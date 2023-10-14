@@ -22,8 +22,6 @@ git commit -m (To commit changes, and include a message)
 
 git push (To push changes to the main repo)
 ```
-
-```
 ### To start out:
 ``` 
 git clone https://github.com/Darrel-Koh/FYP-23-S4-33.git
