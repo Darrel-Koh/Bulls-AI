@@ -61,10 +61,9 @@ git merge origin/main
 
 ```
 
-## How To Run
+## How To Run The Project
 ```
 Create the file `mern/server/config.env` with your Atlas URI and the server port:
-
 
 Start server:
 ```
