@@ -34,7 +34,7 @@ const MainPage = () => {
       <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
         <input
           type="text"
-          placeholder="Enter Search Term"
+          placeholder="Search for Tickers/Stocks"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ padding: '8px', marginRight: '8px' }}
@@ -47,9 +47,9 @@ const MainPage = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid #ddd' }}>
-              <th style={{ padding: '10px', textAlign: 'left' }}>Column 1</th>
-              <th style={{ padding: '10px', textAlign: 'left' }}>Column 2</th>
-              <th style={{ padding: '10px', textAlign: 'left' }}>Column 3</th>
+              <th style={{ padding: '10px', textAlign: 'center' }}>Recommended for you</th>
+              <th style={{ padding: '10px', textAlign: 'center' }}>Sectors</th>
+              <th style={{ padding: '10px', textAlign: 'center' }}>Industries</th>
             </tr>
           </thead>
           <tbody>
