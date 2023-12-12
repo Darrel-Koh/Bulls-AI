@@ -60,3 +60,20 @@ git fetch origin main
 git merge origin/main
 
 ```
+
+## How To Run the Project
+```
+Create the file `mern/server/config.env` with your Atlas URI and the server port:
+
+Start server:
+cd mern/server
+npm install (only for first time)
+npm start
+
+
+Start Web server:
+cd mern/client
+npm install (only for first time)
+npm start
+
+```
