@@ -37,7 +37,7 @@ const MainPage = () => {
           placeholder="Search for Tickers/Stocks"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: '8px', marginRight: '8px' }}
+          style={{ textAlign: 'center', padding: '8px', marginRight: '8px' }}
         />
         <button onClick={handleSearch} style={submitButtonStyle}>
           Search
