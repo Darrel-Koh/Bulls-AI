@@ -20,6 +20,8 @@ const App = () => {
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
         <Route path="/loginPage" element={<LoginPage />} />
+        <Route path="/mainPage" element={<MainPage />} />
+
       </Routes>
       </div>
     </div>
