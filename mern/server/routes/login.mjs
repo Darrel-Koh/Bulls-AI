@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 // Check whether email and password exist in database
-router.get("/", async (req, res) => {
+router.get("/login", async (req, res) => {
   // Checking users table if email and password exist
   const userInfo = await db
     .collection("users")
