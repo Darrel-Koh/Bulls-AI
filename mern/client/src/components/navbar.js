@@ -35,6 +35,9 @@ export default function Navbar() {
              <NavLink className="nav-link" to="/loginPage">
                Login/Register
              </NavLink>
+             <NavLink className="nav-link" to="/viewTickers">
+               View Tickers/Stocks
+             </NavLink>
            </li>
          </ul>
        </div>

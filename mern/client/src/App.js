@@ -10,6 +10,7 @@ import Edit from "./components/edit";
 import Create from "./components/create";
 import LoginPage from "./components/loginPage";
 import MainPage from "./components/mainPage";
+import ViewTickers from './components/viewTickers';
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
         <Route path="/create" element={<Create />} />
         <Route path="/loginPage" element={<LoginPage />} />
         <Route path="/mainPage" element={<MainPage />} />
-
+        <Route path="/viewTickers" element={<ViewTickers />} />
       </Routes>
       </div>
     </div>

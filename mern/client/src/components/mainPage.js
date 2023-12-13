@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const MainPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchData();
@@ -23,6 +27,7 @@ const MainPage = () => {
     try {
       // Fetch filtered data based on the search term
       const response = await axios.get(`https://api.example.com/data?search=${searchTerm}`);
+      navigate(`/stock/${searchTerm}`, { state: { stockData: response.data } });
       setData(response.data);
     } catch (error) {
       console.error('Error searching data:', error);
