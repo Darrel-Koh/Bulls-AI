@@ -1,42 +1,64 @@
 // GlossaryPage.js
-import React from 'react';
+import React, { useState } from 'react';
 
 const GlossaryPage = () => {
+  const glossaryData = [
+    { term: 'AI', definition: 'ARTIFICIAL INTELLIGENCE' },
+    { term: 'IDE', definition: 'INTEGRATED DEVELOPMENT ENVIRONMENT (A SOFTWARE APPLICATION THAT HELPS PROGRAMMERS DEVELOP SOFTWARE CODE EFFICIENTLY)' },
+    { term: 'VSCode', definition: 'VISUAL STUDIO CODE (AN INTEGRATED DEVELOPMENT ENVIRONMENT CREATED BY MICROSOFT)' },
+    { term: 'GitHub', definition: 'IT IS A WEB-BASED PLATFORM AND VERSION CONTROL REPOSITORY' },
+    // Add more terms and definitions as needed
+  ];
+
+  const [selectedTerm, setSelectedTerm] = useState(null);
+
+  const handleTermClick = (term) => {
+    setSelectedTerm(term);
+  };
+
   return (
-    <div>
-      <h1>Glossary</h1>
+    <div style={containerStyle}>
+      <div style={listStyle}>
+        {/* Glossary List */}
+        {glossaryData.map((item) => (
+          <div
+            key={item.term}
+            style={{ ...termStyle, cursor: 'pointer' }}
+            onClick={() => handleTermClick(item.term)}
+          >
+            {item.term}
+          </div>
+        ))}
+      </div>
       <div style={contentStyle}>
-        <TermDefinition term="AI" definition="ARTIFICIAL INTELLIGENCE" />
-        <TermDefinition
-          term="IDE"
-          definition="INTEGRATED DEVELOPMENT ENVIRONMENT (A SOFTWARE APPLICATION THAT HELPS PROGRAMMERS DEVELOP SOFTWARE CODE EFFICIENTLY)"
-        />
-        <TermDefinition
-          term="VSCode"
-          definition="VISUAL STUDIO CODE (AN INTEGRATED DEVELOPMENT ENVIRONMENT CREATED BY MICROSOFT)"
-        />
-        <TermDefinition
-          term="GitHub"
-          definition="IT IS A WEB-BASED PLATFORM AND VERSION CONTROL REPOSITORY"
-        />
-        {/* Add more terms and definitions as needed */}
+        {/* Display Selected Definition */}
+        {selectedTerm ? (
+          <div>
+            <h2>{selectedTerm}</h2>
+            <p>{glossaryData.find((item) => item.term === selectedTerm)?.definition}</p>
+          </div>
+        ) : (
+          <p>Select a term to view its definition.</p>
+        )}
       </div>
     </div>
   );
 };
 
-const contentStyle = {
-  padding: '20px',
+const containerStyle = {
+  display: 'flex',
 };
 
-const TermDefinition = ({ term, definition }) => (
-  <div style={termStyle}>
-    <strong>{term}</strong>: {definition}
-  </div>
-);
+const listStyle = {
+  marginRight: '20px',
+};
 
 const termStyle = {
-  marginBottom: '15px',
+  marginBottom: '10px',
+};
+
+const contentStyle = {
+  flex: 1,
 };
 
 export default GlossaryPage;
