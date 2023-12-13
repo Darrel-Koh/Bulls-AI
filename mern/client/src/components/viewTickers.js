@@ -1,7 +1,10 @@
 // viewTickers.js
 
 
-import React from 'react';
+
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 
 const ViewTickers = ({ location }) => {
   const stockData = location?.state?.stockData;
