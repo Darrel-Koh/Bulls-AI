@@ -41,7 +41,7 @@ const MyTickerPage = () => {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <div style={{ marginBottom: '10px' }}>
-            <Link to="/add-ticker">Add Ticker</Link>
+            <Link to="/add-ticker">Add Ticker List</Link>
           </div>
           {/* List Selection Boxes */}
           <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
