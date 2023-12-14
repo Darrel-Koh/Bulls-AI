@@ -1,6 +1,7 @@
 // LoginPage.js
 
 import React, { useState } from "react";
+import { redirect } from "react-router-dom";
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -19,7 +20,7 @@ const LoginPage = () => {
       password: loginPassword,
     };
 
-    await fetch("http://localhost:5050/login", {
+    const response = await fetch("http://localhost:5050/login", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -29,6 +30,13 @@ const LoginPage = () => {
       window.alert(error);
       return;
     });
+
+    if (response.ok) {
+      return redirect("/mainpage");
+    } else {
+      // need to show error in the login form
+    }
+
     setLoginUsername("");
     setLoginPassword("");
   };
