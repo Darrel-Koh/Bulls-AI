@@ -20,20 +20,22 @@ const LoginPage = () => {
       password: loginPassword,
     };
 
-    const response = await fetch("http://localhost:5050/login", {
+    const response = await fetch(`http://localhost:5050/login/${loginInfo}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(loginInfo),
     }).catch((error) => {
       window.alert(error);
       return;
     });
 
     if (response.ok) {
+      console.log("LOGIN SUCCESS");
       return redirect("/mainpage");
     } else {
+      console.log("LOGIN FAIL");
+
       // need to show error in the login form
     }
 

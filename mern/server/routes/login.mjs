@@ -9,7 +9,7 @@ router.get("/login", async (req, res) => {
   // Checking users table if email and password exist
   const userInfo = await db
     .collection("users")
-    .findOne({ email: req.body.userName, password: req.body.password });
+    .findOne({ email: req.params.userName, password: req.params.password });
 
   // if userInfo = null
   if (!userInfo) {
