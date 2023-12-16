@@ -1,26 +1,21 @@
 // glossaryGet.mjs
 import express from "express";
 import { bullsai } from "../db/conn.mjs";
-import { ObjectId } from "mongodb";
 
-// Create an Express Router
-const glossaryRouter = express.Router();
+const router = express.Router();
 
-// Route to get all glossary items
-glossaryRouter.get("/glossary", async (req, res) => {
+router.get("/glossary", async (req, res) => {
   try {
-    let collection = await bullsai.collection("glossary"); // Use bullsai database
+    let collection = await bullsai.collection("glossary");
     let results = await collection.find({}).toArray();
-    
-    // Set the Content-Type header
     res.setHeader('Content-Type', 'application/json');
-    
     res.send(results).status(200);
   } catch (error) {
     console.error('Error fetching glossary items:', error);
-    res.status(500).send('Internal Server Error');
+
+    // Send an error response with a meaningful message
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
   }
 });
 
-// Export the router
-export default glossaryRouter;
+export default router;

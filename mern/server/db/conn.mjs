@@ -1,3 +1,4 @@
+// conn.mjs
 import { MongoClient } from "mongodb";
 
 const connectionString = process.env.ATLAS_URI || "";
@@ -13,11 +14,9 @@ try {
 }
 
 let db = conn.db("sample_training");
-
 let glossarydb = conn.db("glossary");
 let favtickerdb = conn.db("favTickers");
 let bullsai = conn.db("bullsai");
 
-export { glossarydb, favtickerdb };
+export { glossarydb, favtickerdb, bullsai };
 export default db;
-export {bullsai};

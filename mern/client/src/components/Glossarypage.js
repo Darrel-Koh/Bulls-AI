@@ -1,3 +1,4 @@
+// glossarypage.js
 import React, { useState, useEffect } from 'react';
 
 const GlossaryPage = () => {
@@ -8,7 +9,7 @@ const GlossaryPage = () => {
   useEffect(() => {
     const fetchGlossaryData = async () => {
       try {
-        const response = await fetch('http://localhost:5050/glossary');
+        const response = await fetch('http://localhost:3000/glossary');
         if (!response.ok) {
           throw new Error(`Failed to fetch glossary data: ${response.statusText}`);
         }
@@ -20,7 +21,7 @@ const GlossaryPage = () => {
     };
 
     fetchGlossaryData();
-  }, []); // Empty dependency array ensures this effect runs only once, equivalent to componentDidMount
+  }, []); 
 
   const handleTermClick = (term) => {
     setSelectedTerm(term);
@@ -29,7 +30,6 @@ const GlossaryPage = () => {
   return (
     <div style={containerStyle}>
       <div style={listStyle}>
-        {/* Glossary List */}
         {terms.map((item) => (
           <div
             key={item.term}
@@ -41,7 +41,6 @@ const GlossaryPage = () => {
         ))}
       </div>
       <div style={contentStyle}>
-        {/* Display Selected Definition */}
         {selectedTerm ? (
           <div>
             <h2>{selectedTerm}</h2>
@@ -50,8 +49,6 @@ const GlossaryPage = () => {
         ) : (
           <p>Select a term to view its definition.</p>
         )}
-
-        {/* Display Error */}
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>
