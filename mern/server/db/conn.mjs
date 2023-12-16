@@ -16,6 +16,8 @@ let db = conn.db("sample_training");
 
 let glossarydb = conn.db("glossary");
 let favtickerdb = conn.db("favTickers");
+let bullsai = conn.db("bullsai");
 
 export { glossarydb, favtickerdb };
 export default db;
+export {bullsai};

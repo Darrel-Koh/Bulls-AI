@@ -1,16 +1,26 @@
-// GlossaryPage.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const GlossaryPage = () => {
-  const glossaryData = [
-    { term: 'AI', definition: 'ARTIFICIAL INTELLIGENCE' },
-    { term: 'IDE', definition: 'INTEGRATED DEVELOPMENT ENVIRONMENT (A SOFTWARE APPLICATION THAT HELPS PROGRAMMERS DEVELOP SOFTWARE CODE EFFICIENTLY)' },
-    { term: 'VSCode', definition: 'VISUAL STUDIO CODE (AN INTEGRATED DEVELOPMENT ENVIRONMENT CREATED BY MICROSOFT)' },
-    { term: 'GitHub', definition: 'IT IS A WEB-BASED PLATFORM AND VERSION CONTROL REPOSITORY' },
-    // Add more terms and definitions as needed
-  ];
-
+  const [terms, setTerms] = useState([]);
   const [selectedTerm, setSelectedTerm] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchGlossaryData = async () => {
+      try {
+        const response = await fetch('http://localhost:5050/glossary');
+        if (!response.ok) {
+          throw new Error(`Failed to fetch glossary data: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setTerms(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchGlossaryData();
+  }, []); // Empty dependency array ensures this effect runs only once, equivalent to componentDidMount
 
   const handleTermClick = (term) => {
     setSelectedTerm(term);
@@ -20,7 +30,7 @@ const GlossaryPage = () => {
     <div style={containerStyle}>
       <div style={listStyle}>
         {/* Glossary List */}
-        {glossaryData.map((item) => (
+        {terms.map((item) => (
           <div
             key={item.term}
             style={{ ...termStyle, cursor: 'pointer' }}
@@ -35,11 +45,14 @@ const GlossaryPage = () => {
         {selectedTerm ? (
           <div>
             <h2>{selectedTerm}</h2>
-            <p>{glossaryData.find((item) => item.term === selectedTerm)?.definition}</p>
+            <p>{terms.find((item) => item.term === selectedTerm)?.desc}</p>
           </div>
         ) : (
           <p>Select a term to view its definition.</p>
         )}
+
+        {/* Display Error */}
+        {error && <p style={{ color: 'red' }}>{error}</p>}
       </div>
     </div>
   );
