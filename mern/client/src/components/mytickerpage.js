@@ -1,4 +1,3 @@
-// MyTickerPage.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -40,9 +39,6 @@ const MyTickerPage = () => {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <div style={{ marginBottom: '10px' }}>
-            <Link to="/add-ticker">Add Ticker List</Link>
-          </div>
           {/* List Selection Boxes */}
           <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
             {Object.keys(tickerLists).map((list) => (
@@ -57,10 +53,15 @@ const MyTickerPage = () => {
           </div>
         </div>
 
-        {/* Delete List Button */}
-        <button onClick={handleDeleteList} style={{ marginLeft: '10px' }}>
-          Delete List
-        </button>
+        {/* Action Buttons */}
+        <div>
+          <button onClick={handleDeleteList} style={actionButtonStyle}>
+            Delete List
+          </button>
+          <Link to="/add-ticker" style={{ marginLeft: '10px' }}>
+            <button style={actionButtonStyle}>Add Ticker List</button>
+          </Link>
+        </div>
       </div>
 
       {/* Ticker Table */}
@@ -101,6 +102,11 @@ const ListSelectionBox = ({ list, label, selectedList, onSelect }) => {
       {label}
     </div>
   );
+};
+
+const actionButtonStyle = {
+  padding: '10px',
+  marginLeft: '10px',
 };
 
 const tableHeaderStyle = {
