@@ -18,7 +18,6 @@ const App = () => {
   return (
     <div>
       <Header />  {Header}
-      <Navbar />
       <div style={{ margin: 20 }}>
       <Routes>
         <Route exact path="/" element={<RecordList />} />
