@@ -9,6 +9,7 @@ import RecordList from "./components/recordList";
 import Edit from "./components/edit";
 import Create from "./components/create";
 import LoginPage from "./components/loginPage";
+import MainPage from "./components/mainPage";
 
 const App = () => {
   return (
@@ -20,6 +21,8 @@ const App = () => {
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
         <Route path="/loginPage" element={<LoginPage />} />
+        <Route path="/mainPage" element={<MainPage />} />
+
       </Routes>
       </div>
     </div>
