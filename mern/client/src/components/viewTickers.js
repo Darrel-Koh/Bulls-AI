@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+//import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+
 
 const exampleNews = [
   {
@@ -12,53 +13,13 @@ const exampleNews = [
     description: 'Leading technology companies announced robust earnings for the latest quarter, exceeding expectations.',
     url: 'https://example.com/news2',
   },
-  // Add more news items as needed
 ];
 
 
 const ViewTickers = () => {
-  const [records, setRecords] = useState([]);
-  const [news, setNews] = useState([]);
-  const [stocks, setStocks] = useState([]);
   const hardcodedNews = exampleNews;
-
-
-
-  useEffect(() => {
-    // Fetch stocks from your Express server
-    fetch('/api/stocks')
-      .then((response) => response.json())
-      .then((data) => setStocks(data))
-      .catch((error) => console.error('Error fetching stocks:', error));
-  }, []);
-
-  useEffect(() => {
-    const apiKey = '67c2e55c595c4c9576d78ed6dcc46b75';
-    const apiUrlRecords = '/api/records';  // Update with your actual API endpoint for records
-    const apiUrlNews = `https://gnews.io/api/v4/top-headlines?token=${apiKey}`;
-
-    const fetchRecords = async () => {
-      try {
-        const response = await axios.get(apiUrlRecords);
-        setRecords(response.data);
-      } catch (error) {
-        console.error('Error fetching records:', error);
-      }
-    };
-
-    const fetchNews = async () => {
-      try {
-        const response = await axios.get(apiUrlNews);
-        setNews(response.data.articles);
-      } catch (error) {
-        console.error('Error fetching news:', error);
-      }
-    };
-
-    fetchRecords();
-    fetchNews();
-  }, []);
-
+  const location = useLocation();
+  const searchResults = location.state?.searchResults || [];
 
 
 
@@ -69,55 +30,46 @@ const ViewTickers = () => {
 
   return (
     <div>
-      <center><h1>Stocks Page (to be deleted)</h1></center>
       {/* Add to Favourite Button */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
+      <div style={{ marginTop: "100px", display: 'flex', justifyContent: 'right', alignItems: 'right', marginBottom: '20px' }}>
         <button onClick={() => handleAddToFavourite(1)} style={submitButtonStyle}>
           Add to Favourite
         </button>
       </div>
-      {/* Records Container */}
-      <div className="records-container">
-        <center><h2>Records (to be deleted)</h2></center>
-        {records.map((record) => (
-          <div key={record._id}>
-            <h3>{record.name}</h3>
-            <p>{record.description}</p>
-            <p>Price: ${record.price}</p>
-            <button onClick={() => handleAddToFavourite(record._id)}>Add to Favourite</button>
-          </div>
-        ))}
-      </div>
+  
 
-      {news.length > 0 ? (
-        <div style={{ margin: '20px', alignItems: "center" }}>
-          <h2>Latest News</h2>
-          {news.map((article, index) => (
-            <div key={index} style={{ marginBottom: '20px' }}>
-              <h3>{article.title}</h3>
-              <p>{article.description}</p>
-              <a href={article.url} target="_blank" rel="noopener noreferrer">
-                Read More
-              </a>
-            </div>
-          ))}
-        </div>
+      {searchResults.length > 0 ? (
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Symbol</th>
+              <th>Shares</th>
+              <th>Price Traded</th>
+              <th>Direction</th>
+              <th>Price Change Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {searchResults.map((result) => (
+              <tr key={result._id}>
+                <td>{result._id}</td>
+                <td>{result.symbol}</td>
+                <td>{result.shares}</td>
+                <td>{result.priceTraded}</td>
+                <td>{result.direction}</td>
+                <td>{result.priceChangeAmount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       ) : (
-        <center><p>No news available.</p></center>
+        <p>No data available for the search term.</p>
       )}
-
-<div className="App">
-      <ul>
-        {stocks.map((stock) => (
-          <li key={stock._id}>
-            <strong>{stock.symbol}</strong> - {stock.companyName}
-          </li>
-        ))}
-      </ul>
-    </div>
+    
 
     <div>
-      {/* Other components... */}
+    
       
       {/* News Section */}
       <div style={{ marginTop: '500px'  }}>
@@ -137,13 +89,13 @@ const ViewTickers = () => {
         </ul>
       </div>
 
-      {/* Other components... */}
-    </div>
+     
 
       {/* Footer */}
       <footer style={{ padding: '10px', marginTop: '80px', backgroundColor: '#f4f4f4', textAlign: 'center' }}>
         <p>&copy; 2023 Bulls Ai. All rights reserved.</p>
       </footer>
+    </div>
     </div>
   );
 };

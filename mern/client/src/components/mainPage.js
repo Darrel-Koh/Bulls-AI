@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import SearchStocks from './SearchStocks'; // Import the SearchStocks component
 import { useNavigate } from 'react-router-dom';
 
 
 const MainPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
 
 
   useEffect(() => {
@@ -16,38 +17,40 @@ const MainPage = () => {
   const fetchData = async () => {
     try {
       // Fetch data from your API endpoint (replace with your actual API endpoint)
-      const response = await axios.get(`http://localhost:5050/record/`);
+      const response = await axios.get(`http://localhost:5050/api/data`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  const handleSearch = async () => {
+
+  const handleSearch = async (searchTerm) => {
     try {
+        if (!searchTerm.trim()) {
+          setErrorMessage('Please enter a search term.');
+          return;
+        }
       // Fetch filtered data based on the search term
-      const response = await axios.get(`https://api.example.com/data?search=${searchTerm}`);
-      navigate(`/stock/${searchTerm}`, { state: { stockData: response.data } });
+      // Assuming you have an endpoint like /api/search in your Express server
+      const response = await axios.get(`http://localhost:5050/api/search?q=${searchTerm}`);
       setData(response.data);
+      
+      // Navigate to the ViewTickers page with search results
+      navigate('/viewTickers', { state: { searchResults: response.data } });
     } catch (error) {
       console.error('Error searching data:', error);
     }
   };
-
+ 
+  
   return (
-    <div style={{ textAlign: 'center', margin: '20px'}}>
-      <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
-        <input
-          type="text"
-          placeholder="Search for Tickers/Stocks"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ textAlign: 'center', padding: '8px', marginRight: '8px' }}
-        />
-        <button onClick={handleSearch} style={submitButtonStyle}>
-          Search
-        </button>
-      </div>
+    
+      <div style={{ textAlign: 'center', margin: '20px'}}>
+      <SearchStocks onSearch={handleSearch} /> {/* Include the SearchStocks component */}
+      
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
       {data.length > 0 ? (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
@@ -78,14 +81,6 @@ const MainPage = () => {
   );
 };
 
-  const submitButtonStyle = {
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    padding: '10px 15px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-  };
 
 
 export default MainPage;

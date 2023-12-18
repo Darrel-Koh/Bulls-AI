@@ -37,11 +37,7 @@ export default function Navbar() {
                 Log Out
               </NavLink> 
               </li> 
-              <li className="nav-item">
-              <NavLink className="nav-link" to="/viewTickers">
-                View Tickers
-              </NavLink>     
-            </li>
+           
           </ul>
         </div>
       </nav>
