@@ -44,7 +44,7 @@ export default function GlossaryPage() {
       <div style={contentStyle}>
         {selectedTerm ? (
           <div>
-            <h2>{terms.find((item) => item.term === selectedTerm)?.name}</h2> {/* Updated this line */}
+            <h2>{terms.find((item) => item.term === selectedTerm)?.name}</h2>
             <p>{terms.find((item) => item.term === selectedTerm)?.desc}</p>
           </div>
         ) : (
