@@ -1,83 +1,71 @@
-// LoginPage.js
 
 import React, { useState } from "react";
-import { redirect } from "react-router-dom";
+import '../components/style.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("login");
-  const [loginUsername, setLoginUsername] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [registerUsername, setRegisterUsername] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
+  const navigate = useNavigate();
+  const [setLoggedIn] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    console.log("Logging in with:", loginUsername, loginPassword);
 
-    const loginInfo = {
-      userName: loginUsername,
-      password: loginPassword,
-    };
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/login', { loginEmail, loginPassword });
+      console.log('Login successful. Token:', response.data.token);
 
-    const response = await fetch(`http://localhost:5050/login/${loginInfo}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).catch((error) => {
-      window.alert(error);
-      return;
-    });
-
-    if (response.ok) {
-      console.log("LOGIN SUCCESS");
-      return redirect("/mainpage");
-    } else {
-      console.log("LOGIN FAIL");
-
-      // need to show error in the login form
+      // Set loggedIn state to true and redirect to the main page
+      setLoggedIn(true);
+      navigate('/mainPage');
+    } catch (error) {
+      console.error('Login failed:', error.message);
     }
-
-    setLoginUsername("");
-    setLoginPassword("");
   };
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    console.log(
-      "Registering with:",
-      registerUsername,
-      registerPassword,
-      setRegisterFirstName
-    );
-
-    setRegisterUsername("");
-    setRegisterPassword("");
-    setRegisterFirstName("");
+  const handleRegister = async () => {
+    try {
+      await axios.post('http://localhost:5000/register', { registerEmail, registerPassword, registerFirstName });
+      console.log('Registration successful');
+    } catch (error) {
+      console.error('Registration failed:', error.message);
+    }
   };
 
   return (
+
+    <div className="parent-div">
+
+    <div className="outer-div">
+
     <div
       style={{
         textAlign: "center",
-        marginTop: "50px",
+        marginTop: "100px",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
       }}
     >
+
       <div style={{ marginBottom: "20px" }}>
         <button
           style={{
-            padding: "12px 20px",
+            padding: "12px 50px",
+            marginTop: "140px",
             marginRight: "10px",
             backgroundColor: activeTab === "login" ? "#28a745" : "#007bff",
             color: "white",
-            border: "none",
-            borderRadius: "4px",
+            border: "2px",
+            borderRadius: "8px",
             cursor: "pointer",
-            fontSize: "16px",
+            fontSize: "18px",
           }}
           onClick={() => setActiveTab("login")}
         >
@@ -85,31 +73,34 @@ const LoginPage = () => {
         </button>
         <button
           style={{
-            padding: "12px 20px",
+            padding: "12px 40px",
+            marginRight: "10px",
             backgroundColor: activeTab === "register" ? "#28a745" : "#007bff",
             color: "white",
-            border: "1px solid #28a745",
-            borderRadius: "4px",
+            border: "2px",
+            borderRadius: "8px",
             cursor: "pointer",
-            fontSize: "16px",
+            fontSize: "18px",
           }}
           onClick={() => setActiveTab("register")}
         >
           Register
         </button>
+
+        
       </div>
       {activeTab === "login" && (
         <form
           onSubmit={handleLogin}
           style={{ maxWidth: "300px", margin: "auto" }}
         >
-          <div style={{ marginBottom: "15px" }}>
-            <label htmlFor="loginUsername">Email Address:</label>
+          <div style={{ marginBottom: "20px" }}>
+            <label htmlFor="loginEmail">Email Address:</label>
             <input
               type="text"
-              id="loginUsername"
-              value={loginUsername}
-              onChange={(e) => setLoginUsername(e.target.value)}
+              id="loginEmail"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
               style={{ width: "100%", padding: "8px" }}
             />
           </div>
@@ -137,12 +128,12 @@ const LoginPage = () => {
           style={{ maxWidth: "300px", margin: "auto" }}
         >
           <div style={{ marginBottom: "15px" }}>
-            <label htmlFor="registerUsername">Email Address:</label>
+            <label htmlFor="registerEmail">Email Address:</label>
             <input
               type="text"
               id="registerUsername"
-              value={registerUsername}
-              onChange={(e) => setRegisterUsername(e.target.value)}
+              value={registerEmail}
+              onChange={(e) => setRegisterEmail(e.target.value)}
               style={{ width: "100%", padding: "8px" }}
             />
           </div>
@@ -182,6 +173,8 @@ const LoginPage = () => {
       >
         <p>&copy; 2023 Bulls Ai. All rights reserved.</p>
       </footer>
+      </div>
+      </div>
     </div>
   );
 };
@@ -189,10 +182,12 @@ const LoginPage = () => {
 const submitButtonStyle = {
   backgroundColor: "#4CAF50",
   color: "white",
-  padding: "10px 15px",
+  padding: "15px 25px",
   border: "none",
-  borderRadius: "4px",
+  borderRadius: "15px",
   cursor: "pointer",
+  marginBottom: "100px",
+  fontSize: "18px"
 };
 
 export default LoginPage;
