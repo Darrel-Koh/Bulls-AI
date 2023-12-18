@@ -13,5 +13,6 @@ try {
 }
 
 let db = conn.db("sample_training");
+let bullsdb = conn.db("bullsai")
 
-export default db;
+export {db, bullsdb};
