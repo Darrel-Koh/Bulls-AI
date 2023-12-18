@@ -18,5 +18,6 @@ router.get("/login", async (req, res) => {
     // if userInfo exist
   } else {
     res.send(userInfo).status(200);
+    return redirect("/mainpage");
   }
 });
