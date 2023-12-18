@@ -35,7 +35,12 @@ export default function Navbar() {
             <li className="nav-item">
               <NavLink className="nav-link" to="/loginPage">
                 Log Out
-              </NavLink>      
+              </NavLink> 
+              </li> 
+              <li className="nav-item">
+              <NavLink className="nav-link" to="/viewTickers">
+                View Tickers
+              </NavLink>     
             </li>
           </ul>
         </div>
