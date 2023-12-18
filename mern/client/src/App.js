@@ -24,7 +24,6 @@ const App = () => {
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
         <Route path="/glossary" element={<GlossaryPage />} />
-        
         <Route path="/" element={<Header />} />
         <Route path="/my-ticker" element={<MyTickerPage />} />
         <Route path="/add-ticker" element={<AddTickerPage />} />
