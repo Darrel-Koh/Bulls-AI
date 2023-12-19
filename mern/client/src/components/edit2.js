@@ -5,8 +5,7 @@ export default function Edit() {
   const [form, setForm] = useState({
     name: "",
     position: "",
-    password: "", // Change 'level' to 'password'
-    records: [],
+    password: "", 
   });
  const params = useParams();
  const navigate = useNavigate();
