@@ -4,21 +4,27 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-// Check whether email and password exist in database
-router.get("/login", async (req, res) => {
-  // Checking users table if email and password exist
-  const userInfo = await bullsai
-    .collection("users")
-    .findOne({ email: req.params.userName, password: req.params.password });
+// Use POST method for login as it involves sensitive information (password)
+router.post("/login", async (req, res) => {
+  try {
+    // Destructure email and password from the request body
+    const { email, password } = req.body;
 
-  // if userInfo = null
-  if (!userInfo) {
-    res.send("Not found").status(404);
+    // Checking users collection if email and password exist
+    const userInfo = await bullsai
+      .collection("users")
+      .findOne({ email, password });
 
-    // if userInfo exist
-  } else {
-    res.send(userInfo).status(200);
-    return redirect("/mainpage");
+    // If userInfo is null, user not found
+    if (!userInfo) {
+      return res.status(404).send("Not found");
+    }
+
+    // If userInfo exists, send user information and redirect to mainpage
+    res.status(200).send(userInfo);
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).send("Internal Server Error");
   }
 });
 
