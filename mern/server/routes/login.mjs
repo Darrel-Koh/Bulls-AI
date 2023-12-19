@@ -1,5 +1,5 @@
 import express from "express";
-import db from "../db/conn.mjs";
+import {db, bullsdb} from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 // Check whether email and password exist in database
 router.get("/login", async (req, res) => {
   // Checking users table if email and password exist
-  const userInfo = await db
+  const userInfo = await bullsdb
     .collection("users")
     .findOne({ email: req.params.userName, password: req.params.password });
 
