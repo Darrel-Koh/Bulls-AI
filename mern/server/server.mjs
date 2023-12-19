@@ -3,6 +3,7 @@ import cors from "cors";
 import "./loadEnvironment.mjs";
 import records from "./routes/record.mjs";
 import user from "./routes/record2.mjs";
+import {db, bullsdb} from "../server/db/conn.mjs"
 
 const PORT = 5050;
 const app = express();
