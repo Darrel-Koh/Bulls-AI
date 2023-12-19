@@ -13,6 +13,8 @@ import GlossaryPage from "./components/Glossarypage";
 import MyTickerPage from "./components/mytickerpage";
 import AddTickerPage from "./addtickerpage";
 
+import LoginPage from "./components/loginPage";
+import MainPage from "./components/mainPage";
 
 const App = () => {
   return (
@@ -24,9 +26,12 @@ const App = () => {
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
         <Route path="/glossary" element={<GlossaryPage />} />
-        <Route path="/" element={<Header />} />
+        {/* <Route path="/" element={<Header />} /> */}
         <Route path="/my-ticker" element={<MyTickerPage />} />
         <Route path="/add-ticker" element={<AddTickerPage />} />
+        <Route path="/loginPage" element={<LoginPage />} />
+        <Route path="/mainPage" element={<MainPage />} />
+
       </Routes>
       </div>
     </div>
