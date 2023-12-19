@@ -16,14 +16,13 @@ const App = () => {
     <div>
       <Navbar />
       <div style={{ margin: 20 }}>
-      <Routes>
-        <Route exact path="/" element={<RecordList />} />
-        <Route path="/edit/:id" element={<Edit />} />
-        <Route path="/create" element={<Create />} />
-        <Route path="/loginPage" element={<LoginPage />} />
-        <Route path="/mainPage" element={<MainPage />} />
-
-      </Routes>
+        <Routes>
+          <Route exact path="/" element={<RecordList />} />
+          <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/create" element={<Create />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/mainPage" element={<MainPage />} />
+        </Routes>
       </div>
     </div>
   );
