@@ -11,7 +11,7 @@ const LoginPage = () => {
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
   const navigate = useNavigate();
-  const [setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false); // Fix state initialization
 
   const handleLogin = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
@@ -30,12 +30,13 @@ const LoginPage = () => {
     }
   };
 
-  const handleRegister = async () => {
+  const handleRegister = async (e) => {
+    e.preventDefault();
     try {
       await axios.post("http://localhost:5000/register", {
-        registerEmail,
-        registerPassword,
-        registerFirstName,
+        email: registerEmail,
+        password: registerPassword,
+        firstName: registerFirstName,
       });
       console.log("Registration successful");
     } catch (error) {
