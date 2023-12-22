@@ -27,6 +27,7 @@ const LoginPage = ({ setLoginUser }) => {
     axios.post('http://localhost:5050/Login', user).then((res) => {
       alert(res.data.message);
       setLoginUser(res.data.user);
+      console.log(user);
       navigate('/mainPage');
     });
   };

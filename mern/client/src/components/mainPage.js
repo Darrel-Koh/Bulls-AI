@@ -12,7 +12,7 @@ const MainPage = () => {
   const fetchData = async () => {
     try {
       // Fetch data from your API endpoint (replace with your actual API endpoint)
-      const response = await axios.get(`http://localhost:5050/record/`);
+      const response = await axios.get(`http://localhost:5050/mainPage/`);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
