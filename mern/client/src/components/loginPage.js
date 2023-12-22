@@ -1,46 +1,41 @@
 import React, { useState } from "react";
 import "../components/style.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-const LoginPage = () => {
+const LoginPage = ({setLoginUser}) => {
   const [activeTab, setActiveTab] = useState("login");
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [registerFirstName, setRegisterFirstName] = useState("");
-  const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useState(false); // Fix state initialization
+  const history = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
-    try {
-      const response = await axios.post(`http://localhost:5050/login`, {
-        email: loginEmail,
-        password: loginPassword,
-      });
-      console.log("Login successful. Token:", response.data.token);
+  const [user, setUser] = useState({
+      name: '',
+      email: '',
+      password: '',
+    });
 
-      // Set loggedIn state to true and redirect to the main page
-      setLoggedIn(true);
-      navigate("/mainPage");
-    } catch (error) {
-      console.error("Login failed:", error.message);
-    }
+
+  const handleChange = (e) => {
+    const {name, value} = e.target;
+    setUser({
+      ...user,
+      [name]: value,
+    });
   };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:5000/register", {
-        email: registerEmail,
-        password: registerPassword,
-        firstName: registerFirstName,
-      });
-      console.log("Registration successful");
-    } catch (error) {
-      console.error("Registration failed:", error.message);
+  const handleLogin = () => {
+    axios.post('http://localhost:5050/Login', user).then((res) => {
+      alert(res.data.message);
+      setLoginUser(res.data.user);
+      history.push('/mainPage');
+    });
+  };
+
+  const handleRegister = () => {
+    const { name, email, password } = user;
+    if (name && email && password) {
+      axios.post('http://localhost:5050/Register', user).then((res) => console.log(res));
+    } else {
+      alert('Invalid input');
     }
   };
 
@@ -92,7 +87,6 @@ const LoginPage = () => {
           </div>
           {activeTab === "login" && (
             <form
-              onSubmit={handleLogin}
               style={{ maxWidth: "300px", margin: "auto" }}
             >
               <div style={{ marginBottom: "20px" }}>
@@ -100,8 +94,9 @@ const LoginPage = () => {
                 <input
                   type="text"
                   id="loginEmail"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
+                  name="email" 
+                  value={user.email}  
+                  onChange={handleChange}                  
                   style={{ width: "100%", padding: "8px" }}
                 />
               </div>
@@ -110,14 +105,15 @@ const LoginPage = () => {
                 <input
                   type="password"
                   id="loginPassword"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
+                  name="password" 
+                  value={user.password}  
+                  onChange={handleChange}                  
                   style={{ width: "100%", padding: "8px" }}
                 />
               </div>
 
               <div>
-                <button type="submit" style={submitButtonStyle}>
+                <button type="submit" style={submitButtonStyle} onClick={handleLogin}>
                   Login
                 </button>
               </div>
@@ -125,7 +121,6 @@ const LoginPage = () => {
           )}
           {activeTab === "register" && (
             <form
-              onSubmit={handleRegister}
               style={{ maxWidth: "300px", margin: "auto" }}
             >
               <div style={{ marginBottom: "15px" }}>
@@ -133,8 +128,9 @@ const LoginPage = () => {
                 <input
                   type="text"
                   id="registerUsername"
-                  value={registerEmail}
-                  onChange={(e) => setRegisterEmail(e.target.value)}
+                  name="email" 
+                  value={user.email} 
+                  onChange={handleChange}
                   style={{ width: "100%", padding: "8px" }}
                 />
               </div>
@@ -143,8 +139,9 @@ const LoginPage = () => {
                 <input
                   type="password"
                   id="registerPassword"
-                  value={registerPassword}
-                  onChange={(e) => setRegisterPassword(e.target.value)}
+                  name="password" 
+                  value={user.password} 
+                  onChange={handleChange}                
                   style={{ width: "100%", padding: "8px" }}
                 />
               </div>
@@ -153,13 +150,14 @@ const LoginPage = () => {
                 <input
                   type="text"
                   id="registerFirstName"
-                  value={registerFirstName}
-                  onChange={(e) => setRegisterFirstName(e.target.value)}
+                  name="name" 
+                  value={user.name} 
+                  onChange={handleChange}              
                   style={{ width: "100%", padding: "8px" }}
                 />
               </div>
               <div>
-                <button type="submit" style={submitButtonStyle}>
+                <button type="submit" style={submitButtonStyle} onClick={handleRegister}>
                   Register
                 </button>
               </div>
@@ -190,5 +188,6 @@ const submitButtonStyle = {
   marginBottom: "100px",
   fontSize: "18px",
 };
+
 
 export default LoginPage;
