@@ -3,9 +3,9 @@ import "../components/style.css";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = ({setLoginUser}) => {
+const LoginPage = ({ setLoginUser }) => {
   const [activeTab, setActiveTab] = useState("login");
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState({
       name: '',
@@ -22,15 +22,17 @@ const LoginPage = ({setLoginUser}) => {
     });
   };
 
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
     axios.post('http://localhost:5050/Login', user).then((res) => {
       alert(res.data.message);
       setLoginUser(res.data.user);
-      history.push('/mainPage');
+      navigate('/mainPage');
     });
   };
 
-  const handleRegister = () => {
+  const handleRegister = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
     const { name, email, password } = user;
     if (name && email && password) {
       axios.post('http://localhost:5050/Register', user).then((res) => console.log(res));
