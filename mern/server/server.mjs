@@ -1,8 +1,11 @@
 // server.mjs (Express backend)
 
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
+import "./loadEnvironment.mjs";
+import records from "./routes/record.mjs";
 import { MongoClient } from 'mongodb';
+import glossary from "./routes/glossaryGet.mjs";
 
 const app = express();
 const port = 5050;
@@ -14,6 +17,8 @@ app.use(cors());
 app.get('/api/test', (req, res) => {
   res.json({ message: 'This is a test endpoint' });
 });
+app.use("/record", records);
+app.use("/glossary", glossary);
 
 app.get('/api/data', async (req, res) => {
     try {
