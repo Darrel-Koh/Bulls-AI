@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const MainPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState([]);
+  const location = useLocation();
+  const loggedInUser = location.state ? location.state.user : null;
 
   useEffect(() => {
     fetchData();
-  }, []); // Empty dependency array to fetch data on component mount
+  }, [loggedInUser]); // Empty dependency array to fetch data on component mount
 
   const fetchData = async () => {
     try {
@@ -18,6 +21,8 @@ const MainPage = () => {
       console.error('Error fetching data:', error);
     }
   };
+
+  console.log('Logged In User:', loggedInUser);
 
   const handleSearch = async () => {
     try {

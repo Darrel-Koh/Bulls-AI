@@ -28,9 +28,10 @@ const LoginPage = ({ setLoginUser }) => {
       alert(res.data.message);
       setLoginUser(res.data.user);
       console.log(user);
-      navigate('/mainPage');
+      navigate('/mainPage', { state: { user: res.data.user } });
     });
   };
+  
 
   const handleRegister = (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
