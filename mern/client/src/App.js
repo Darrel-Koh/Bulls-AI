@@ -19,7 +19,7 @@ const App = () => {
       <Header />  {Header}
       <div style={{ margin: 20 }}>
       <Routes>
-      <Route path="/mainPage" element={<MainPage />} />
+      <Route path="/" element={<MainPage />} />
         <Route path="/glossary" element={<GlossaryPage />} />
         {/* <Route path="/" element={<Header />} /> */}
         <Route path="/my-ticker" element={<MyTickerPage />} />
