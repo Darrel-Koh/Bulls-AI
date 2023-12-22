@@ -74,7 +74,7 @@ const MainPage = () => {
         <p>No data available.</p>
       )}
 
-    <footer style={{ marginTop: 'auto', padding: '10px', backgroundColor: '#f4f4f4' }}>
+    <footer style={{ marginTop: '600px', padding: '10px', backgroundColor: '#f4f4f4' }}>
         <p>&copy; 2023 Bulls Ai. All rights reserved.</p>
       </footer>
     </div>
