@@ -9,7 +9,6 @@ const MainPage = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
-
   useEffect(() => {
     fetchData();
   }, []); // Empty dependency array to fetch data on component mount
