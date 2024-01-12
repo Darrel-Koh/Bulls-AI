@@ -13,14 +13,15 @@ const LoginPage = () => {
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
   const navigate = useNavigate();
-  const [setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
 
-  const handleLogin = async () => {
+  const handleLogin = async (event) => {
+    event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/login', { loginEmail, loginPassword });
+      const response = await axios.post('http://localhost:5050/login', { loginEmail, loginPassword });
       console.log('Login successful. Token:', response.data.token);
-
+  
       // Set loggedIn state to true and redirect to the main page
       setLoggedIn(true);
       navigate('/mainPage');
@@ -28,10 +29,11 @@ const LoginPage = () => {
       console.error('Login failed:', error.message);
     }
   };
-
-  const handleRegister = async () => {
+  
+  const handleRegister = async (event) => {
+    event.preventDefault();
     try {
-      await axios.post('http://localhost:5000/register', { registerEmail, registerPassword, registerFirstName });
+      await axios.post('http://localhost:5050/register', { registerEmail, registerPassword, registerFirstName });
       console.log('Registration successful');
     } catch (error) {
       console.error('Registration failed:', error.message);

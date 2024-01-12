@@ -3,6 +3,7 @@ import cors from "cors";
 import "./loadEnvironment.mjs";
 import records from "./routes/record.mjs";
 import user from "./routes/record2.mjs";
+import loginRouter from "./routes/login.mjs";
 import {db, bullsdb} from "../server/db/conn.mjs"
 
 const PORT = 5050;
@@ -13,6 +14,7 @@ app.use(express.json());
 
 app.use("/record", records);
 app.use("/user", user)
+app.use("/login", loginRouter)
 
 app.get('/db-test', async (req, res) => {
   try {

@@ -5,19 +5,20 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 // Check whether email and password exist in database
-router.get("/login", async (req, res) => {
+router.post("/", async (req, res) => {
   // Checking users table if email and password exist
   const userInfo = await bullsdb
     .collection("users")
-    .findOne({ email: req.params.userName, password: req.params.password });
+    .findOne({ email: req.body.email, password: req.body.password });
 
   // if userInfo = null
   if (!userInfo) {
-    res.send("Not found").status(404);
-
-    // if userInfo exist
+    res.status(404).send("Not found");
   } else {
-    res.send(userInfo).status(200);
-    return redirect("/mainpage");
+    // if userInfo exist
+    res.status(200).json(userInfo);
+    // res.redirect("/mainPage"); // This won't work after res.json or res.send
   }
 });
+
+export default router;
