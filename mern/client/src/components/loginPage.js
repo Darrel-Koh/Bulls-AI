@@ -18,9 +18,18 @@ const LoginPage = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+  
+    console.log(`Email: ${loginEmail}, Password: ${loginPassword}`); // Log email and password
+    // Check if email or password is empty
+    if (!loginEmail || !loginPassword) {
+      console.error('Email or password cannot be empty');
+      return;
+    }
+  
     try {
-      const response = await axios.post('http://localhost:5050/login', { loginEmail, loginPassword });
-      console.log('Login successful. Token:', response.data.token);
+      const response = await axios.post('http://localhost:5050/login', { email: loginEmail, password: loginPassword });
+  
+      console.log('Login successful. Response:', response.data);
   
       // Set loggedIn state to true and redirect to the main page
       setLoggedIn(true);
@@ -92,37 +101,21 @@ const LoginPage = () => {
         
       </div>
       {activeTab === "login" && (
-        <form
-          onSubmit={handleLogin}
-          style={{ maxWidth: "300px", margin: "auto" }}
-        >
-          <div style={{ marginBottom: "20px" }}>
-            <label htmlFor="loginEmail">Email Address:</label>
-            <input
-              type="text"
-              id="loginEmail"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-              style={{ width: "100%", padding: "8px" }}
-            />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label htmlFor="loginPassword">Password:</label>
-            <input
-              type="password"
-              id="loginPassword"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-              style={{ width: "100%", padding: "8px" }}
-            />
-          </div>
-
-          <div>
-            <button type="submit" style={submitButtonStyle}>
-              Login
-            </button>
-          </div>
-        </form>
+         <form onSubmit={handleLogin}>
+         <input
+           type="email"
+           placeholder="Email"
+           value={loginEmail}
+           onChange={(e) => setLoginEmail(e.target.value)}
+         />
+         <input
+           type="password"
+           placeholder="Password"
+           value={loginPassword}
+           onChange={(e) => setLoginPassword(e.target.value)}
+         />
+         <button type="submit">Login</button>
+       </form>
       )}
       {activeTab === "register" && (
         <form

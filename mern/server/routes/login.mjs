@@ -6,18 +6,19 @@ const router = express.Router();
 
 // Check whether email and password exist in database
 router.post("/", async (req, res) => {
-  // Checking users table if email and password exist
+  const { email, password } = req.body;
+
+  console.log(`Received email: ${email}, password: ${password}`); // Log received email and password
+
   const userInfo = await bullsdb
     .collection("users")
-    .findOne({ email: req.body.email, password: req.body.password });
+    .findOne({ email, password });
 
-  // if userInfo = null
   if (!userInfo) {
-    res.status(404).send("Not found");
+    // Send 401 Unauthorized status code and error message
+    res.status(401).send("Invalid email or password");
   } else {
-    // if userInfo exist
     res.status(200).json(userInfo);
-    // res.redirect("/mainPage"); // This won't work after res.json or res.send
   }
 });
 

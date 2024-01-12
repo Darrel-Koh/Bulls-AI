@@ -14,7 +14,7 @@ app.use(express.json());
 
 app.use("/record", records);
 app.use("/user", user)
-app.use("/login", loginRouter)
+app.use("/login", loginRouter);
 
 app.get('/db-test', async (req, res) => {
   try {
