@@ -1,0 +1,27 @@
+.parent-div{
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-size: center;
+    background-attachment: fixed;
+    height:100vh;
+    margin:0px;
+    display: flex;
+    justify-content:center ;
+    align-items: center;
+    background: #0f1f21;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #010103, #24C6DC);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #060419, #78adb4); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    
+}
+.outer-div{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-evenly ;
+    background-color:white;
+    align-items: center;
+    width:70%;
+    height: 80vh;
+    border-radius: 50px;
+    box-shadow: 0 7px 8px 0 rgba(0, 0, 0, 0.5), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
+}

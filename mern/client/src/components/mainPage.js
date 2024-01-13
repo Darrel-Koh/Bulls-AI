@@ -30,14 +30,14 @@ const MainPage = () => {
   };
 
   return (
-    <div style={{ textAlign: 'center', margin: '20px'}}>
+    <div style={{ textAlign: 'center', margin: '40px'}}>
       <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
         <input
           type="text"
           placeholder="Search for Tickers/Stocks"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ textAlign: 'center', padding: '8px', marginRight: '8px' }}
+          style={{ textAlign: 'center', padding: '8px', marginRight: '8px', width: "100%" }}
         />
         <button onClick={handleSearch} style={submitButtonStyle}>
           Search
@@ -66,7 +66,10 @@ const MainPage = () => {
         <p>No data available.</p>
       )}
 
-    <footer style={{ marginTop: 'auto', padding: '10px', backgroundColor: '#f4f4f4' }}>
+    <footer 
+      style={{ marginTop: '600px', padding: '10px', backgroundColor: '#f4f4f4' }}
+      
+      >
         <p>&copy; 2023 Bulls Ai. All rights reserved.</p>
       </footer>
     </div>
@@ -80,6 +83,8 @@ const MainPage = () => {
     border: 'none',
     borderRadius: '4px',
     cursor: 'pointer',
+    marginBottom: '100px',
+    marginTop: '10px'
   };
 
 

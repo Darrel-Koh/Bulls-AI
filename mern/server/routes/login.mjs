@@ -1,22 +1,25 @@
 import express from "express";
-import db from "../db/conn.mjs";
+import {db, bullsdb} from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
 // Check whether email and password exist in database
-router.get("/login", async (req, res) => {
-  // Checking users table if email and password exist
-  const userInfo = await db
+router.post("/", async (req, res) => {
+  const { email, password } = req.body;
+
+  console.log(`Received email: ${email}, password: ${password}`); // Log received email and password
+
+  const userInfo = await bullsdb
     .collection("users")
-    .findOne({ email: req.body.userName, password: req.body.password });
+    .findOne({ email, password });
 
-  // if userInfo = null
   if (!userInfo) {
-    res.send("Not found").status(404);
-
-    // if userInfo exist
+    // Send 401 Unauthorized status code and error message
+    res.status(401).send("Invalid email or password");
   } else {
-    res.send(userInfo).status(200);
+    res.status(200).json(userInfo);
   }
 });
+
+export default router;
