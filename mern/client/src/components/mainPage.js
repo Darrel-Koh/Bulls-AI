@@ -1,9 +1,14 @@
+// MainPage.js
+
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
-  const [searchTerm, setSearchTerm] = useState('');
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -11,39 +16,69 @@ const MainPage = () => {
 
   const fetchData = async () => {
     try {
-      // Fetch data from your API endpoint (replace with your actual API endpoint)
-      const response = await axios.get(`http://localhost:5050/record/`);
-      setData(response.data);
+      setIsLoading(true);
+
+      // Fetch data from the /api/data endpoint
+      const response = await fetch(`http://localhost:5050/api/data`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const tickersData = await response.json();
+      setData(tickersData);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setErrorMessage('Error fetching data. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleSearch = async () => {
+    const trimmedSearchTerm = searchTerm.toString().trim();
+    const encodedSearchTerm = encodeURIComponent(trimmedSearchTerm);
+
+    if (!trimmedSearchTerm) {
+      setErrorMessage('Please enter a search term.');
+      return;
+    }
+
     try {
-      // Fetch filtered data based on the search term
-      const response = await axios.get(`https://api.example.com/data?search=${searchTerm}`);
-      setData(response.data);
+      console.log('Sending request with search term:', encodedSearchTerm);
+
+      const response = await fetch(`http://localhost:5050/api/search?q=${encodedSearchTerm}`);
+      const searchData = await response.json();
+
+      console.log('Filtered Data:', searchData);
+
+      // Navigate to the ViewTickers page with search results and search term
+      navigate('/viewTickers', { state: { searchResults: searchData, searchTerm: trimmedSearchTerm } });
     } catch (error) {
       console.error('Error searching data:', error);
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', margin: '40px'}}>
+    <div style={{ textAlign: 'center', margin: '20px' }}>
       <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
         <input
           type="text"
           placeholder="Search for Tickers/Stocks"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ textAlign: 'center', padding: '8px', marginRight: '8px', width: "100%" }}
+          style={{ textAlign: 'center', padding: '8px', marginRight: '8px' }}
         />
         <button onClick={handleSearch} style={submitButtonStyle}>
           Search
         </button>
+
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       </div>
-      {data.length > 0 ? (
+
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : data.length > 0 ? (
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ borderBottom: '2px solid #ddd' }}>
@@ -66,26 +101,20 @@ const MainPage = () => {
         <p>No data available.</p>
       )}
 
-    <footer 
-      style={{ marginTop: '600px', padding: '10px', backgroundColor: '#f4f4f4' }}
-      
-      >
+      <footer style={{ marginTop: '600px', padding: '10px', backgroundColor: '#f4f4f4' }}>
         <p>&copy; 2023 Bulls Ai. All rights reserved.</p>
       </footer>
     </div>
   );
 };
 
-  const submitButtonStyle = {
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    padding: '10px 15px',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    marginBottom: '100px',
-    marginTop: '10px'
-  };
-
+const submitButtonStyle = {
+  backgroundColor: '#321FDE',
+  color: 'white',
+  padding: '10px 15px',
+  border: 'none',
+  borderRadius: '4px',
+  cursor: 'pointer',
+};
 
 export default MainPage;

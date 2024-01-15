@@ -1,12 +1,13 @@
 // Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
+import BullsAiLogo from '../images/BullsAI logo_coloured_logo.png';
 
 const Header = () => {
   return (
     <header style={headerStyle}>
-      <Link to="/" style={{ ...logoStyle, marginRight: '10px' }}>
-        Logo
+       <Link to="/mainPage">
+        <img alt="BullsAI Logo" style={{ width: '50px', height: '50px' }} src={BullsAiLogo} />
       </Link>
       <nav style={navStyle}>
         <Link to="/glossary" style={{ ...buttonStyle, marginLeft: 0 }}>
@@ -15,6 +16,9 @@ const Header = () => {
         <Link to="/my-ticker" style={buttonStyle}>
           My Ticker
         </Link>
+        <Link to="/loginPage" style={buttonStyle}>
+          Log Out
+        </Link> 
       </nav>
     </header>
   );

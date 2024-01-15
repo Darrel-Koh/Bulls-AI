@@ -6,6 +6,7 @@ import user from "./routes/record2.mjs";
 import loginRouter from "./routes/login.mjs";
 import {db, bullsdb} from "../server/db/conn.mjs"
 import glossary from "./routes/glossaryGet.mjs";
+import mainpage from "./routes/mainpage.mjs";
 
 const PORT = 5050;
 const app = express();
@@ -16,6 +17,8 @@ app.use(express.json());
 app.use("/record", records);
 app.use("/user", user)
 app.use("/login", loginRouter);
+app.use("/api/data", mainpage);
+app.use("/api/search", mainpage);
 
 app.get('/db-test', async (req, res) => {
   try {

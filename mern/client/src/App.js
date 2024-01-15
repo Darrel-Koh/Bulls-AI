@@ -13,7 +13,7 @@ import Header from "./components/header";
 import GlossaryPage from "./components/Glossarypage";
 import MyTickerPage from "./components/mytickerpage";
 import AddTickerPage from "./addtickerpage";
-
+import ViewTickers from './components/viewTickers';
 import Create from "./components/create2";
 import LoginPage from "./components/loginPage";
 import MainPage from "./components/mainPage";
@@ -32,7 +32,8 @@ const App = () => {
         {/* <Route path="/" element={<Header />} /> */}
         <Route path="/my-ticker" element={<MyTickerPage />} />
         <Route path="/add-ticker" element={<AddTickerPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/loginPage" element={<LoginPage />} />
+        <Route path="/viewTickers" element={<ViewTickers />} />
         <Route path="/mainPage" element={<MainPage />} />
 
       </Routes>
