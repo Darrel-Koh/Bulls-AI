@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import express from "express";
 import { db, bullsdb } from "../db/conn.mjs";
 
@@ -22,11 +23,14 @@ router.post("/", async (req, res) => {
       return res.status(400).send("Email is already registered");
     }
 
+    // Hash the password before storing it in the database
+    const hashedPassword = await bcrypt.hash(registerPassword, 10);
+
     // If the email is not registered, insert the new user into the database
     const newUser = {
       first_name: registerFirstName, // Change field name to first_name
       email: registerEmail,
-      password: registerPassword,
+      password: hashedPassword, // Store hashed password
     };
 
     await bullsdb.collection("users").insertOne(newUser);
