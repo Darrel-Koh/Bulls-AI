@@ -45,7 +45,7 @@ const MyTickerPage = () => {
               <ListSelectionBox
                 key={user._id}
                 user={user}
-                label={user.first_name} // Displaying email, you can customize this based on your user structure
+                label={user.email} // Displaying email, you can customize this based on your user structure
                 selectedUser={selectedUser}
                 onSelect={handleUserSelect}
               />
