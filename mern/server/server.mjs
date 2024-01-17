@@ -19,6 +19,7 @@ app.use("/record", records);
 app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter); // Use the registration router
+app.use("/my-ticker", tickerpage);
 
 app.get("/db-test", async (req, res) => {
   try {
