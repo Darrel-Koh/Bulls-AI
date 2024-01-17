@@ -1,21 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const exampleNews = [
-  {
-    title: 'Stocks Surge to Record Highs',
-    description: 'The stock market experienced a significant surge, reaching record highs across major indices.',
-    url: 'https://solss.uow.edu.au/sid/sols_login_ctl.login',
-  },
-  {
-    title: 'Tech Giants Report Strong Earnings',
-    description: 'Leading technology companies announced robust earnings for the latest quarter, exceeding expectations.',
-    url: 'https://example.com/news2',
-  },
-];
+import LazyLoad from 'react-lazyload';
 
 const ViewTickers = () => {
-  const hardcodedNews = exampleNews;
   const location = useLocation();
   const navigate = useNavigate();
   const searchResults = location.state?.searchResults || [];
@@ -24,7 +11,44 @@ const ViewTickers = () => {
   const itemsPerPage = 10; // Adjust the number of items per page as needed
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+  const [newsData, setNewsData] = useState([]);
+  const [relatedNews, setRelatedNews] = useState([]);
+  const [loadingNews, setLoadingNews] = useState(true);
 
+  useEffect(() => {
+    console.log('Fetching related news for:', searchTerm);
+    const apiKey = 'a1f6019d3f084b21bd71242f6629ef1b'; // Replace with your actual News API key
+  
+    const fetchRelatedNews = async () => {
+      try {
+        const response = await fetch(`https://newsapi.org/v2/everything?q=${searchTerm}&apiKey=${apiKey}`);
+  
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+  
+        const data = await response.json();
+  
+        // Limit the news to 5 articles
+        const limitedNews = data.articles.slice(0, 3);
+  
+        setRelatedNews(limitedNews);
+      } catch (error) {
+        console.error('Error fetching related news:', error);
+      } finally {
+        console.log('Finished fetching related news');
+        setLoadingNews(false);
+      }
+    };
+  
+    // Fetch related news when the component mounts or when the search term changes
+    if (searchTerm) {
+      fetchRelatedNews();
+    }
+  }, [searchTerm]);
+  
+  
+ 
   // Filter data based on the search term
   const filteredData = searchResults.filter((result) =>
     result.symbol.toLowerCase().includes(searchTerm.toLowerCase())
@@ -48,6 +72,8 @@ const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
     console.log(`Added record with ID ${recordId} to favourites`);
   };
 
+
+
   return (
     <div>
       {/* Add to Favourite Button */}
@@ -62,12 +88,12 @@ const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
           <tr style={{ borderBottom: '2px solid #ddd', background: '#f2f2f2' }}>
-              <th style={tableCellStyle}>ID</th>
-              <th style={tableCellStyle}>Symbol</th>
-              <th style={tableCellStyle}>Shares</th>
-              <th style={tableCellStyle}>Price Traded</th>
+              <th style={tableHeaderStyle}>ID</th>
+              <th style={tableHeaderStyle}>Trading Name</th>
+              <th style={tableHeaderStyle}>Symbol</th>
+            { /* <th style={tableCellStyle}>Price Traded</th>
               <th style={tableCellStyle}>Direction</th>
-              <th style={tableCellStyle}>Price Change Amount</th>
+      <th style={tableCellStyle}>Price Change Amount</th>*/}
               <th style={tableHeaderStyle}>Action</th> {/* New column for the action button */}
 
             </tr>
@@ -75,12 +101,13 @@ const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
           <tbody>
           {displayedData.map((result, index) => (
               <tr key={result._id} style={{ borderBottom: '1px solid #ddd', background: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
-              <td>{result._id}</td>
+                <td style={tableCellStyle}>{result._id}</td>
+                <td style={tableCellStyle}>{result.trading_name}</td>
                 <td style={tableCellStyle}>{result.symbol}</td>
-                <td style={tableCellStyle}>{result.shares}</td>
-                <td style={tableCellStyle}>{result.priceTraded}</td>
+
+                {/*<td style={tableCellStyle}>{result.priceTraded}</td>
                 <td style={tableCellStyle}>{result.direction}</td>
-                <td style={tableCellStyle}>{result.priceChangeAmount}</td>
+          <td style={tableCellStyle}>{result.priceChangeAmount}</td>*/}
                 <td style={tableCellStyle}>
                   {/* Favourite Button for each row */}
                   <button onClick={() => handleAddToFavourite(result._id)} style={favouriteButtonStyle}>
@@ -127,23 +154,25 @@ const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
         </button>
       </div>
 
-      {/* News Section */}
-      <div style={{ marginTop: '500px' }}>
-        <ul>
-          <h3>Latest News</h3>
-          <div>
-            {hardcodedNews.map((article, index) => (
-              <div key={index} style={{ marginBottom: '20px' }}>
-                <h4 style={{ textDecoration: 'underline' }}>{article.title}</h4>
-                <p>{article.description}</p>
-                <a href={article.url} target="_blank" rel="noopener noreferrer">
-                  Read More
-                </a>
-              </div>
-            ))}
+   {/* Lazy Loaded Related News Section */}
+   {searchTerm && !loadingNews && (
+        <LazyLoad height={200} offset={100} once>
+          <div style={{ marginTop: '50px' }}>
+            <h4 style={{ textAlign: 'left', marginBottom: '20px' }}>Related News</h4>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {relatedNews.map((article, index) => (
+                <li key={index} style={{ marginBottom: '20px', border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
+                  <h5 style={{ margin: 0 }}>{article.title}</h5>
+                  <p style={{ margin: '10px 0 0' }}>{article.description}</p>
+                  <a href={article.url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', marginTop: '10px', color: '#007BFF', textDecoration: 'underline' }}>
+                    Read More
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
-        </ul>
-      </div>
+        </LazyLoad>
+      )}
 
       {/* Footer */}
       <footer style={{ padding: '10px', marginTop: '80px', backgroundColor: '#f4f4f4', textAlign: 'center' }}>
@@ -152,17 +181,6 @@ const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
     </div>
   );
 };
-
-const submitButtonStyle = {
-  backgroundColor: '#321FDE',
-  color: 'white',
-  padding: '10px 15px',
-  border: 'none',
-  borderRadius: '4px',
-  cursor: 'pointer',
-  marginBottom: '10px',
-};
-
 
 const favouriteButtonStyle = {
   backgroundColor: '#FFD700', // Yellow color for the favourite button

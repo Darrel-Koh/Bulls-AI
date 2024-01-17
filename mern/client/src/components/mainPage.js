@@ -9,10 +9,12 @@ const MainPage = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  useEffect(() => {
+    useEffect(() => {
     fetchData();
-  }, []); // Empty dependency array to fetch data on component mount
+  }, [currentPage, pageSize]); // Update data when currentPage or pageSize changes
 
   const fetchData = async () => {
     try {
@@ -59,6 +61,10 @@ const MainPage = () => {
     }
   };
 
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
   return (
     <div style={{ textAlign: 'center', margin: '20px' }}>
       <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column' }}>
@@ -79,28 +85,51 @@ const MainPage = () => {
       {isLoading ? (
         <p>Loading...</p>
       ) : data.length > 0 ? (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ borderBottom: '2px solid #ddd' }}>
-              <th style={{ padding: '10px', textAlign: 'center' }}>Recommended for you</th>
-              <th style={{ padding: '10px', textAlign: 'center' }}>Sectors</th>
-              <th style={{ padding: '10px', textAlign: 'center' }}>Industries</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr key={index} style={{ borderBottom: '1px solid #ddd' }}>
-                <td style={{ padding: '10px' }}>{item.column1}</td>
-                <td style={{ padding: '10px' }}>{item.column2}</td>
-                <td style={{ padding: '10px' }}>{item.column3}</td>
+        <>
+          <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px', border: '1px solid #ddd' }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid #ddd', background: '#f2f2f2' }}>
+                <th style={tableHeaderStyle}>ID</th>
+                <th style={tableHeaderStyle}>Recommended for you</th>
+                <th style={tableHeaderStyle}>Sectors</th>
+                <th style={tableHeaderStyle}>Industries</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={index} style={{ borderBottom: '1px solid #ddd', background: index % 2 === 0 ? '#f9f9f9' : 'white' }}>
+                  <td style={tableCellStyle}>{item._id}</td>
+                  <td style={tableCellStyle}>{item.column1}</td>
+                  <td style={tableCellStyle}>{item.column2}</td>
+                  <td style={tableCellStyle}>{item.column3}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+            {/* Pagination */}
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              style={paginationButtonStyle}
+            >
+              Previous
+            </button>
+            <span style={{ margin: '0 10px', fontSize: '16px', fontWeight: 'bold' }}>{`Page ${currentPage}`}</span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={data.length < pageSize}
+              style={paginationButtonStyle}
+            >
+              Next
+            </button>
+          </div>
+        </>
       ) : (
         <p>No data available.</p>
       )}
-
+      
       <footer style={{ marginTop: '600px', padding: '10px', backgroundColor: '#f4f4f4' }}>
         <p>&copy; 2023 Bulls Ai. All rights reserved.</p>
       </footer>
@@ -115,6 +144,30 @@ const submitButtonStyle = {
   border: 'none',
   borderRadius: '4px',
   cursor: 'pointer',
+};
+
+const tableHeaderStyle = {
+  padding: '10px',
+  textAlign: 'center',
+  fontWeight: 'bold',
+  border: '1px solid #ddd',
+};
+
+const tableCellStyle = {
+  padding: '10px',
+  textAlign: 'center',
+  border: '1px solid #ddd',
+};
+
+
+const paginationButtonStyle = {
+  backgroundColor: '#321FDE',
+  color: 'white',
+  padding: '10px 15px',
+  border: 'none',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  margin: '0 5px',
 };
 
 export default MainPage;
