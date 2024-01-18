@@ -43,7 +43,7 @@ const MyTickerPage = () => {
               selectedUser.favList.map((list) => (
                 <ListSelectionBox
                   key={list.list_name}
-                  list={list}
+                  list={list.list_name}
                   label={list.list_name}
                   selectedTab={selectedTab}
                   onTabClick={handleTabClick}
@@ -79,7 +79,7 @@ const MyTickerPage = () => {
 };
 
 const ListSelectionBox = ({ list, label, selectedTab, onTabClick }) => {
-  const isSelected = list.list_name === selectedTab;
+  const isSelected = list === selectedTab;
   const boxStyle = {
     padding: '10px',
     border: isSelected ? '2px solid #007bff' : '1px solid #ddd',
@@ -87,7 +87,7 @@ const ListSelectionBox = ({ list, label, selectedTab, onTabClick }) => {
   };
 
   return (
-    <div style={boxStyle} onClick={() => onTabClick(list.list_name)}>
+    <div style={boxStyle} onClick={() => onTabClick(list)}>
       {label}
     </div>
   );
