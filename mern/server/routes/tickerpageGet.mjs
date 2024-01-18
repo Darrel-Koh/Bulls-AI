@@ -21,7 +21,14 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const collection = await bullsdb.collection("users");
-    const query = { _id: new ObjectId(req.params.id) };
+    const userId = req.params.id;
+
+    // Ensure that the userId is a valid ObjectId
+    if (!ObjectId.isValid(userId)) {
+      return res.status(400).send("Invalid user ID");
+    }
+
+    const query = { _id: new ObjectId(userId) };
     const result = await collection.findOne(query);
 
     if (!result) res.status(404).send("Not found");
