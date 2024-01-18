@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 
 const MyTickerPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -33,6 +32,38 @@ const MyTickerPage = () => {
     setSelectedTab(list_name);
   };
 
+  const ListSelectionBox = ({ list, label, selectedTab, onSelect }) => {
+    const isSelected = list === selectedTab;
+    const boxStyle = {
+      padding: '10px',
+      outline: isSelected ? '2px solid #000' : 'none', // Black outline for selected, no outline for others
+      cursor: 'pointer',
+    };
+  
+    return (
+      <div style={boxStyle} onClick={() => onSelect(list)}>
+        {label}
+      </div>
+    );
+  };
+  
+
+  const actionButtonStyle = {
+    padding: '10px',
+    marginLeft: '10px',
+  };
+
+  const tableHeaderStyle = {
+    backgroundColor: '#f2f2f2',
+    padding: '10px',
+    border: '1px solid #ddd',
+  };
+
+  const tableCellStyle = {
+    padding: '10px',
+    border: '1px solid #ddd',
+  };
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -46,56 +77,41 @@ const MyTickerPage = () => {
                   list={list.list_name}
                   label={list.list_name}
                   selectedTab={selectedTab}
-                  onTabClick={handleTabClick}
+                  onSelect={handleTabClick}
                 />
               ))}
           </div>
         </div>
 
         <div>
-          <Link to="/add-ticker" style={{ marginLeft: '10px' }}>
-            <button style={actionButtonStyle}>Add Ticker List</button>
-          </Link>
+          <button onClick={() => console.log('Add Ticker List')} style={actionButtonStyle}>
+            Add Ticker List
+          </button>
         </div>
       </div>
 
-      {/* Display Content based on the selected tab */}
-      {selectedUser &&
-        selectedUser.favList &&
-        selectedUser.favList.map((list) => (
-          <div key={list.list_name} style={{ display: selectedTab === list.list_name ? 'block' : 'none' }}>
-            <div>
-              <p>ID:</p>
-              <ul>
-                {list.tickers.map((ticker, index) => (
-                  <li key={index}>{ticker}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
+      <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+        <thead>
+          <tr>
+            <th style={tableHeaderStyle}>ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selectedUser &&
+            selectedUser.favList &&
+            selectedUser.favList
+              .filter((list) => selectedTab === null || list.list_name === selectedTab)
+              .map((list) =>
+                list.tickers.map((ticker, index) => (
+                  <tr key={index}>
+                    <td style={tableCellStyle}>{ticker}</td>
+                  </tr>
+                ))
+              )}
+        </tbody>
+      </table>
     </div>
   );
-};
-
-const ListSelectionBox = ({ list, label, selectedTab, onTabClick }) => {
-  const isSelected = list === selectedTab;
-  const boxStyle = {
-    padding: '10px',
-    border: isSelected ? '2px solid #007bff' : '1px solid #ddd',
-    cursor: 'pointer',
-  };
-
-  return (
-    <div style={boxStyle} onClick={() => onTabClick(list)}>
-      {label}
-    </div>
-  );
-};
-
-const actionButtonStyle = {
-  padding: '10px',
-  marginLeft: '10px',
 };
 
 export default MyTickerPage;
