@@ -18,11 +18,15 @@ import Create from "./components/create2";
 import LoginPage from "./components/loginPage";
 import MainPage from "./components/mainPage";
 import UserList from "./components/recordList2";
+import { useState } from 'react';
+import AuthContext from './components/AuthContext';
 
 const App = () => {
+  const [userId, setUserId] = useState(null);
   return (
     <div>
       <Header />  {Header}
+      <AuthContext.Provider value={{ userId, setUserId }}>
       <div style={{ margin: 20 }}>
       <Routes>
         <Route exact path="/" element={<UserList />} />
@@ -36,7 +40,9 @@ const App = () => {
         <Route path="/mainPage" element={<MainPage />} />
 
       </Routes>
+      
       </div>
+      </AuthContext.Provider>
     </div>
   );
 };

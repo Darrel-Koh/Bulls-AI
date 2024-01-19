@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+import AuthContext from './AuthContext'; // Import the AuthContext
 
 const MyTickerPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
   const [error, setError] = useState(null);
+  const { userId } = useContext(AuthContext); // Get userId from the context
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch(`http://localhost:5050/my-ticker/${encodeURIComponent("65a923af650ef89cdf7928b8")}`);
+        // Use the userId from the context in the URL
+        const response = await fetch(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch user data: ${response.statusText}`);
@@ -26,7 +30,7 @@ const MyTickerPage = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [userId]); // Include userId in the dependency array
 
   const handleTabClick = (list_name) => {
     setSelectedTab(list_name);
@@ -76,14 +80,14 @@ const MyTickerPage = () => {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'flex-start', // Add this line
+    justifyContent: 'flex-start',
   };
-  
+
   const tabsContainerStyle = {
     display: 'flex',
-    justifyContent: 'flex-start', // Change from 'space-around' to 'flex-start'
+    justifyContent: 'flex-start',
     width: '100%',
-    flexWrap: 'wrap', // Add this line to wrap tabs to next line if they don't fit
+    flexWrap: 'wrap',
   };
 
   const tableStyle = {
