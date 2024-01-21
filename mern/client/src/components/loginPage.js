@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "./AuthContext"; // Import the AuthContext
+import AuthContext from '../components/AuthContext'; // Import AuthContext
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -34,7 +34,7 @@ const LoginPage = () => {
       console.log("Login successful. Response:", response.data);
 
       // Set the user ID in the context upon successful login
-      setUserId(response.data._id);
+      setUserId(response.data._id); // Assuming the userId is returned in the response data
 
       // Continue with your existing logic
       navigate("/mainPage");
@@ -43,24 +43,22 @@ const LoginPage = () => {
     }
   };
 
+
   const handleRegister = async (event) => {
     event.preventDefault();
     try {
-      await axios.post("http://localhost:5050/register", {
-        email: registerEmail,
-        password: registerPassword,
-        firstName: registerFirstName,
-      });
-      console.log("Registration successful");
+      await axios.post('http://localhost:5050/register', { registerEmail, registerPassword, registerFirstName });
+      console.log('Registration successful');
 
-      // Reset the register form
-      setRegisterEmail("");
-      setRegisterPassword("");
-      setRegisterFirstName("");
+      // reset the register form
+      setRegisterEmail('');
+      setRegisterPassword('');
+      setRegisterFirstName('');
       // Switch to the login form
-      setActiveTab("login");
+      setActiveTab('login');
+
     } catch (error) {
-      console.error("Registration failed:", error.message);
+      console.error('Registration failed:', error.message);
     }
   };
 
