@@ -5,7 +5,6 @@ import { Route, Routes } from "react-router-dom";
 
 // We import all the components we need in our app
 import Navbar from "./components/navbar";
-import RecordList from "./components/recordList";
 // import Edit from "./components/edit";
 import Edit from "./components/edit2";
 // import Create from "./components/create";
@@ -23,10 +22,11 @@ import AuthContext from './components/AuthContext';
 
 const App = () => {
   const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState('');
   return (
     <div>
+      <AuthContext.Provider value={{ userId, setUserId, userName, setUserName }}>
       <Header />  {Header}
-      <AuthContext.Provider value={{ userId, setUserId }}>
       <div style={{ margin: 20 }}>
       <Routes>
         <Route exact path="/" element={<UserList />} />
