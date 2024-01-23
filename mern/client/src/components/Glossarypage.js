@@ -33,7 +33,7 @@ export default function GlossaryPage() {
       <div style={listStyle}>
         {terms.map((term) => (
           <div
-            key={term.displayedTerm}
+            key={term.term}
             style={{ ...termStyle, cursor: 'pointer' }}
             onClick={() => handleTermClick(term.term)}
           >

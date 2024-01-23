@@ -7,30 +7,62 @@ const MyTickerPage = () => {
   const [selectedTab, setSelectedTab] = useState(null);
   const [error, setError] = useState(null);
   const { userId } = useContext(AuthContext); // Get userId from the context
+  const [tickerData, setTickerData] = useState([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Use the userId from the context in the URL
-        const response = await fetch(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
+        // Ensure userId is available before making the API call
+        if (!userId) {
+          // Clear selectedUser and tickerData when userId is null
+          setSelectedUser(null);
+          setTickerData([]);
+          return;
+        }
 
+        const response = await fetch(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch user data: ${response.statusText}`);
         }
 
         const userData = await response.json();
         setSelectedUser(userData);
-        // Set the default selected tab to the first one
         if (userData.favList.length > 0) {
           setSelectedTab(userData.favList[0].list_name);
         }
+
+        // Fetch ticker data for each tickerId
+        const tickerDataPromises = userData.favList
+          .flatMap((list) => list.tickers)
+          .map(async (tickerId) => {
+            try {
+              const tickerResponse = await fetch(`http://localhost:5050/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
+              if (!tickerResponse.ok) {
+                throw new Error(`Failed to fetch ticker data: ${tickerResponse.statusText}`);
+              }
+
+              const tickerData = await tickerResponse.json();
+              console.log('tickerData:', tickerData);
+              return {
+                tickerId,
+                tickerData,
+              };
+            } catch (error) {
+              console.error('Error fetching ticker data:', error);
+              return null;
+            }
+          });
+
+        // Wait for all ticker data promises to resolve
+        const tickerDataResults = await Promise.all(tickerDataPromises);
+        setTickerData(tickerDataResults.filter(Boolean)); // Filter out any null results
       } catch (error) {
         setError(error.message);
       }
     };
 
     fetchUserData();
-  }, [userId]); // Include userId in the dependency array
+  }, [userId]);
 
   const handleTabClick = (list_name) => {
     setSelectedTab(list_name);
@@ -95,6 +127,15 @@ const MyTickerPage = () => {
     borderCollapse: 'collapse',
   };
 
+  // Ensure selectedUser is available before rendering
+  if (!selectedUser) {
+    return (
+      <div style={pageContainerStyle}>
+        <p>No user data available.</p>
+      </div>
+    );
+  }
+
   return (
     <div style={pageContainerStyle}>
       <div style={tabsContainerStyle}>
@@ -115,6 +156,8 @@ const MyTickerPage = () => {
         <thead>
           <tr>
             <th style={tableHeaderStyle}>ID</th>
+            <th style={tableHeaderStyle}>Trading Name</th>
+            <th style={tableHeaderStyle}>Symbol</th>
           </tr>
         </thead>
         <tbody>
@@ -123,11 +166,22 @@ const MyTickerPage = () => {
             selectedUser.favList
               .filter((list) => selectedTab === null || list.list_name === selectedTab)
               .map((list) =>
-                list.tickers.map((ticker, index) => (
-                  <tr key={index}>
-                    <td style={tableCellStyle}>{ticker}</td>
-                  </tr>
-                ))
+                list.tickers.map((tickerId, index) => {
+                  const tickerInfo = tickerData.find((data) => data && data.tickerId === tickerId);
+
+                  if (!tickerInfo) {
+                    // Handle case where tickerData is not available yet
+                    return null;
+                  }
+
+                  return (
+                    <tr key={index}>
+                      <td style={tableCellStyle}>{tickerId}</td>
+                      <td style={tableCellStyle}>{tickerInfo.tickerData.trading_name}</td>
+                      <td style={tableCellStyle}>{tickerInfo.tickerData.symbol}</td>
+                    </tr>
+                  );
+                })
               )}
         </tbody>
       </table>

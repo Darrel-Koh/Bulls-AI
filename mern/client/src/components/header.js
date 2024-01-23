@@ -1,57 +1,50 @@
-import React, { useContext } from 'react';
+// header.js
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../components/AuthContext';
 
-const Header = () => {
-  const authContext = useContext(AuthContext);
-  const { userId, userName, setUserId, setUserName } = authContext || {};
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    // Ask for confirmation before logging out
-    const confirmLogout = window.confirm('Are you sure you want to log out?');
-
-    if (confirmLogout) {
-      // Reset user ID and user name in the context
-      setUserId(null);
-      setUserName('');
-
-      // Navigate to the login page after logout
-      navigate('/login');
-    }
-  };
-
-  return (
-    <header style={headerStyle}>
-      <Link to="/" style={{ ...logoStyle, marginRight: '10px' }}>
-        Home
-      </Link>
-      <nav style={navStyle}>
-        <Link to="/glossary" style={{ ...buttonStyle, marginLeft: 0 }}>
-          Glossary
-        </Link>
-        <Link to="/my-ticker" style={buttonStyle}>
-          My Ticker
-        </Link>
-        {userId ? (
-          <span style={{ ...welcomeStyle, backgroundColor: '#28a745', pointerEvents: 'none' }}>
-            Welcome, {userName}
-          </span>
-        ) : (
-          <Link to="/login" style={buttonStyle}>
-            Login
-          </Link>
-)}
-        {userId && (
-          <button onClick={handleLogout} style={{ ...buttonStyle, backgroundColor: '#dc3545' }}>
-            Logout
-          </button>
-        )}
-      </nav>
-    </header>
-  );
+const buttonStyle = {
+  textDecoration: 'none',
+  color: '#fff',
+  padding: '10px',
+  fontWeight: 'bold',
+  cursor: 'pointer',
 };
 
+const redButtonStyle = {
+  ...buttonStyle,
+  backgroundColor: '#dc3545',
+};
+
+const roundedButtonStyle = {
+  ...buttonStyle,
+  borderRadius: '8px',
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+};
+
+const dropdownStyle = {
+  position: 'absolute',
+  top: 'calc(100% + 10px)',
+  right: 0, // Adjust the position to the right
+  zIndex: '1',
+  display: 'flex',
+  flexDirection: 'column',
+  backgroundColor: '#333',
+};
+
+const dropdownItemStyle = {
+  ...buttonStyle,
+  marginLeft: '0',
+  borderRadius: '0',
+};
+
+const arrowStyle = {
+  marginLeft: '5px',  // Adjust the margin to separate the arrow from the text
+  transform: 'rotate(180deg)',
+  transition: 'transform 0.3s ease',
+};
 
 const headerStyle = {
   display: 'flex',
@@ -72,18 +65,99 @@ const navStyle = {
   display: 'flex',
 };
 
-const buttonStyle = {
-  textDecoration: 'none',
-  color: '#fff',
-  padding: '10px',
-  fontWeight: 'bold',
-  marginLeft: '20px', // Adjust the left margin as needed
-  cursor: 'pointer',
-};
+const Header = () => {
+  const authContext = useContext(AuthContext);
+  const { userId, userName, setUserId, setUserName } = authContext || {};
+  const navigate = useNavigate();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownRef = useRef(null);
 
-const welcomeStyle = {
-  ...buttonStyle,
-  borderRadius: '8px', // Add rounded corners for distinction
+  const toggleDropdown = () => {
+    setDropdownVisible((prevVisible) => !prevVisible);
+  };
+
+  const isComponentMounted = useRef(true);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && isComponentMounted.current) {
+        setDropdownVisible(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      isComponentMounted.current = false;
+    };
+  }, []);
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('Are you sure you want to log out?');
+
+    if (confirmLogout) {
+      setUserId(null);
+      setUserName('');
+      setDropdownVisible(false); // Close the dropdown on logout
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      isComponentMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!userId) {
+      navigate('/');
+      setDropdownVisible(false); // Close the dropdown on navigation
+    }
+  }, [userId, navigate]);
+
+  const handleDropdownOptionClick = () => {
+    setDropdownVisible(false); // Close the dropdown when an option is clicked
+  };
+
+  if (!userId) {
+    // Render nothing or a loading state if needed
+    return null;
+  }
+
+  return (
+    <header style={headerStyle}>
+      <Link to="/mainPage" style={{ ...logoStyle, marginRight: '20px' }}>
+        Home
+      </Link>
+      <div style={navStyle}>
+        <Link to="/glossary" style={{ ...buttonStyle, marginRight: '10px' }}>
+          Glossary
+        </Link>
+        <div style={{ position: 'relative' }} ref={dropdownRef}>
+          <span
+            style={{ ...roundedButtonStyle, cursor: 'pointer', backgroundColor: '#28a745' }}
+            onClick={toggleDropdown}
+          >
+            <span style={{ marginLeft: '5px' }}>Welcome, {userName}</span>
+            <span style={{ ...arrowStyle, transform: dropdownVisible ? 'rotate(90deg)' : 'rotate(180deg)' }}>
+              ➤
+            </span>
+          </span>
+          {dropdownVisible && (
+            <div style={{ ...dropdownStyle, width: '155px' }}>
+              <Link to="/my-ticker" style={dropdownItemStyle} onClick={handleDropdownOptionClick}>
+                My Ticker
+              </Link>
+              <button onClick={handleLogout} style={{ ...dropdownItemStyle, ...redButtonStyle }}>
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export default Header;

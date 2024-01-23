@@ -1,3 +1,4 @@
+//App.js
 import React from "react";
 
 // We use Route in order to define the different routes of our application
@@ -5,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 
 // We import all the components we need in our app
 import Navbar from "./components/navbar";
+
 // import Edit from "./components/edit";
 import Edit from "./components/edit2";
 // import Create from "./components/create";
@@ -26,17 +28,17 @@ const App = () => {
   return (
     <div>
       <AuthContext.Provider value={{ userId, setUserId, userName, setUserName }}>
-      <Header />  {Header}
+      <Header /> 
       <div style={{ margin: 20 }}>
       <Routes>
-        <Route exact path="/" element={<UserList />} />
+        <Route exact path="/" element={<LoginPage />} />
         <Route path="/edit/:id" element={<Edit />} />
         <Route path="/create" element={<Create />} />
         <Route path="/glossary" element={<GlossaryPage />} />
         {/* <Route path="/" element={<Header />} /> */}
         <Route path="/my-ticker" element={<MyTickerPage />} />
         <Route path="/add-ticker" element={<AddTickerPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/recordList" element={<UserList />} />
         <Route path="/mainPage" element={<MainPage />} />
 
       </Routes>

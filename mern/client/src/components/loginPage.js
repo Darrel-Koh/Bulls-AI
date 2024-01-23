@@ -81,7 +81,6 @@ const LoginPage = () => {
         <div
           style={{
             textAlign: "center",
-            marginTop: "100px",
             minHeight: "100vh",
             display: "flex",
             flexDirection: "column",
@@ -91,7 +90,7 @@ const LoginPage = () => {
             <button
               style={{
                 padding: "12px 50px",
-                marginTop: "140px",
+                marginTop: "100px",
                 marginRight: "10px",
                 backgroundColor: activeTab === "login" ? "#28a745" : "#007bff",
                 color: "white",
@@ -129,7 +128,7 @@ const LoginPage = () => {
                 placeholder="Email"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-              />
+              /> 
               <input
                 type="password"
                 placeholder="Password"
