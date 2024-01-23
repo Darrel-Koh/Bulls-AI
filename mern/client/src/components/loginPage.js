@@ -39,11 +39,12 @@ const LoginPage = () => {
   const handleRegister = async (event) => {
     event.preventDefault();
     try {
-      await axios.post("http://localhost:5050/register", {
+      const response = await axios.post("http://localhost:5050/register", {
         registerEmail,
         registerPassword,
         registerFirstName,
       });
+
       console.log("Registration successful");
 
       setRegisterEmail("");
@@ -54,6 +55,12 @@ const LoginPage = () => {
       if (
         error.response &&
         error.response.status === 400 &&
+        error.response.data.startsWith("Password")
+      ) {
+        alert(error.response.data); // Show password requirements alert
+      } else if (
+        error.response &&
+        error.response.status === 400 &&
         error.response.data === "Email is already registered"
       ) {
         alert("Email is already registered. Please use another email.");
@@ -61,6 +68,17 @@ const LoginPage = () => {
         console.error("Registration failed:", error.message);
       }
     }
+  };
+
+  const submitButtonStyle = {
+    backgroundColor: "#4CAF50",
+    color: "white",
+    padding: "15px 25px",
+    border: "none",
+    borderRadius: "15px",
+    cursor: "pointer",
+    marginBottom: "100px",
+    fontSize: "18px",
   };
 
   return (
@@ -181,17 +199,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-};
-
-const submitButtonStyle = {
-  backgroundColor: "#4CAF50",
-  color: "white",
-  padding: "15px 25px",
-  border: "none",
-  borderRadius: "15px",
-  cursor: "pointer",
-  marginBottom: "100px",
-  fontSize: "18px",
 };
 
 export default LoginPage;

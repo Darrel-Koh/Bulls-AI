@@ -4,6 +4,12 @@ import { db, bullsdb } from "../db/conn.mjs";
 
 const router = express.Router();
 
+// Password validation function
+const isStrongPassword = (password) => {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  return regex.test(password);
+};
+
 // Register a new user
 router.post("/", async (req, res) => {
   const { registerEmail, registerPassword, registerFirstName } = req.body;
@@ -23,14 +29,24 @@ router.post("/", async (req, res) => {
       return res.status(400).send("Email is already registered");
     }
 
+    // Check if the password meets the requirements
+    if (!isStrongPassword(registerPassword)) {
+      // Send 400 Bad Request status code and error message if password is weak
+      return res
+        .status(400)
+        .send(
+          "Password must have at least 8 characters, 1 capital letter, 1 small letter, and 1 integer."
+        );
+    }
+
     // Hash the password before storing it in the database
     const hashedPassword = await bcrypt.hash(registerPassword, 10);
 
     // If the email is not registered, insert the new user into the database
     const newUser = {
-      first_name: registerFirstName, // Change field name to first_name
+      first_name: registerFirstName,
       email: registerEmail,
-      password: hashedPassword, // Store hashed password
+      password: hashedPassword,
     };
 
     await bullsdb.collection("users").insertOne(newUser);
