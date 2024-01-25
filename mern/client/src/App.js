@@ -35,6 +35,7 @@ const App = () => {
         <Route path="/loginPage" element={<LoginPage />} />
         <Route path="/viewTickers" element={<ViewTickers />} />
         <Route path="/mainPage" element={<MainPage />} />
+        
 
       </Routes>
       </div>
