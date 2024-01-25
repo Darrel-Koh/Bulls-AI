@@ -8,6 +8,7 @@ import registrationRouter from "./routes/registration.mjs"; // Import the new re
 import { db, bullsdb } from "../server/db/conn.mjs";
 import glossary from "./routes/glossaryGet.mjs";
 import tickerpage from "./routes/tickerpageGet.mjs";
+import tickerListRouter from "./routes/addtickerlistGet.mjs";
 
 const PORT = 5050;
 const app = express();
@@ -20,6 +21,7 @@ app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter); // Use the registration router
 app.use("/my-ticker", tickerpage);
+app.use("/add-ticker", tickerListRouter);
 
 app.get("/db-test", async (req, res) => {
   try {

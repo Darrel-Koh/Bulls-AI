@@ -1,47 +1,49 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import AuthContext from './AuthContext'; // Import the AuthContext
+import { useNavigate } from 'react-router-dom';
+import AuthContext from './AuthContext';
 
 const MyTickerPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
-  const { userId } = useContext(AuthContext); // Get userId from the context
   const [tickerData, setTickerData] = useState([]);
+  const { userId } = useContext(AuthContext);
+  const navigate = useNavigate(); // Get navigate function from react-router-dom
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Ensure userId is available before making the API call
         if (!userId) {
-          // Clear selectedUser and tickerData when userId is null
           setSelectedUser(null);
           setTickerData([]);
           return;
         }
 
-        const response = await fetch(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
-        if (!response.ok) {
+        const response = await axios.get(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
+
+        if (!response.data) {
           throw new Error(`Failed to fetch user data: ${response.statusText}`);
         }
 
-        const userData = await response.json();
+        const userData = response.data;
         setSelectedUser(userData);
+
         if (userData.favList.length > 0) {
           setSelectedTab(userData.favList[0].list_name);
         }
 
-        // Fetch ticker data for each tickerId
         const tickerDataPromises = userData.favList
           .flatMap((list) => list.tickers)
           .map(async (tickerId) => {
             try {
-              const tickerResponse = await fetch(`http://localhost:5050/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
-              if (!tickerResponse.ok) {
+              const tickerResponse = await axios.get(`http://localhost:5050/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
+              if (!tickerResponse.data) {
                 throw new Error(`Failed to fetch ticker data: ${tickerResponse.statusText}`);
               }
 
-              const tickerData = await tickerResponse.json();
+              const tickerData = tickerResponse.data;
               console.log('tickerData:', tickerData);
               return {
                 tickerId,
@@ -53,9 +55,8 @@ const MyTickerPage = () => {
             }
           });
 
-        // Wait for all ticker data promises to resolve
         const tickerDataResults = await Promise.all(tickerDataPromises);
-        setTickerData(tickerDataResults.filter(Boolean)); // Filter out any null results
+        setTickerData(tickerDataResults.filter(Boolean));
       } catch (error) {
         setError(error.message);
       }
@@ -127,14 +128,9 @@ const MyTickerPage = () => {
     borderCollapse: 'collapse',
   };
 
-  // Ensure selectedUser is available before rendering
-  if (!selectedUser) {
-    return (
-      <div style={pageContainerStyle}>
-        <p>No user data available.</p>
-      </div>
-    );
-  }
+  const handleAddTickerClick = () => {
+    navigate('/add-ticker'); // Navigate to the Add Ticker page
+  };
 
   return (
     <div style={pageContainerStyle}>
@@ -170,7 +166,6 @@ const MyTickerPage = () => {
                   const tickerInfo = tickerData.find((data) => data && data.tickerId === tickerId);
 
                   if (!tickerInfo) {
-                    // Handle case where tickerData is not available yet
                     return null;
                   }
 
@@ -186,7 +181,7 @@ const MyTickerPage = () => {
         </tbody>
       </table>
 
-      <button onClick={() => console.log('Add Ticker List')} style={actionButtonStyle}>
+      <button onClick={handleAddTickerClick} style={actionButtonStyle}>
         Add Ticker List
       </button>
     </div>
