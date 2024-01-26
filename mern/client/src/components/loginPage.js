@@ -70,6 +70,22 @@ const LoginPage = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    const email = prompt("Enter your email to reset password:");
+
+    if (email) {
+      try {
+        await axios.post("http://localhost:5050/forget-password", {
+          email,
+        });
+        alert("Password reset initiated. Check your email for instructions.");
+      } catch (error) {
+        console.error("Password reset failed:", error.message);
+        alert("Password reset failed. Please try again later.");
+      }
+    }
+  };
+
   const submitButtonStyle = {
     backgroundColor: "#4CAF50",
     color: "white",
@@ -142,6 +158,9 @@ const LoginPage = () => {
                 onChange={(e) => setLoginPassword(e.target.value)}
               />
               <button type="submit">Login</button>
+              <button type="button" onClick={handleForgotPassword}>
+                Forgot Password?
+              </button>
             </form>
           )}
           {activeTab === "register" && (

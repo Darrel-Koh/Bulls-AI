@@ -4,7 +4,8 @@ import "./loadEnvironment.mjs";
 import records from "./routes/record.mjs";
 import user from "./routes/record2.mjs";
 import loginRouter from "./routes/login.mjs";
-import registrationRouter from "./routes/registration.mjs"; // Import the new registration router
+import registrationRouter from "./routes/registration.mjs";
+import forgetPasswordRouter from "./routes/forgetPassword.mjs"; // Import the new forgetPassword router
 import { db, bullsdb } from "../server/db/conn.mjs";
 import glossary from "./routes/glossaryGet.mjs";
 
@@ -17,7 +18,8 @@ app.use(express.json());
 app.use("/record", records);
 app.use("/user", user);
 app.use("/login", loginRouter);
-app.use("/register", registrationRouter); // Use the registration router
+app.use("/register", registrationRouter);
+app.use("/forget-password", forgetPasswordRouter); // Use the forgetPassword router
 
 app.get("/db-test", async (req, res) => {
   try {
