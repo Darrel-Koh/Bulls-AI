@@ -1,6 +1,7 @@
 import express from "express";
 import { bullsdb } from "../db/conn.mjs";
 import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
 
 const router = express.Router();
 
@@ -26,7 +27,8 @@ router.post("/", async (req, res) => {
       .collection("users")
       .updateOne({ email }, { $set: { password: hashedTempPassword } });
 
-    // TODO: Send the temporary password to the user via email or any other method
+    // Send the temporary password to the user via email
+    await sendEmail(email, tempPassword);
 
     res.status(200).send("Password reset successful");
   } catch (error) {
@@ -34,5 +36,25 @@ router.post("/", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// Function to send email using Nodemailer
+const sendEmail = async (to, tempPassword) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "bullsai001@gmail.com",
+      pass: "Applebanana!",
+    },
+  });
+
+  const mailOptions = {
+    from: "bullsai001@gmail.com",
+    to,
+    subject: "Password Reset",
+    text: `Your temporary password is: ${tempPassword}`,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
 
 export default router;
