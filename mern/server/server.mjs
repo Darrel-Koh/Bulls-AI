@@ -7,6 +7,7 @@ import loginRouter from "./routes/login.mjs";
 import registrationRouter from "./routes/registration.mjs"; // Import the new registration router
 import { db, bullsdb } from "../server/db/conn.mjs";
 import glossary from "./routes/glossaryGet.mjs";
+import modelsRouter from "./routes/models.mjs";
 
 const PORT = 5050;
 const app = express();
@@ -18,6 +19,8 @@ app.use("/record", records);
 app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter); // Use the registration router
+app.use("/model", modelsRouter);
+
 
 app.get("/db-test", async (req, res) => {
   try {
