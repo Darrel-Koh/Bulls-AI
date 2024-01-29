@@ -10,58 +10,58 @@ const MyTickerPage = () => {
   const [error, setError] = useState(null);
   const [tickerData, setTickerData] = useState([]);
   const { userId } = useContext(AuthContext);
-  const navigate = useNavigate(); // Get navigate function from react-router-dom
+  const navigate = useNavigate();
+
+  const fetchUserData = async () => {
+    try {
+      if (!userId) {
+        setSelectedUser(null);
+        setTickerData([]);
+        return;
+      }
+
+      const response = await axios.get(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
+
+      if (!response.data) {
+        throw new Error(`Failed to fetch user data: ${response.statusText}`);
+      }
+
+      const userData = response.data;
+      setSelectedUser(userData);
+
+      if (userData.favList.length > 0) {
+        setSelectedTab(userData.favList[0].list_name);
+      }
+
+      const tickerDataPromises = userData.favList
+        .flatMap((list) => list.tickers)
+        .map(async (tickerId) => {
+          try {
+            const tickerResponse = await axios.get(`http://localhost:5050/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
+            if (!tickerResponse.data) {
+              throw new Error(`Failed to fetch ticker data: ${tickerResponse.statusText}`);
+            }
+
+            const tickerData = tickerResponse.data;
+            console.log('tickerData:', tickerData);
+            return {
+              tickerId,
+              tickerData,
+            };
+          } catch (error) {
+            console.error('Error fetching ticker data:', error);
+            return null;
+          }
+        });
+
+      const tickerDataResults = await Promise.all(tickerDataPromises);
+      setTickerData(tickerDataResults.filter(Boolean));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        if (!userId) {
-          setSelectedUser(null);
-          setTickerData([]);
-          return;
-        }
-
-        const response = await axios.get(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
-
-        if (!response.data) {
-          throw new Error(`Failed to fetch user data: ${response.statusText}`);
-        }
-
-        const userData = response.data;
-        setSelectedUser(userData);
-
-        if (userData.favList.length > 0) {
-          setSelectedTab(userData.favList[0].list_name);
-        }
-
-        const tickerDataPromises = userData.favList
-          .flatMap((list) => list.tickers)
-          .map(async (tickerId) => {
-            try {
-              const tickerResponse = await axios.get(`http://localhost:5050/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
-              if (!tickerResponse.data) {
-                throw new Error(`Failed to fetch ticker data: ${tickerResponse.statusText}`);
-              }
-
-              const tickerData = tickerResponse.data;
-              console.log('tickerData:', tickerData);
-              return {
-                tickerId,
-                tickerData,
-              };
-            } catch (error) {
-              console.error('Error fetching ticker data:', error);
-              return null;
-            }
-          });
-
-        const tickerDataResults = await Promise.all(tickerDataPromises);
-        setTickerData(tickerDataResults.filter(Boolean));
-      } catch (error) {
-        setError(error.message);
-      }
-    };
-
     fetchUserData();
   }, [userId]);
 
@@ -129,7 +129,26 @@ const MyTickerPage = () => {
   };
 
   const handleAddTickerClick = () => {
-    navigate('/add-ticker'); // Navigate to the Add Ticker page
+    navigate('/add-ticker');
+  };
+
+  const handleDeleteTickerList = async () => {
+    try {
+      if (!selectedTab) {
+        throw new Error('No ticker list selected for deletion');
+      }
+
+      const response = await axios.delete(`http://localhost:5050/delete-ticker/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`);
+
+      if (!response.data) {
+        throw new Error(`Failed to delete ticker list: ${response.statusText}`);
+      }
+
+      // Call the fetchUserData function after the deletion
+      fetchUserData();
+    } catch (error) {
+      console.error('Error deleting ticker list:', error.message);
+    }
   };
 
   return (
@@ -183,6 +202,9 @@ const MyTickerPage = () => {
 
       <button onClick={handleAddTickerClick} style={actionButtonStyle}>
         Add Ticker List
+      </button>
+      <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
+        Delete List
       </button>
     </div>
   );
