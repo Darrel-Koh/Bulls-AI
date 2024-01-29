@@ -6,9 +6,11 @@ import fs from 'fs';
 import * as tf from '@tensorflow/tfjs';
 import { exec } from 'child_process';
 import fetch from 'node-fetch';
+import writeModelFiles from "../functions/writeModelFiles.js";
 
 const router = express.Router();
 global.fetch = fetch;
+// const writeModelFiles = require('../functions/writeModelFiles.js');
 
 
 router.get('/', async (req, res) => {
@@ -26,45 +28,34 @@ router.get('/:ticker', async (req, res) => {
     res.status(404).send('No model found');
     return;
   }
-  // Parse the model JSON
-  const modelJson = JSON.parse(Buffer.from(doc.model_json.buffer, 'base64').toString());
 
-  // Modify the paths value in the weightsManifest array
-  modelJson.weightsManifest.forEach((manifestItem, index) => {
-    manifestItem.paths = manifestItem.paths.map((path) => `${req.params.ticker}_weights_${index}.bin`);
-  });
-
-  // Write the modified model JSON to a file
-  const modelJsonPath = `./tfjs_model/${req.params.ticker}_model.json`;
-  fs.writeFileSync(modelJsonPath, JSON.stringify(modelJson));
-
-  // Write each weights data to a separate file
-  doc.model_weights.forEach((weightData, index) => {
-    const weightPath = `./tfjs_model/${req.params.ticker}_weights_${index}.bin`;
-    fs.writeFileSync(weightPath, weightData.buffer);
-  });
-
-   // Assuming you have a server that serves the model files at the following URL
-   const modelPath = `./tfjs_model/${req.params.ticker}_model.json`;
-   const modelUrl = `http://localhost:5050/tfjs_model/${req.params.ticker}_model.json`;
-   
- 
-   // Check if the file exists
-   if (!fs.existsSync(modelPath)) {
-     res.status(404).send('Model file not found');
-   } else{
-      console.log("model file found");
-   }
-  // Assuming you have a server that serves the model files at the following URL
-  // const modelUrl = `http://localhost:5050/mern/server/tfjs_models/${req.params.ticker}_model.json`;
+  const modelFiles = await writeModelFiles(req.params.ticker, doc);
+  console.log(modelFiles);
   
+   // Assuming you have a server that serves the model files at the following URL
+   const modelPath = modelFiles.modelJsonPath;;
+   const modelUrl = `http://localhost:5050/${modelFiles.modelJsonPath}`;
+ 
+  // Check if the file exists
+  try {
+    await fs.promises.access(modelPath);
+    console.log("Model file found");
+  } catch (err) {
+    res.status(404).send('Model file not found');
+  }
 
   try {
     const model = await tf.loadLayersModel(modelUrl);
-    res.send('Model loaded successfully');
+    res.send({ status: 'success', message: 'Model loaded successfully' });
+    model.summary();
+
+
+
+
+
   } catch (error) {
     console.error(error);
-    res.status(500).send('Error loading model');
+    res.status(500).send({ status: 'error', message: error.message });
   }
 });
 
