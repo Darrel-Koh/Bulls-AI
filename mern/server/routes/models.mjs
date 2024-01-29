@@ -26,6 +26,24 @@ router.get('/:ticker', async (req, res) => {
     res.status(404).send('No model found');
     return;
   }
+  // Parse the model JSON
+  const modelJson = JSON.parse(Buffer.from(doc.model_json.buffer, 'base64').toString());
+
+  // Modify the paths value in the weightsManifest array
+  modelJson.weightsManifest.forEach((manifestItem, index) => {
+    manifestItem.paths = manifestItem.paths.map((path) => `${req.params.ticker}_weights_${index}.bin`);
+  });
+
+  // Write the modified model JSON to a file
+  const modelJsonPath = `./tfjs_model/${req.params.ticker}_model.json`;
+  fs.writeFileSync(modelJsonPath, JSON.stringify(modelJson));
+
+  // Write each weights data to a separate file
+  doc.model_weights.forEach((weightData, index) => {
+    const weightPath = `./tfjs_model/${req.params.ticker}_weights_${index}.bin`;
+    fs.writeFileSync(weightPath, weightData.buffer);
+  });
+
    // Assuming you have a server that serves the model files at the following URL
    const modelPath = `./tfjs_model/${req.params.ticker}_model.json`;
    const modelUrl = `http://localhost:5050/tfjs_model/${req.params.ticker}_model.json`;
@@ -49,8 +67,5 @@ router.get('/:ticker', async (req, res) => {
     res.status(500).send('Error loading model');
   }
 });
-
-// const model = await tf.loadLayersModel(`file://${modelJsonPath}`);
-// });
 
 export default router;
