@@ -47,6 +47,7 @@ router.post("/", async (req, res) => {
       first_name: registerFirstName,
       email: registerEmail,
       password: hashedPassword,
+      favorite_lists: [], // Initialize with an empty favorite_lists array
     };
 
     await bullsdb.collection("users").insertOne(newUser);
