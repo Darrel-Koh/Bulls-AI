@@ -61,10 +61,10 @@ router.get('/:ticker', async (req, res) => {
     const model = await tf.loadLayersModel(modelUrl);
     model.summary();
     // Prepare input data
-    
+
     // Get the model prediction
-    const prediction = model.predict(input);
-    console.log(prediction);
+    // const prediction = model.predict(input);
+    // console.log(prediction);
   
     res.send({ status: 'success', message: 'Model loaded and prediction made successfully' });
   } catch (error) {
