@@ -18,6 +18,19 @@ router.get('/', async (req, res) => {
   const docs = await collection.find().toArray();
   res.send(docs);
 });
+/* 
+
+This route will be used to load the model in the browser.
+
+1. Fetching the model data from the database.
+2. Writing the model files to disk.
+3. Checking if the model file exists.
+4. Loading the model using TensorFlow.js.
+5. Sending a response indicating that the model was loaded successfully. 
+
+Next is predicting the price of a stock using the loaded model.
+
+*/
 
 router.get('/:ticker', async (req, res) => {
   console.log(req.params);  // Log the req.params object
@@ -46,13 +59,14 @@ router.get('/:ticker', async (req, res) => {
 
   try {
     const model = await tf.loadLayersModel(modelUrl);
-    res.send({ status: 'success', message: 'Model loaded successfully' });
     model.summary();
-
-
-
-
-
+    // Prepare input data
+    
+    // Get the model prediction
+    const prediction = model.predict(input);
+    console.log(prediction);
+  
+    res.send({ status: 'success', message: 'Model loaded and prediction made successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).send({ status: 'error', message: error.message });
