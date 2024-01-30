@@ -268,7 +268,6 @@ const MyTickerPage = () => {
       <table style={tableStyle}>
         <thead>
           <tr>
-            <th style={tableHeaderStyle}>ID</th>
             <th style={tableHeaderStyle}>Trading Name</th>
             <th style={tableHeaderStyle}>Symbol</th>
             <th style={tableHeaderStyle}>Latest Transaction Date</th>
@@ -298,7 +297,6 @@ const MyTickerPage = () => {
 
                   return (
                     <tr key={index}>
-                      <td style={tableCellStyle}>{tickerId}</td>
                       <td style={tableCellStyle}>{tickerInfo.tickerData.trading_name}</td>
                       <td style={tableCellStyle}>{tickerInfo.tickerData.symbol}</td>
                       <td style={tableCellStyle}>{latestTransaction.Date}</td>
