@@ -15,6 +15,10 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+import tickerpage from "./routes/tickerpageGet.mjs";
+import tickerListRouter from "./routes/addtickerlistGet.mjs";
+import deletetickerListRouter from "./routes/deletetickerlistGet.mjs"
+import deleteTicker from "./routes/deleteTicker.mjs"
 import mainpage from "./routes/mainpage.mjs";
 import searchRoute from "./routes/searchRoute.mjs";
 import compression from 'compression';
@@ -40,6 +44,12 @@ app.use("/api/data", mainpage);
 app.use("/api/search", mainpage);
 
 
+
+
+app.use("/my-ticker", tickerpage);
+app.use("/add-tickerlist", tickerListRouter);
+app.use("/delete-tickerlist", deletetickerListRouter);
+app.use("/delete-tickers",deleteTicker)
 
 app.get("/db-test", async (req, res) => {
   try {

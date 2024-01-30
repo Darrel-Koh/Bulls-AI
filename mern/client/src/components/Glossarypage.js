@@ -29,45 +29,89 @@ export default function GlossaryPage() {
   };
 
   return (
-    <div style={containerStyle}>
-      <div style={listStyle}>
-        {terms.map((term) => (
-          <div
-            key={term.displayedTerm}
-            style={{ ...termStyle, cursor: 'pointer' }}
-            onClick={() => handleTermClick(term.term)}
-          >
-            {term.term}
-          </div>
-        ))}
+    <div>
+      <div style={headerStyle}>
+        <div style={headerBoxStyle}>
+          <h1>Glossary</h1>
+        </div>
       </div>
-      <div style={contentStyle}>
-        {selectedTerm ? (
-          <div>
-            <h2>{terms.find((item) => item.term === selectedTerm)?.name}</h2>
-            <p>{terms.find((item) => item.term === selectedTerm)?.desc}</p>
-          </div>
-        ) : (
-          <p>Select a term to view its definition.</p>
-        )}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div style={containerStyle}>
+        <div style={termsContainerStyle}>
+          {terms.map((term) => (
+            <div
+              key={term.term}
+              style={{ ...termBoxStyle, cursor: 'pointer' }}
+              onClick={() => handleTermClick(term.term)}
+            >
+              {term.term}
+            </div>
+          ))}
+        </div>
+        <div style={contentContainerStyle}>
+          {selectedTerm ? (
+            <div style={contentBoxStyle}>
+              <h2>{terms.find((item) => item.term === selectedTerm)?.name}</h2>
+              <p>{terms.find((item) => item.term === selectedTerm)?.desc}</p>
+            </div>
+          ) : (
+            <p>Select a term to view its definition.</p>
+          )}
+          {error && <p style={{ color: 'red' }}>{error}</p>}
+        </div>
       </div>
     </div>
   );
 }
 
-const containerStyle = {
-  display: 'flex',
+const headerStyle = {
+  textAlign: 'center',
 };
 
-const listStyle = {
+const headerBoxStyle = {
+  marginBottom: '20px',
+  padding: '20px',
+  borderRadius: '8px',
+  backgroundColor: '#333',
+  color: '#fff',
+  border: '2px solid black', // Black outline
+  transition: 'background-color 0.3s ease',
+};
+
+const containerStyle = {
+  display: 'flex',
+  fontFamily: 'Arial, sans-serif',
+};
+
+const termsContainerStyle = {
   marginRight: '20px',
 };
 
-const termStyle = {
+const termBoxStyle = {
   marginBottom: '10px',
+  padding: '10px',
+  borderRadius: '8px',
+  backgroundColor: '#f0f0f0',
+  border: '2px solid black', // Black outline
+  transition: 'background-color 0.3s ease',
 };
 
-const contentStyle = {
+const contentContainerStyle = {
   flex: 1,
+};
+
+const contentBoxStyle = {
+  padding: '20px',
+  borderRadius: '8px',
+  backgroundColor: '#f0f0f0',
+  border: '2px solid black', // Black outline
+};
+
+export {
+  headerStyle,
+  headerBoxStyle,
+  containerStyle,
+  termsContainerStyle,
+  termBoxStyle,
+  contentContainerStyle,
+  contentBoxStyle,
 };
