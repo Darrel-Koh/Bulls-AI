@@ -1,14 +1,16 @@
 // mainPage.js
 //mainPage.js
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const MainPage = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalPages, setTotalPages] = useState();
@@ -75,7 +77,7 @@ const MainPage = () => {
       // Navigate to the ViewTickers page with search results and search term
       navigate('/viewTickers', { state: { searchResults: searchData, searchTerm: trimmedSearchTerm } });
     } catch (error) {
-      console.error('Error searching data:', error);
+      console.error("Error searching data:", error);
     }
   };
   
