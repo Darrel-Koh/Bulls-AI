@@ -32,17 +32,9 @@ const LoginPage = () => {
       });
 
       console.log("Login successful. Response:", response.data);
-      setLoggedIn(true);
       navigate("/mainPage");
-      const response = await axios.post("http://localhost:5050/login", {
-        email: loginEmail,
-        password: loginPassword,
-      });
-
-      console.log("Login successful. Response:", response.data);
-
       setUserId(response.data._id);
-      setUserName(response.data.first_name);
+      setUserName(response.data.username);
 
       navigate("/mainPage");
     } catch (error) {
@@ -54,7 +46,7 @@ const LoginPage = () => {
     event.preventDefault();
 
     try {
-      if (!registerEmail || !registerPassword || !registerFirstName) {
+      if (!registerEmail || !registerPassword || !registerUsername) {
         throw new Error("Please fill in all the registration fields.");
       }
 
