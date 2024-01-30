@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [loginPassword, setLoginPassword] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
-  const [registerFirstName, setRegisterFirstName] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
   const [registerAccountType, setRegisterAccountType] = useState(""); // Added state for account type
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false);
@@ -43,7 +43,7 @@ const LoginPage = () => {
       const response = await axios.post("http://localhost:5050/register", {
         registerEmail,
         registerPassword,
-        registerFirstName,
+        registerUsername,
         registerAccountType,
       });
 
@@ -51,7 +51,7 @@ const LoginPage = () => {
 
       setRegisterEmail("");
       setRegisterPassword("");
-      setRegisterFirstName("");
+      setRegisterUsername("");
       setRegisterAccountType("");
       setActiveTab("login");
     } catch (error) {
@@ -175,7 +175,7 @@ const LoginPage = () => {
                 <label htmlFor="registerEmail">Email Address:</label>
                 <input
                   type="text"
-                  id="registerUsername"
+                  id="registerEmail"
                   value={registerEmail}
                   onChange={(e) => setRegisterEmail(e.target.value)}
                   style={{ width: "100%", padding: "8px" }}
@@ -192,12 +192,12 @@ const LoginPage = () => {
                 />
               </div>
               <div style={{ marginBottom: "15px" }}>
-                <label htmlFor="registerFirstName">First Name:</label>
+                <label htmlFor="registerUsername">Username:</label>
                 <input
                   type="text"
-                  id="registerFirstName"
-                  value={registerFirstName}
-                  onChange={(e) => setRegisterFirstName(e.target.value)}
+                  id="registerUsername"
+                  value={registerUsername}
+                  onChange={(e) => setRegisterUsername(e.target.value)}
                   style={{ width: "100%", padding: "8px" }}
                 />
               </div>
