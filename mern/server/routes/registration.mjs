@@ -15,12 +15,12 @@ router.post("/", async (req, res) => {
   const {
     registerEmail,
     registerPassword,
-    registerFirstName,
+    registerUsername, // Change from 'registerFirstName' to 'registerUsername'
     registerAccountType,
   } = req.body;
 
   console.log(
-    `Received registration request: ${registerEmail}, ${registerFirstName}, ${registerAccountType}`
+    `Received registration request: ${registerEmail}, ${registerUsername}, ${registerAccountType}`
   );
 
   try {
@@ -49,14 +49,14 @@ router.post("/", async (req, res) => {
 
     // If the email is not registered, insert the new user into the database
     const newUser = {
-      first_name: registerFirstName,
+      username: registerUsername, // Change field name to 'username'
       email: registerEmail,
       password: hashedPassword,
       account_type: registerAccountType,
       favList: [
         {
-          list_name: "Favourite", // Default list name
-          tickers: [], // Empty array for tickers
+          list_name: "Favourite",
+          tickers: [],
         },
       ],
     };
