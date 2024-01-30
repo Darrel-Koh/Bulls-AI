@@ -14,6 +14,10 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+import tickerpage from "./routes/tickerpageGet.mjs";
+import tickerListRouter from "./routes/addtickerlistGet.mjs";
+import deletetickerListRouter from "./routes/deletetickerlistGet.mjs"
+import deleteTicker from "./routes/deleteTicker.mjs"
 
 const PORT = 5050;
 const app = express();
@@ -31,6 +35,10 @@ app.use("/model", modelsRouter);
 app.use('/tfjs_model', express.static(path.join(__dirname, 'tfjs_model')));
 
 
+app.use("/my-ticker", tickerpage);
+app.use("/add-tickerlist", tickerListRouter);
+app.use("/delete-tickerlist", deletetickerListRouter);
+app.use("/delete-tickers",deleteTicker)
 
 app.get("/db-test", async (req, res) => {
   try {
