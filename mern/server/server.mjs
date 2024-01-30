@@ -9,6 +9,13 @@ import forgetPasswordRouter from "./routes/forgetPassword.mjs";
 import changePasswordRouter from "./routes/changepassword.mjs"; // Import the new changePassword router
 import { db, bullsdb } from "../server/db/conn.mjs";
 import glossary from "./routes/glossaryGet.mjs";
+import modelsRouter from "./routes/models.mjs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const PORT = 5050;
 const app = express();
@@ -22,6 +29,10 @@ app.use("/login", loginRouter);
 app.use("/register", registrationRouter);
 app.use("/forget-password", forgetPasswordRouter);
 app.use("/change-password", changePasswordRouter); // Use the changePassword router
+app.use("/model", modelsRouter);
+
+// Serve static files from the "tfjs_models" directory
+app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
 app.get("/db-test", async (req, res) => {
   try {
