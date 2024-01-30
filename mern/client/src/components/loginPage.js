@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
-  const [registerAccountType, setRegisterAccountType] = useState("Basic");
+  const [registerAccountType, setRegisterAccountType] = useState(""); // Added state for account type
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -52,7 +52,7 @@ const LoginPage = () => {
       setRegisterEmail("");
       setRegisterPassword("");
       setRegisterFirstName("");
-      setRegisterAccountType("Basic");
+      setRegisterAccountType("");
       setActiveTab("login");
     } catch (error) {
       if (
@@ -60,7 +60,7 @@ const LoginPage = () => {
         error.response.status === 400 &&
         error.response.data.startsWith("Password")
       ) {
-        alert(error.response.data);
+        alert(error.response.data); // Show password requirements alert
       } else if (
         error.response &&
         error.response.status === 400 &&
@@ -210,25 +210,14 @@ const LoginPage = () => {
                   style={{ width: "100%", padding: "8px" }}
                 >
                   <option value="Basic">Basic</option>
-                  <option value="Premium">Premium</option>
+                  <option value="Professional">Professional</option>
                 </select>
               </div>
-              <div>
-                <button type="submit" style={submitButtonStyle}>
-                  Register
-                </button>
-              </div>
+              <button type="submit" style={submitButtonStyle}>
+                Register
+              </button>
             </form>
           )}
-          <footer
-            style={{
-              marginTop: "auto",
-              padding: "10px",
-              backgroundColor: "#f4f4f4",
-            }}
-          >
-            <p>&copy; 2023 Bulls Ai. All rights reserved.</p>
-          </footer>
         </div>
       </div>
     </div>

@@ -52,8 +52,13 @@ router.post("/", async (req, res) => {
       first_name: registerFirstName,
       email: registerEmail,
       password: hashedPassword,
-      account_type: registerAccountType, // Add the account_type field
-      favorite_lists: [],
+      account_type: registerAccountType,
+      favList: [
+        {
+          list_name: "Favourite", // Default list name
+          tickers: [], // Empty array for tickers
+        },
+      ],
     };
 
     await bullsdb.collection("users").insertOne(newUser);
