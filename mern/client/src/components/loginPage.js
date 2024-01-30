@@ -44,6 +44,14 @@ const LoginPage = () => {
     try {
       await axios.post('http://localhost:5050/register', { registerEmail, registerPassword, registerFirstName });
       console.log('Registration successful');
+
+      // reset the register form
+      setRegisterEmail('');
+      setRegisterPassword('');
+      setRegisterFirstName('');
+      // Switch to the login form
+      setActiveTab('login');
+
     } catch (error) {
       console.error('Registration failed:', error.message);
     }
