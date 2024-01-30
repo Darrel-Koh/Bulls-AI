@@ -12,11 +12,16 @@ const isStrongPassword = (password) => {
 
 // Register a new user
 router.post("/", async (req, res) => {
-  const { registerEmail, registerPassword, registerFirstName } = req.body;
+  const {
+    registerEmail,
+    registerPassword,
+    registerFirstName,
+    registerAccountType,
+  } = req.body;
 
   console.log(
-    `Received registration request: ${registerEmail}, ${registerFirstName}`
-  ); // Log received registration request
+    `Received registration request: ${registerEmail}, ${registerFirstName}, ${registerAccountType}`
+  );
 
   try {
     // Check if the email is already registered
@@ -31,7 +36,7 @@ router.post("/", async (req, res) => {
 
     // Check if the password meets the requirements
     if (!isStrongPassword(registerPassword)) {
-      // Send 400 Bad Request status code and error message if password is weak
+      // Send 400 Bad Request status code and error message if the password is weak
       return res
         .status(400)
         .send(
@@ -47,7 +52,8 @@ router.post("/", async (req, res) => {
       first_name: registerFirstName,
       email: registerEmail,
       password: hashedPassword,
-      favorite_lists: [], // Initialize with an empty favorite_lists array
+      account_type: registerAccountType, // Add the account_type field
+      favorite_lists: [],
     };
 
     await bullsdb.collection("users").insertOne(newUser);

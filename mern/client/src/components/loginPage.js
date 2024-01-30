@@ -10,6 +10,7 @@ const LoginPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
+  const [registerAccountType, setRegisterAccountType] = useState("Basic");
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -43,6 +44,7 @@ const LoginPage = () => {
         registerEmail,
         registerPassword,
         registerFirstName,
+        registerAccountType,
       });
 
       console.log("Registration successful");
@@ -50,6 +52,7 @@ const LoginPage = () => {
       setRegisterEmail("");
       setRegisterPassword("");
       setRegisterFirstName("");
+      setRegisterAccountType("Basic");
       setActiveTab("login");
     } catch (error) {
       if (
@@ -57,7 +60,7 @@ const LoginPage = () => {
         error.response.status === 400 &&
         error.response.data.startsWith("Password")
       ) {
-        alert(error.response.data); // Show password requirements alert
+        alert(error.response.data);
       } else if (
         error.response &&
         error.response.status === 400 &&
@@ -197,6 +200,18 @@ const LoginPage = () => {
                   onChange={(e) => setRegisterFirstName(e.target.value)}
                   style={{ width: "100%", padding: "8px" }}
                 />
+              </div>
+              <div style={{ marginBottom: "15px" }}>
+                <label htmlFor="registerAccountType">Account Type:</label>
+                <select
+                  id="registerAccountType"
+                  value={registerAccountType}
+                  onChange={(e) => setRegisterAccountType(e.target.value)}
+                  style={{ width: "100%", padding: "8px" }}
+                >
+                  <option value="Basic">Basic</option>
+                  <option value="Premium">Premium</option>
+                </select>
               </div>
               <div>
                 <button type="submit" style={submitButtonStyle}>
