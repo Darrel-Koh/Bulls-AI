@@ -10,6 +10,7 @@ import glossary from "./routes/glossaryGet.mjs";
 import tickerpage from "./routes/tickerpageGet.mjs";
 import tickerListRouter from "./routes/addtickerlistGet.mjs";
 import deletetickerListRouter from "./routes/deletetickerlistGet.mjs"
+import deleteTicker from "./routes/deleteTicker.mjs"
 
 const PORT = 5050;
 const app = express();
@@ -22,8 +23,9 @@ app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter); // Use the registration router
 app.use("/my-ticker", tickerpage);
-app.use("/add-ticker", tickerListRouter);
-app.use("/delete-ticker", deletetickerListRouter);
+app.use("/add-tickerlist", tickerListRouter);
+app.use("/delete-tickerlist", deletetickerListRouter);
+app.use("/delete-tickers",deleteTicker)
 
 app.get("/db-test", async (req, res) => {
   try {

@@ -1,8 +1,8 @@
-//loginPage.js
+// loginPage.js
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import AuthContext from '../components/AuthContext'; // Import AuthContext
+import AuthContext from '../components/AuthContext';
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -12,15 +12,13 @@ const LoginPage = () => {
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
   const navigate = useNavigate();
-  const { setUserId, setUserName } = useContext(AuthContext); // Get setUserId from the context
-
+  const { setUserId, setUserName } = useContext(AuthContext);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    console.log(`Email: ${loginEmail}, Password: ${loginPassword}`); // Log email and password
+    console.log(`Email: ${loginEmail}, Password: ${loginPassword}`);
 
-    // Check if email or password is empty
     if (!loginEmail || !loginPassword) {
       console.error("Email or password cannot be empty");
       return;
@@ -34,23 +32,19 @@ const LoginPage = () => {
 
       console.log("Login successful. Response:", response.data);
 
-      // Set the user ID in the context upon successful login
-      setUserId(response.data._id); // Assuming the userId is returned in the response data
-      setUserName(response.data.first_name); // Assuming the userId is returned in the response data
+      setUserId(response.data._id);
+      setUserName(response.data.first_name);
 
-      // Continue with your existing logic
       navigate("/mainPage");
     } catch (error) {
       console.error("Login failed:", error.message);
     }
   };
 
-
   const handleRegister = async (event) => {
     event.preventDefault();
 
     try {
-      // Check if any of the registration inputs are empty
       if (!registerEmail || !registerPassword || !registerFirstName) {
         throw new Error('Please fill in all the registration fields.');
       }
@@ -58,12 +52,11 @@ const LoginPage = () => {
       await axios.post('http://localhost:5050/register', { registerEmail, registerPassword, registerFirstName });
       window.alert('Registration successful');
 
-      // reset the register form
       setRegisterEmail('');
       setRegisterPassword('');
       setRegisterFirstName('');
-      // Switch to the login form
       setActiveTab('login');
+      navigate("/"); // Navigate to the root ("/") when switching to register form
 
     } catch (error) {
       window.alert(`Registration failed: ${error.message}`);
@@ -71,8 +64,8 @@ const LoginPage = () => {
   };
 
   const handleRegisterButton = () => {
-    // Switch to the register form
     setActiveTab("register");
+    navigate("/"); // Navigate to the root ("/") when switching to register form
   };
 
   return (
@@ -128,7 +121,7 @@ const LoginPage = () => {
                 placeholder="Email"
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
-              /> 
+              />
               <input
                 type="password"
                 placeholder="Password"

@@ -1,4 +1,3 @@
-// header.js
 import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../components/AuthContext';
@@ -27,7 +26,7 @@ const roundedButtonStyle = {
 const dropdownStyle = {
   position: 'absolute',
   top: 'calc(100% + 10px)',
-  right: 0, // Adjust the position to the right
+  right: 0,
   zIndex: '1',
   display: 'flex',
   flexDirection: 'column',
@@ -41,7 +40,7 @@ const dropdownItemStyle = {
 };
 
 const arrowStyle = {
-  marginLeft: '5px',  // Adjust the margin to separate the arrow from the text
+  marginLeft: '5px',
   transform: 'rotate(180deg)',
   transition: 'transform 0.3s ease',
 };
@@ -70,17 +69,40 @@ const Header = () => {
   const { userId, userName, setUserId, setUserName } = authContext || {};
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [loading, setLoading] = useState(true); // New state for loading status
+  const [isLoggedOut, setIsLoggedOut] = useState(false); // New state for logout status
   const dropdownRef = useRef(null);
 
-  const toggleDropdown = () => {
-    setDropdownVisible((prevVisible) => !prevVisible);
-  };
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      const storedUserId = localStorage.getItem('userId');
+      const storedUserName = localStorage.getItem('userName');
 
-  const isComponentMounted = useRef(true);
+      if (storedUserId && storedUserName) {
+        setUserId(storedUserId);
+        setUserName(storedUserName);
+      }
+
+      // Set loading to false once authentication check is complete
+      setLoading(false);
+    };
+
+    checkAuthentication();
+  }, [setUserId, setUserName]);
+
+  useEffect(() => {
+    if (!userId && !loading) {
+      // Navigate to default route only if not authenticated and loading is false
+      navigate('/');
+      setIsLoggedOut(true); // Set logout status to true
+    } else {
+      setIsLoggedOut(false); // Set logout status to false
+    }
+  }, [userId, loading, navigate]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && isComponentMounted.current) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownVisible(false);
       }
     };
@@ -89,39 +111,43 @@ const Header = () => {
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
-      isComponentMounted.current = false;
     };
-  }, []);
+  }, [dropdownRef]);
+
+  useEffect(() => {
+    if (!userId) {
+      setDropdownVisible(false);
+    } else {
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('userName', userName);
+    }
+  }, [userId, userName]);
+
+  const toggleDropdown = () => {
+    setDropdownVisible((prevVisible) => !prevVisible);
+  };
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
 
     if (confirmLogout) {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userName');
+
       setUserId(null);
       setUserName('');
-      setDropdownVisible(false); // Close the dropdown on logout
+      setDropdownVisible(false);
+
+      navigate('/');
     }
   };
-
-  useEffect(() => {
-    return () => {
-      isComponentMounted.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!userId) {
-      navigate('/');
-      setDropdownVisible(false); // Close the dropdown on navigation
-    }
-  }, [userId, navigate]);
 
   const handleDropdownOptionClick = () => {
-    setDropdownVisible(false); // Close the dropdown when an option is clicked
+    setDropdownVisible(false);
   };
 
-  if (!userId) {
-    // Render nothing or a loading state if needed
+  if (loading || isLoggedOut) {
+    // You can show a loading indicator or null during the initial loading phase or after logout
     return null;
   }
 
