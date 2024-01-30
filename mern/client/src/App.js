@@ -9,6 +9,7 @@ import Header from "./components/header";
 import GlossaryPage from "./components/Glossarypage";
 import MyTickerPage from "./components/mytickerpage";
 import AddTickerPage from "./components/addtickerpage";
+import ViewTickers from './components/viewTickers';
 import Create from "./components/create2";
 import LoginPage from "./components/loginPage";
 import MainPage from "./components/mainPage";
@@ -34,10 +35,12 @@ const App = () => {
             <Route path="/glossary" element={<GlossaryPage />} />
             <Route path="/my-ticker" element={<MyTickerPage />} />
             <Route path="/add-ticker" element={<AddTickerPage />} />
-            <Route path="/recordList" element={<UserList />} />
-            <Route path="/mainPage" element={<MainPage />} />
+            <Route path="/recordListPage" element={<UserList />} />
+            <Route path="/viewTickers" element={<ViewTickers />} />
+        <Route path="/mainPage" element={<MainPage />} />
             <Route path="/change-password" element={<ChangePassword />} />{" "}
-            {/* Add this line */}
+            {/* Add this line */}        
+
           </Routes>
         </div>
       </AuthContext.Provider>

@@ -1,3 +1,4 @@
+// server.mjs
 import express from "express";
 import cors from "cors";
 import "./loadEnvironment.mjs";
@@ -20,12 +21,16 @@ import tickerpage from "./routes/tickerpageGet.mjs";
 import tickerListRouter from "./routes/addtickerlistGet.mjs";
 import deletetickerListRouter from "./routes/deletetickerlistGet.mjs";
 import deleteTicker from "./routes/deleteTicker.mjs";
+import mainpage from "./routes/mainpage.mjs";
+import searchRoute from "./routes/searchRoute.mjs";
+import compression from 'compression';
 
 const PORT = 5050;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(compression());
 
 app.use("/record", records);
 app.use("/user", user);
@@ -37,6 +42,12 @@ app.use("/model", modelsRouter);
 
 // Serve static files from the "tfjs_models" directory
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
+
+
+app.use("/api/data", mainpage);
+app.use("/api/search", mainpage);
+
+
 
 app.use("/my-ticker", tickerpage);
 app.use("/add-tickerlist", tickerListRouter);
@@ -54,6 +65,8 @@ app.get("/db-test", async (req, res) => {
 });
 
 app.use("/glossary", glossary);
+
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
