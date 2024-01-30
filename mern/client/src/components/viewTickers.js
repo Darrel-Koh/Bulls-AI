@@ -24,7 +24,7 @@ const ViewTickers = () => {
       try {
         
         const stocksKeywords = ['stocks', 'financial', 'market']; // Add more keywords as needed
-        const searchTermWithKeywords = `${searchTerm} ${stocksKeywords.join(' AND ')}`;
+        const searchTermWithKeywords = `${searchTerm} ${stocksKeywords.join(' OR ')}`;
     
         const response = await fetch(`https://newsapi.org/v2/everything?q=${searchTermWithKeywords}&apiKey=${apiKey}`);  
         
