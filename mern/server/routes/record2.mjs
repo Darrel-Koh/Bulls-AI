@@ -1,6 +1,6 @@
 import express from "express";
 // import db from "../db/conn.mjs";
-import {db, bullsdb} from "../db/conn.mjs"
+import { db, bullsdb } from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 
 const router = express.Router();
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 // This section will help you get a single record by id
 router.get("/:id", async (req, res) => {
   let collection = await bullsdb.collection("users");
-  let query = {_id: new ObjectId(req.params.id)};
+  let query = { _id: new ObjectId(req.params.id) };
   let result = await collection.findOne(query);
 
   if (!result) res.send("Not found").status(404);
@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
 // This section will help you create a new record.
 router.post("/", async (req, res) => {
   let newDocument = {
-    first_name: req.body.first_name,
+    username: req.body.username,
     email: req.body.email,
     password: req.body.password,
   };
@@ -37,12 +37,12 @@ router.post("/", async (req, res) => {
 // This section will help you update a record by id.
 router.patch("/:id", async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
-  const updates =  {
+  const updates = {
     $set: {
-      first_name: req.body.first_name,
+      username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-    }
+    },
   };
 
   let collection = await bullsdb.collection("users");
