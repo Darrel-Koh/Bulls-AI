@@ -24,6 +24,7 @@ import deleteTicker from "./routes/deleteTicker.mjs";
 import mainpage from "./routes/mainpage.mjs";
 import searchRoute from "./routes/searchRoute.mjs";
 import compression from 'compression';
+import edittickerlistRouter from "./routes/edittickerlistpageGet.mjs";
 
 const PORT = 5050;
 const app = express();
@@ -39,6 +40,8 @@ app.use("/register", registrationRouter);
 app.use("/forget-password", forgetPasswordRouter);
 app.use("/change-password", changePasswordRouter); // Use the changePassword router
 app.use("/model", modelsRouter);
+app.use("/edit-tickerlist",edittickerlistRouter);
+
 
 // Serve static files from the "tfjs_models" directory
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
