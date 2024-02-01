@@ -3,14 +3,8 @@ import express from 'express';
 import { bullsdb } from '../db/conn.mjs';
 import cache from 'memory-cache';
 import { connectToDatabaseMiddleware, closeDatabaseConnectionMiddleware, errorHandler, asyncMiddleware } from './middleware.mjs';
-import searchRoute from './searchRoute.mjs';
-import TickerData from '../models/tickerModels.js';
 
 const router = express.Router();
-
-// Use the search route
-router.use('/api/search', searchRoute);
-
 
 const fetchDataFromDatabase = async (page, pageSize) => {
     try {
@@ -41,16 +35,6 @@ const fetchDataFromDatabase = async (page, pageSize) => {
     }
 };
 
-
-
-router.get("/", async (req, res) => {
-    let collection = await bullsdb.collection("ticker_data");
-    // Limit to 632 collections for faster loading process
-    let results = await collection.find({}).limit(10).toArray(); 
-    res.send(results).status(200);
-});
-
-
 // Middleware for caching
 const cacheMiddleware = (duration) => (req, res, next) => {
     const key = `__express__${req.originalUrl || req.url}`;
@@ -80,8 +64,16 @@ const addPaginationHeaders = (res, req, page, pageSize, totalPages) => {
     });
 };
 
-// Combined route to fetch data
-// Route to fetch paginated data
+// Define a route handler to fetch data from the "ticker_data" collection
+router.get("/", async (req, res) => {
+    let collection = await bullsdb.collection("ticker_data");
+    // Limit to 632 collections for faster loading process
+    let results = await collection.find({}).limit(10).toArray(); 
+    res.send(results).status(200);
+});
+
+
+
 router.get('/api/data', connectToDatabaseMiddleware, cacheMiddleware(10), asyncMiddleware(async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -90,16 +82,17 @@ router.get('/api/data', connectToDatabaseMiddleware, cacheMiddleware(10), asyncM
         // Fetch paginated data
         const { data, totalPages } = await fetchDataFromDatabase(page, pageSize);
 
+        // Extract trading_name from each object in the data array
+        const tradingNames = data.map(item => item.trading_name);
+
         // Add pagination headers
         addPaginationHeaders(res, req, page, pageSize, totalPages);
 
-        res.json({ data, totalPages });
+        res.json({ data: tradingNames, totalPages });
     } catch (err) {
         console.error('Error fetching data from MongoDB:', err);
         errorHandler(err, req, res);
     }
 }));
-
-
 
 export default router;

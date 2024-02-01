@@ -1,8 +1,19 @@
-// loginPage.js
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/AuthContext";
+import BullsAiLogo from "../images/BullsAI logo_coloured_logo.png"; // Import BullsAI logo
+import {
+  Button,
+  Typography,
+  TextField,
+  Container,
+  Link,
+  Select,
+  MenuItem,
+  Box,
+  Avatar, // Import Avatar component
+} from "@mui/material";
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -11,7 +22,7 @@ const LoginPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
-  const [registerAccountType, setRegisterAccountType] = useState(""); // Added state for account type
+  const [registerAccountType, setRegisterAccountType] = useState("Basic");
   const navigate = useNavigate();
   const { setUserId, setUserName } = useContext(AuthContext);
 
@@ -31,10 +42,13 @@ const LoginPage = () => {
         password: loginPassword,
       });
 
-      console.log("Login successful. Response:", response.data);
-      navigate("/mainPage");
-      setUserId(response.data._id);
-      setUserName(response.data.username);
+      const userData = response.data;
+
+      console.log("Login successful. Response:", userData);
+      setUserId(userData._id);
+      setUserName(userData.username);
+
+      localStorage.setItem("userData", JSON.stringify(userData));
 
       navigate("/mainPage");
     } catch (error) {
@@ -62,7 +76,7 @@ const LoginPage = () => {
       setRegisterEmail("");
       setRegisterPassword("");
       setRegisterUsername("");
-      setRegisterAccountType("");
+      setRegisterAccountType("Basic");
       setActiveTab("login");
     } catch (error) {
       if (
@@ -70,7 +84,7 @@ const LoginPage = () => {
         error.response.status === 400 &&
         error.response.data.startsWith("Password")
       ) {
-        alert(error.response.data); // Show password requirements alert
+        alert(error.response.data);
       } else if (
         error.response &&
         error.response.status === 400 &&
@@ -112,142 +126,118 @@ const LoginPage = () => {
 
   const handleRegisterButton = () => {
     setActiveTab("register");
-    navigate("/"); // Navigate to the root ("/") when switching to register form
+    navigate("/");
   };
 
   return (
-    <div className="parent-div">
-      <div className="outer-div">
-        <div
-          style={{
-            textAlign: "center",
-            marginTop: "100px",
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ marginBottom: "20px" }}>
-            <button
-              style={{
-                padding: "12px 50px",
-                marginTop: "140px",
-                marginRight: "10px",
-                backgroundColor: activeTab === "login" ? "#28a745" : "#007bff",
-                color: "white",
-                border: "2px",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "18px",
-              }}
-              onClick={() => setActiveTab("login")}
-            >
-              Login
-            </button>
-            <button
-              style={{
-                padding: "12px 40px",
-                marginRight: "10px",
-                backgroundColor:
-                  activeTab === "register" ? "#28a745" : "#007bff",
-                color: "white",
-                border: "2px",
-                borderRadius: "8px",
-                cursor: "pointer",
-                fontSize: "18px",
-              }}
-              onClick={() => setActiveTab("register")}
-            >
-              Register
-            </button>
-          </div>
-          {activeTab === "login" && (
-            <form onSubmit={handleLogin}>
-              <input
-                type="email"
-                placeholder="Email"
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              />
-              <button type="submit">Login</button>
-              <button type="button" onClick={handleForgotPassword}>
-                Forgot Password?
-              </button>
-            </form>
-          )}
-          {activeTab === "register" && (
-            <form
-              onSubmit={handleRegister}
-              style={{ maxWidth: "300px", margin: "auto" }}
-            >
-              <div style={{ marginBottom: "15px" }}>
-                <label htmlFor="registerEmail">Email Address:</label>
-                <input
-                  type="text"
-                  id="registerEmail"
-                  value={registerEmail}
-                  onChange={(e) => setRegisterEmail(e.target.value)}
-                  style={{ width: "100%", padding: "8px" }}
-                />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
-                <label htmlFor="registerPassword">Password:</label>
-                <input
-                  type="password"
-                  id="registerPassword"
-                  value={registerPassword}
-                  onChange={(e) => setRegisterPassword(e.target.value)}
-                  style={{ width: "100%", padding: "8px" }}
-                />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
-                <label htmlFor="registerUsername">Username:</label>
-                <input
-                  type="text"
-                  id="registerUsername"
-                  value={registerUsername}
-                  onChange={(e) => setRegisterUsername(e.target.value)}
-                  style={{ width: "100%", padding: "8px" }}
-                />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
-                <label htmlFor="registerAccountType">Account Type:</label>
-                <select
-                  id="registerAccountType"
-                  value={registerAccountType}
-                  onChange={(e) => setRegisterAccountType(e.target.value)}
-                  style={{ width: "100%", padding: "8px" }}
-                >
-                  <option value="Basic">Basic</option>
-                  <option value="Professional">Professional</option>
-                </select>
-              </div>
-              <button type="submit" style={submitButtonStyle}>
-                Register
-              </button>
-            </form>
-          )}
+    <Container maxWidth="sm">
+      <div style={{ textAlign: "center", marginTop: "100px" }}>
+        <Avatar
+          alt="BullsAI Logo"
+          src={BullsAiLogo}
+          sx={{ width: 100, height: 100, margin: "0 auto 20px" }} // Styling for the logo
+        />
+        <div style={{ marginBottom: "20px" }}>
+          <Button
+            variant="contained"
+            style={{
+              marginRight: "10px",
+              backgroundColor: activeTab === "login" ? "#28a745" : "#007bff",
+              color: "white",
+              fontSize: "18px",
+            }}
+            onClick={() => setActiveTab("login")}
+          >
+            Login
+          </Button>
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: activeTab === "register" ? "#28a745" : "#007bff",
+              color: "white",
+              fontSize: "18px",
+            }}
+            onClick={() => setActiveTab("register")}
+          >
+            Register
+          </Button>
         </div>
+        {activeTab === "login" && (
+          <form onSubmit={handleLogin}>
+            <TextField
+              type="email"
+              placeholder="Email"
+              value={loginEmail}
+              onChange={(e) => setLoginEmail(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              type="password"
+              placeholder="Password"
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+      <Button type="submit" variant="contained" style={{ backgroundColor: '#4CAF50', marginRight: '10px' }}>
+              Login
+            </Button>
+                <Button
+          variant="text"
+          color="primary"
+          onClick={handleForgotPassword}
+          style={{ marginTop: "10px", marginLeft: "10px" }}
+        >
+          Forgot Password?
+        </Button>
+          </form>
+        )}
+        {activeTab === "register" && (
+          <form onSubmit={handleRegister} style={{ maxWidth: "300px", margin: "auto" }}>
+            <TextField
+              type="text"
+              label="Email Address"
+              value={registerEmail}
+              onChange={(e) => setRegisterEmail(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              type="password"
+              label="Password"
+              value={registerPassword}
+              onChange={(e) => setRegisterPassword(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              type="text"
+              label="Username"
+              value={registerUsername}
+              onChange={(e) => setRegisterUsername(e.target.value)}
+              fullWidth
+              margin="normal"
+            />
+            <Select
+              value={registerAccountType}
+              onChange={(e) => setRegisterAccountType(e.target.value)}
+              fullWidth
+              margin="normal"
+            >
+              <MenuItem value="Basic">Basic</MenuItem>
+              <MenuItem value="Professional">Professional</MenuItem>
+            </Select>
+            <Box display="flex" justifyContent="center" mt={2}> {/* Align buttons in the center */}
+              <Button type="submit" variant="contained" style={submitButtonStyle}>
+                Register
+              </Button>
+             
+            </Box>
+          </form>
+        )}
       </div>
-    </div>
+    </Container>
   );
 };
-
-const submitButtonStyle = {
-  backgroundColor: "#4CAF50",
-  color: "white",
-  padding: "15px 25px",
-  border: "none",
-  borderRadius: "15px",
-  cursor: "pointer",
-  marginBottom: "100px",
-  fontSize: "18px",
-};
-
 export default LoginPage;

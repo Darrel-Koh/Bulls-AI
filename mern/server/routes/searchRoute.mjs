@@ -7,6 +7,14 @@ import { connectToDatabaseMiddleware, closeDatabaseConnectionMiddleware, errorHa
 const router = express.Router();
 const nodecache = new NodeCache();
 
+router.get("/", async (req, res) => {
+    let collection = await bullsdb.collection("ticker_data");
+    // Limit to 632 collections for faster loading process
+    let results = await collection.find({}).limit(10).toArray(); 
+    res.send(results).status(200);
+});
+
+
 router.get("/api/search", asyncMiddleware(async (req, res) => {
     const { q: searchQuery, page = 1, pageSize = 10 } = req.query;
     const skip = (page - 1) * pageSize;
@@ -16,12 +24,11 @@ router.get("/api/search", asyncMiddleware(async (req, res) => {
 
         // Use Mongoose model for the TickerData
         const searchData = await TickerData.find({ trading_name: new RegExp(searchQuery, 'i') })
-            .skip(skip)
-            .limit(pageSize)
-            .lean()  // Use lean() to get plain JavaScript objects instead of Mongoose documents
-            .exec();
-
-        // Check if there is a match in searchData
+        .select('trading_name')
+        .skip(skip)
+        .limit(pageSize)
+        .lean()
+        .exec();
     // Check if there is a match in searchData
         if (searchData.length > 0) {
          console.debug('Search result found:', searchData);

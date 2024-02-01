@@ -43,10 +43,10 @@ app.use("/model", modelsRouter);
 // Serve static files from the "tfjs_models" directory
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
-
+// load suggestions
 app.use("/api/data", mainpage);
-app.use("/api/search", mainpage);
-
+// fetch search route 
+app.use("/api/search", searchRoute);
 
 
 app.use("/my-ticker", tickerpage);
