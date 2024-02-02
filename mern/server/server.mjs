@@ -24,6 +24,7 @@ import deleteTicker from "./routes/deleteTicker.mjs";
 import mainpage from "./routes/mainpage.mjs";
 import searchRoute from "./routes/searchRoute.mjs";
 import compression from 'compression';
+import updateAccount from "./routes/updateAccount.mjs";
 
 const PORT = 5050;
 const app = express();
@@ -47,7 +48,7 @@ app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 app.use("/api/data", mainpage);
 // fetch search route 
 app.use("/api/search", searchRoute);
-
+app.use("/update-account/:id", updateAccount);
 
 app.use("/my-ticker", tickerpage);
 app.use("/add-tickerlist", tickerListRouter);

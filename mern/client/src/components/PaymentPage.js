@@ -1,12 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Typography, Button, TextField, Container } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const PaymentPage = ({ handlePayment }) => {
+const PaymentPage = () => {
     const location = useLocation();
     const selectedPlan = location.state ? location.state.selectedPlan : 'No Plan Selected';
     const navigate = useNavigate();
+    const [userId, setUserId] = useState(null);
+
+    useEffect(() => {
+        // Retrieve user ID from localStorage
+        const storedUserId = localStorage.getItem('userId');
+        console.log('User ID from localStorage:', storedUserId);
+        if (storedUserId) {
+            setUserId(storedUserId);
+        }
+    }, []);
+    
 
     const [paymentInfo, setPaymentInfo] = useState({
         cardNumber: '',
@@ -20,12 +32,35 @@ const PaymentPage = ({ handlePayment }) => {
         setPaymentInfo({ ...paymentInfo, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle payment processing
-        handlePayment(paymentInfo);
+
+        try {
+            // Check if userId is not null before accessing properties
+            if (!userId) {
+                console.error('User ID not found in localStorage', userId);
+                return;
+            }
+
+            // Your payment processing logic goes here
+
+            // Send a request to update the user account type
+            const response = await axios.put(`http://localhost:5050/update-account/${encodeURIComponent(userId)}`, {
+                newAccountType: selectedPlan,
+            });
+
+            if (!response.data) {
+                throw new Error(`Failed to update: ${response.statusText}`);
+            }
+
+            // After successful payment and account update, navigate to a confirmation page
+            navigate('/UserInfo');
+        } catch (error) {
+            console.error('Error processing payment:', error);
+        }
     };
 
+    
     const handleCancel = () => {
         navigate("/PricingPage");
 

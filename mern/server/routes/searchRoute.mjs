@@ -10,7 +10,7 @@ const nodecache = new NodeCache();
 router.get("/", async (req, res) => {
     let collection = await bullsdb.collection("ticker_data");
     // Limit to 632 collections for faster loading process
-    let results = await collection.find({}).limit(10).toArray(); 
+    let results = await collection.find({}).limit(500).toArray(); 
     res.send(results).status(200);
 });
 

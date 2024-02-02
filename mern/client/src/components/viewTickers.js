@@ -23,7 +23,7 @@ useEffect(() => {
   const fetchRelatedNews = async () => {
     try {
       const stocksKeywords = ['stocks', 'financial', 'market', 'finance']; // Add more keywords as needed
-      const searchTermWithKeywords = `${searchTerm} ${stocksKeywords.join(' AND ')}`;
+      const searchTermWithKeywords = `${searchTerm} ${stocksKeywords.join(' OR ')}`;
 
       // Construct the URL with language and sortBy parameters
       const url = `https://newsapi.org/v2/everything?q=${searchTermWithKeywords}&apiKey=${apiKey}&language=en&sortBy=publishedAt`;
