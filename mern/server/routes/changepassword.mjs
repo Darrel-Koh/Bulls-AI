@@ -1,17 +1,18 @@
 import bcrypt from "bcrypt";
 import express from "express";
 import { bullsdb } from "../db/conn.mjs";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
 // Endpoint to change user password
 router.post("/", async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  const userId = req.user.id; // Assuming you have middleware to extract user information
-
+  const { currentPassword, newPassword, userId } = req.body;
+  // const userId = req.user.id; // Assuming you have middleware to extract user information
+  var o_id = new ObjectId(userId);
   try {
     // Retrieve user information from the database based on userId
-    const userInfo = await bullsdb.collection("users").findOne({ _id: userId });
+    const userInfo = await bullsdb.collection("users").findOne({ _id: o_id });
 
     if (!userInfo) {
       // Send 401 Unauthorized status code and error message
@@ -35,7 +36,7 @@ router.post("/", async (req, res) => {
     // Update the user's password in the database
     await bullsdb
       .collection("users")
-      .updateOne({ _id: userId }, { $set: { password: hashedNewPassword } });
+      .updateOne({ _id: o_id }, { $set: { password: hashedNewPassword } });
 
     // Send a success response
     res.status(200).send("Password changed successfully.");

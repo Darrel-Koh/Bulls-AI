@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
+import AuthContext from "./AuthContext";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const { userId } = useContext(AuthContext);
   const handleChangePassword = async (event) => {
     event.preventDefault();
-
+    console.log(userId);
     // Validation checks
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       setErrorMessage("All fields are required.");
@@ -27,6 +28,7 @@ const ChangePassword = () => {
         {
           currentPassword,
           newPassword,
+          userId,
         }
       );
       console.log(response.data); // Log the response
