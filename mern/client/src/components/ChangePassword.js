@@ -8,9 +8,10 @@ const ChangePassword = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { userId } = useContext(AuthContext);
+
   const handleChangePassword = async (event) => {
     event.preventDefault();
-    console.log(userId);
+
     // Validation checks
     if (!currentPassword || !newPassword || !confirmNewPassword) {
       setErrorMessage("All fields are required.");
@@ -18,6 +19,15 @@ const ChangePassword = () => {
     }
     if (newPassword !== confirmNewPassword) {
       setErrorMessage("New password and confirm password do not match.");
+      return;
+    }
+
+    // Password validation check
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      alert(
+        "New password must have at least 8 characters, 1 capital letter, 1 small letter, and 1 integer."
+      );
       return;
     }
 

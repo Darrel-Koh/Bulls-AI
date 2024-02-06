@@ -5,6 +5,12 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
+// Password validation function
+const isStrongPassword = (password) => {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+  return regex.test(password);
+};
+
 // Endpoint to change user password
 router.post("/", async (req, res) => {
   const { currentPassword, newPassword, userId } = req.body;
@@ -17,6 +23,16 @@ router.post("/", async (req, res) => {
     if (!userInfo) {
       // Send 401 Unauthorized status code and error message
       return res.status(401).send("User not found.");
+    }
+
+    // Check if the new password meets the requirements
+    if (!isStrongPassword(newPassword)) {
+      // Send 400 Bad Request status code and error message if the password is weak
+      return res
+        .status(400)
+        .send(
+          "New password must have at least 8 characters, 1 capital letter, 1 small letter, and 1 integer."
+        );
     }
 
     // Compare the provided current password with the hashed password stored in the database
