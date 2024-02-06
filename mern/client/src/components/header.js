@@ -66,7 +66,7 @@ const navStyle = {
 
 const Header = () => {
   const authContext = useContext(AuthContext);
-  const { userId, userName, setUserId, setUserName } = authContext || {};
+  const { userId, userName, status, setUserId, setUserName, setStatus  } = authContext || {};
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [loading, setLoading] = useState(true); // New state for loading status
@@ -77,10 +77,12 @@ const Header = () => {
     const checkAuthentication = async () => {
       const storedUserId = localStorage.getItem('userId');
       const storedUserName = localStorage.getItem('userName');
+      const storedStatus = localStorage.getItem('status');
 
-      if (storedUserId && storedUserName) {
+      if (storedUserId && storedUserName && storedStatus) {
         setUserId(storedUserId);
         setUserName(storedUserName);
+        setStatus(storedStatus);
       }
 
       // Set loading to false once authentication check is complete
@@ -88,7 +90,7 @@ const Header = () => {
     };
 
     checkAuthentication();
-  }, [setUserId, setUserName]);
+  }, [setUserId, setUserName, setStatus]);
 
   useEffect(() => {
     if (!userId && !loading) {
@@ -120,8 +122,9 @@ const Header = () => {
     } else {
       localStorage.setItem('userId', userId);
       localStorage.setItem('userName', userName);
+      localStorage.setItem('status', status);
     }
-  }, [userId, userName]);
+  }, [userId, userName, status]);
 
   const toggleDropdown = () => {
     setDropdownVisible((prevVisible) => !prevVisible);
@@ -133,9 +136,11 @@ const Header = () => {
     if (confirmLogout) {
       localStorage.removeItem('userId');
       localStorage.removeItem('userName');
+      localStorage.removeItem('status');
 
       setUserId(null);
       setUserName('');
+      setStatus('');
       setDropdownVisible(false);
 
       navigate('/');

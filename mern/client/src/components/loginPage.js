@@ -12,7 +12,7 @@ const LoginPage = () => {
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerFirstName, setRegisterFirstName] = useState("");
   const navigate = useNavigate();
-  const { setUserId, setUserName } = useContext(AuthContext);
+  const { setUserId, setUserName, setStatus } = useContext(AuthContext);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -31,9 +31,11 @@ const LoginPage = () => {
       });
 
       console.log("Login successful. Response:", response.data);
-
+      console.log("Status:", response.data.account_type);
       setUserId(response.data._id);
-      setUserName(response.data.first_name);
+      setUserName(response.data.username);
+      setStatus(response.data.account_type);
+      
 
       navigate("/mainPage");
     } catch (error) {

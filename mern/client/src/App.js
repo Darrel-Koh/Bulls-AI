@@ -26,9 +26,10 @@ import AuthContext from './components/AuthContext';
 const App = () => {
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState('');
+  const [status, setStatus] = useState('');
   return (
     <div>
-      <AuthContext.Provider value={{ userId, setUserId, userName, setUserName }}>
+      <AuthContext.Provider value={{ userId, setUserId, userName, setUserName, status, setStatus }}>
       <Header /> 
       <div style={{ margin: 20 }}>
       <Routes>
