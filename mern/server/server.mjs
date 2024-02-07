@@ -25,7 +25,7 @@ import mainpage from "./routes/mainpage.mjs";
 import searchRoute from "./routes/searchRoute.mjs";
 import compression from 'compression';
 
-const PORT = 5050;
+// const PORT = 5050;
 const app = express();
 
 app.use(cors());
@@ -78,6 +78,7 @@ if(process.env.NODE_ENV === 'production'){
   });
 }
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+const port = process.env.PORT || 5050;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });
