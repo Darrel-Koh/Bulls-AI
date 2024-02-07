@@ -83,20 +83,9 @@ const LoginPage = () => {
     }
   };
 
-  const handleForgotPassword = async () => {
-    const email = prompt("Enter your email to reset password:");
-
-    if (email) {
-      try {
-        await axios.post("http://localhost:5050/forget-password", {
-          email,
-        });
-        alert("Password reset initiated. Check your email for instructions.");
-      } catch (error) {
-        console.error("Password reset failed:", error.message);
-        alert("Password reset failed. Please try again later.");
-      }
-    }
+  const handleForgotPassword = async (event) => {
+    event.preventDefault(); // Prevent default behavior of the button click
+    navigate("/forget-password");
   };
 
   const submitButtonStyle = {

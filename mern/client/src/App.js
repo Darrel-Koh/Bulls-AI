@@ -12,6 +12,7 @@ import AddTickerPage from "./components/addtickerpage";
 import ViewTickers from "./components/viewTickers";
 import Create from "./components/create2";
 import LoginPage from "./components/loginPage";
+import ForgetPassword from "./components/ForgetPassword";
 import MainPage from "./components/mainPage";
 import UserList from "./components/recordList2";
 import { useState } from "react";
@@ -37,6 +38,7 @@ const App = () => {
             <Route path="/add-ticker" element={<AddTickerPage />} />
             <Route path="/recordListPage" element={<UserList />} />
             <Route path="/viewTickers" element={<ViewTickers />} />
+            <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/mainPage" element={<MainPage />} />
             <Route path="/changepassword" element={<ChangePassword />} />{" "}
             {/* Add this line */}
