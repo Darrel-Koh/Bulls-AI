@@ -57,6 +57,8 @@ const LoginPage = () => {
         registerAccountType,
       });
 
+      console.log("Registration successful");
+
       window.alert("Registration successful");
 
       setRegisterEmail("");
