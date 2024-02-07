@@ -12,6 +12,6 @@
     "react-lazyload": "^3.2.0"
   },
   "scripts": {
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client && npm install --prefix server"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix mern/client && npm run build --prefix mern/client && npm install --prefix mern/server && npm run build --prefix mern/server"
   }
 }
