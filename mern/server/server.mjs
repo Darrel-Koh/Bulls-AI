@@ -67,6 +67,16 @@ app.get("/db-test", async (req, res) => {
 app.use("/glossary", glossary);
 
 
+if(process.env.NODE_ENV === 'production'){
+  app.use(express.static('client/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+  });
+} else {
+  app.get("*", (req, res) => {
+    res.send("API is running");
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

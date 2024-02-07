@@ -1,1 +1,1 @@
-web: npm start
+web: node mern/server/server.mjs
