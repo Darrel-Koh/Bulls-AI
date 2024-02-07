@@ -16,21 +16,21 @@ const AddTickerPage = ({ onAddTickerList, onCancel }) => {
         const response = await axios.post(`http://localhost:5050/add-tickerlist/${encodeURIComponent(userId)}`, {
           list_name: listName,
         });
-
-        if (!response.data) {
-          throw new Error(`Failed to add ticker list: ${response.statusText}`);
-        }
-
-        // Call the parent component's function to update the state
-        if (onAddTickerList) {
-          onAddTickerList(response.data);
-        }
+  
+        // If the request is successful, navigate to the 'my-ticker' page
         navigate('/my-ticker');
       }
     } catch (error) {
-      console.error('Error adding ticker list:', error.message);
+      if (error.response && error.response.status === 409) {
+        // If the server returns a 409 error (List name already exists), display the error message
+        alert(error.response.data.error);
+      } else {
+        // Handle other errors
+        console.error('Error adding ticker list:', error.message);
+      }
     }
   };
+  
 
   const handleCancel = () => {
     // Call the parent component's function to handle cancellation

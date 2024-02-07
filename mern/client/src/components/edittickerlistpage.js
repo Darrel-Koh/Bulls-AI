@@ -15,25 +15,20 @@ const EditTickerListPage = () => {
         throw new Error('List Name cannot be empty');
       }
 
-      // Log user, old list name, and new list name
-      console.log('User:', userId);
-      console.log('Old List Name:', listName);
-      console.log('New List Name:', newListName);
-
       // Make a request to check if the new list_name already exists
       const response = await axios.put(`http://localhost:5050/edit-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(newListName)}`);
 
-      if (response.data.exists) {
-        throw new Error('List Name already exists. Please choose a different name.');
-      }
-
-      // Navigate back to MyTickerPage
+      // Navigate back to MyTickerPage if the request is successful
       navigate('/my-ticker');
     } catch (error) {
-      console.error('Error editing ticker list:', error.message);
-
-      // Display error message
-      alert(error.message);
+      if (error.response && error.response.status === 409) {
+        // If the server returns a 409 error (List name already exists), display the error message
+        alert(error.response.data.error);
+      } else {
+        // Handle other errors
+        console.error('Error editing ticker list:', error.message);
+        alert(error.message); // Display error message
+      }
     }
   };
 

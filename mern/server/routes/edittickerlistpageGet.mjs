@@ -17,6 +17,17 @@ router.put('/:id/:oldlistname/:newlistname', async (req, res) => {
     // Access the "users" collection from the MongoDB database
     const usersCollection = await bullsdb.collection('users');
 
+    // Check if the new list_name already exists for the user
+    const existingUser = await usersCollection.findOne({
+      _id: new ObjectId(userId),
+      'favList.list_name': newListName,
+    });
+
+    if (existingUser) {
+      // If the new list_name already exists, send a 409 Conflict status
+      return res.status(409).json({ error: 'List name already exists' });
+    }
+
     // Define the query to find the user with the specified ID and old ticker list name
     const query = {
       _id: new ObjectId(userId),
