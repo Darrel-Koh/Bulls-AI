@@ -103,7 +103,7 @@ const handleAddToFavourite = (recordId) => {
               <TableRow key={result._id} style={{ background: index % 2 === 0 ? grey[200] : 'white' }}>
                 <TableCell style={tableCellStyle}>{result.trading_name}</TableCell>
                 <TableCell style={tableCellStyle}>{result.symbol}</TableCell>
-                {/* <TableCell style={tableCellStyle}>
+                <TableCell style={tableCellStyle}>
                   {result.transactions.length > 0 && result.transactions[result.transactions.length - 1].Date}
                 </TableCell>
                 <TableCell style={tableCellStyle}>
@@ -111,7 +111,7 @@ const handleAddToFavourite = (recordId) => {
                 </TableCell>
                 <TableCell style={tableCellStyle}>
                   {result.transactions.length > 0 && result.transactions[result.transactions.length - 1].Volume}
-                </TableCell> */}
+                </TableCell>
                 <TableCell style={tableCellStyle}>
                   <Button onClick={() => handleAddToFavourite(result._id)} variant="contained" style={favouriteButtonStyle}>
                     Add to Favourite

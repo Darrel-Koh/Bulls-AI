@@ -50,7 +50,7 @@ const fetchDataFromDatabase = async (page, pageSize) => {
 
         const skip = (page - 1) * pageSize;
         const database = bullsdb.db('bullsai');
-        const collection = database.collection('tickers');
+        const collection = database.collection('ticker_data');
 
         // Fetch total count to calculate total pages
         const totalCount = await collection.countDocuments();
@@ -104,7 +104,7 @@ const addPaginationHeaders = (res, req, page, pageSize, totalPages) => {
 
 
 router.get("/", async (req, res) => {
-    let collection = await bullsdb.collection("tickers");
+    let collection = await bullsdb.collection("ticker_data");
     // Limit to 632 collections for faster loading process
     let results = await collection.find({}).limit(300).toArray(); 
     res.send(results).status(200);

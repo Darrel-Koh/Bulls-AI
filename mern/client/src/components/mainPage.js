@@ -65,7 +65,28 @@ const MainPage = () => {
       setIsLoading(false); // Stop loading when search completes
     }
   };
+  const handleSearchLink = async (LinkParams) => {
+    const trimmedLinkParams = LinkParams.trim();
+    const encodedSearchTerm = encodeURIComponent(trimmedLinkParams);
+  
+    try {
+      setIsLoading(true); // Start loading when search is initiated
 
+      const response = await fetch(`http://localhost:5050/api/search?q=${encodedSearchTerm}`);
+  
+      if (!response.ok) {
+        console.error('Search request failed:', response.status, response.statusText);
+        return;
+      }
+  
+      const searchData = await response.json();
+      navigate('/viewTickers', { state: { searchResults: searchData, searchTerm: trimmedLinkParams } });
+    } catch (error) {
+      console.error("Error searching data:", error);
+    } finally {
+      setIsLoading(false); // Stop loading when search completes
+    }
+  };
 
   const handleInputChange = (value) => {
     setSearchTerm(value);
@@ -137,9 +158,9 @@ const MainPage = () => {
         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           <TableCell>
           <Link
-          to="/viewTickers"
+          // to="/viewTickers"
           className="trading-link"
-          onClick={() => handleSearch(item.trading_name)}
+          onClick={() => handleSearchLink(item.trading_name)}
         >
           {item.trading_name}
         </Link>
