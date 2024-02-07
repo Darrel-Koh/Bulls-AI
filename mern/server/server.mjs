@@ -6,7 +6,7 @@ import records from "./routes/record.mjs";
 import user from "./routes/record2.mjs";
 import loginRouter from "./routes/login.mjs";
 import registrationRouter from "./routes/registration.mjs";
-import forgetPasswordRouter from "./routes/forgetPassword.mjs";
+import forgetPasswordRouter from "./routes/forgetpassword.mjs";
 import changePasswordRouter from "./routes/changepassword.mjs"; // Import the new changePassword router
 import { db, bullsdb } from "../server/db/conn.mjs";
 import glossary from "./routes/glossaryGet.mjs";
