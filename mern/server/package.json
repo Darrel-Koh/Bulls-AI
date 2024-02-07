@@ -8,7 +8,7 @@
     "start": "node server.mjs",
     "heroku-postbuild": "echo 'Running heroku-postbuild script' && cd ../client && npm install && npm run build && mv build ../server/public",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "react-scripts build"
+    "build": "echo 'No build step'"
   },
   "keywords": [],
   "author": "",
