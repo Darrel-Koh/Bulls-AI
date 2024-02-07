@@ -122,8 +122,9 @@ const Header = () => {
   return (
     <AppBar position="static" style={{ background: 'black' }}>
     <Toolbar>
-      <RouterLink to="/mainPage">
+      <RouterLink to="/mainPage" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
         <Avatar alt="BullsAI Logo" src={BullsAiLogo} />
+        <Typography variant="body1" style={{ marginLeft: '8px', fontFamily: 'helvetica, sans-serif', fontSize: '18px' }}>BULLS AI</Typography>
       </RouterLink>
       <div style={{ flexGrow: 1 }} />
       <Box display="flex" alignItems="center"> {/* Wrap elements in a Box */}

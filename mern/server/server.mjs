@@ -24,7 +24,8 @@ import deleteTicker from "./routes/deleteTicker.mjs";
 import mainpage from "./routes/mainpage.mjs";
 import searchRoute from "./routes/searchRoute.mjs";
 import compression from 'compression';
-import updateAccount from "./routes/updateAccount.mjs";
+import updateAccountRouter from "./routes/updateAccount.mjs";
+import recommendationDataRoute from "./routes/recommendationData.mjs";
 
 const PORT = 5050;
 const app = express();
@@ -45,10 +46,12 @@ app.use("/model", modelsRouter);
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
 // load suggestions
-app.use("/api/data", mainpage);
+//app.use("/api/data", mainpage);
 // fetch search route 
 app.use("/api/search", searchRoute);
-app.use("/update-account/:id", updateAccount);
+app.post("/update-account", updateAccountRouter);
+app.use('/recommendation-data', recommendationDataRoute);
+
 
 app.use("/my-ticker", tickerpage);
 app.use("/add-tickerlist", tickerListRouter);
@@ -66,7 +69,6 @@ app.get("/db-test", async (req, res) => {
 });
 
 app.use("/glossary", glossary);
-
 
 
 app.listen(PORT, () => {

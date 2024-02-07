@@ -45,7 +45,7 @@ const PaymentPage = () => {
             // Your payment processing logic goes here
 
             // Send a request to update the user account type
-            const response = await axios.put(`http://localhost:5050/update-account/${encodeURIComponent(userId)}`, {
+            const response = await axios.patch(`http://localhost:5050/update-account/${encodeURIComponent(userId)}`, {
                 newAccountType: selectedPlan,
             });
 
