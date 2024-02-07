@@ -66,7 +66,7 @@ const addPaginationHeaders = (res, req, page, pageSize, totalPages) => {
 
 // Define a route handler to fetch data from the "ticker_data" collection
 router.get("/", async (req, res) => {
-    let collection = await bullsdb.collection("ticker_data");
+    let collection = await bullsdb.collection("tickers_data");
     // Limit to 632 collections for faster loading process
     let results = await collection.find({}).limit(10).toArray(); 
     res.send(results).status(200);

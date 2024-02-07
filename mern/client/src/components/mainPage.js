@@ -4,6 +4,7 @@ import "../components/style.css";
 import { TextField, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, IconButton, Box, Grid, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
+import { grey } from '@mui/material/colors';
 
 const MainPage = () => {
   const [data, setData] = useState([]);
@@ -12,6 +13,8 @@ const MainPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
+  const [sortBy, setSortBy] = useState(''); // State to track sorting column
+  const [sortDirection, setSortDirection] = useState('asc'); // State to track sorting direction
 
   useEffect(() => {
     fetchData();
@@ -96,6 +99,33 @@ const MainPage = () => {
     setSuggestions(filteredSuggestions);
   };
 
+  // Function to sort data based on the selected column and direction
+  const sortData = (column) => {
+    const sortedData = [...data].sort((a, b) => {
+      if (a[column] < b[column]) return sortDirection === 'asc' ? -1 : 1;
+      if (a[column] > b[column]) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+    setData(sortedData);
+  };
+
+  // Function to toggle sorting direction
+  const toggleSortDirection = () => {
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  };
+
+  // Function to handle sorting when a column header is clicked
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      toggleSortDirection(); // If the same column is clicked, toggle direction
+    } else {
+      setSortBy(column); // Set the new sorting column
+      setSortDirection('asc'); // Reset direction to ascending
+    }
+    sortData(column);
+  };
+  
+
   return (
     <div className="main-container">
       <Grid container alignItems="center" spacing={2}>
@@ -143,38 +173,55 @@ const MainPage = () => {
   
       {/* Empty table with recommendations */}
       <div className="recommendations-container">
-  <Typography variant="h6">Recommendations</Typography>
-  <Table>
-    <TableHead>
-      <TableRow>
-        <TableCell>Trading Name</TableCell>
-        <TableCell>Symbol</TableCell>
-        <TableCell>Last</TableCell>
-        <TableCell>Change</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {data.map((item, index) => (
-        <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-          <TableCell>
-          <Link
-          // to="/viewTickers"
-          className="trading-link"
-          onClick={() => handleSearchLink(item.trading_name)}
-        >
-          {item.trading_name}
-        </Link>
-          </TableCell>
-          <TableCell>{item.symbol}</TableCell>
-          <TableCell>{item.last.toFixed(2)}</TableCell>
-          <TableCell className={item.chng > 0 ? 'positive-change' : 'negative-change'}>
-            {item.chng > 0 ? `+${item.chng}` : item.chng}
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-</div>
+      <Typography variant="h6" style={{ marginBottom: '16px', fontWeight: 'bold' }}>Top 10 Recommendations</Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell onClick={() => handleSort('trading_name')}>
+              Trading Name {sortBy === 'trading_name' && (
+                <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
+              )}
+            </TableCell>
+            <TableCell onClick={() => handleSort('symbol')}>
+              Symbol {sortBy === 'symbol' && (
+                <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
+              )}
+            </TableCell>
+            <TableCell onClick={() => handleSort('last')}>
+              Last {sortBy === 'last' && (
+                <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
+              )}
+            </TableCell>
+            <TableCell onClick={() => handleSort('chng')}>
+              Change {sortBy === 'chng' && (
+                <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
+              )}
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map((item, index) => (
+            <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? grey[200] : 'white' }}>
+              <TableCell>
+                <Link
+                  className="trading-link"
+                  onClick={() => handleSearchLink(item.trading_name)}
+                  style={{ color: '#007bff', cursor: 'pointer' }}
+                >
+                  {item.trading_name}
+                </Link>
+              </TableCell>
+              <TableCell>{item.symbol}</TableCell>
+              <TableCell>{item.last.toFixed(2)}</TableCell>
+              <TableCell className={item.chng > 0 ? 'positive-change' : 'negative-change'}>
+                {item.chng > 0 ? `+${item.chng}` : item.chng}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  
 
   
       <footer className="footer">

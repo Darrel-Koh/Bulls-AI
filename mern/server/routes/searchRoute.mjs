@@ -106,7 +106,7 @@ const addPaginationHeaders = (res, req, page, pageSize, totalPages) => {
 router.get("/", async (req, res) => {
     let collection = await bullsdb.collection("ticker_data");
     // Limit to 632 collections for faster loading process
-    let results = await collection.find({}).limit(300).toArray(); 
+    let results = await collection.find({}).toArray(); 
     res.send(results).status(200);
 });
 
@@ -120,13 +120,8 @@ router.get("/api/search", asyncMiddleware(async (req, res) => {
         await bullsdb.connect();
 
         // Use Mongoose model for the TickerData
-        const searchData = await TickerData.find(
-            { $text: { $search: searchQuery } },
-            { score: { $meta: 'textScore' } } // Optionally, you can also sort by relevance score
-        )
-        .skip(skip)
-        .limit(pageSize)
-        .sort({ score: { $meta: 'textScore' } })
+        const searchData = await TickerData.find({ $text: { $search: searchQuery } })
+        .limit(1)
         .lean()
         .exec();
         
