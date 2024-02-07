@@ -84,7 +84,8 @@ const LoginPage = () => {
   };
 
   const handleForgotPassword = async (event) => {
-    event.preventDefault(); // Prevent default behavior of the button click
+    event.preventDefault(); // Prevent default navigation behavior
+
     navigate("/forget-password");
   };
 
