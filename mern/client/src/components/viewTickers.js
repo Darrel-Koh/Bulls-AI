@@ -1,7 +1,7 @@
 // viewTickers.js
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import LazyLoad from 'react-lazyload';
+import { Typography, Button, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link } from '@mui/material';
 
 const ViewTickers = () => {
   const location = useLocation();
@@ -115,40 +115,32 @@ console.log(filteredData);
     )};
 
   
-  const renderRelatedNews = () => {
-    return (
-      <LazyLoad height={200} offset={100} once>
+    const renderRelatedNews = () => {
+      return (
+        
         <div style={{ marginTop: '50px' }}>
-          <h4 style={{ textAlign: 'left', marginBottom: '20px' }}>Related News</h4>
-          {loadingNews ? (
-            <p>Loading news...</p>
-          ) : relatedNews.length > 0 ? (
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              {relatedNews.map((article, index) => (
-                <li
-                  key={index}
-                  style={{ marginBottom: '20px', border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}
-                >
-                  <h5 style={{ margin: 0 }}>{article.title}</h5>
-                  <p style={{ margin: '10px 0 0' }}>{article.description}</p>
-                  <a
-                    href={article.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ display: 'block', marginTop: '10px', color: '#007BFF', textDecoration: 'underline' }}
-                  >
-                    Read More
-                  </a>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No related news available.</p>
-          )}
-        </div>
-      </LazyLoad>
-    );
-  };
+        <Typography variant="h6" style={{ marginBottom: '20px' }}>Related News</Typography>
+        {loadingNews ? (
+          <CircularProgress />
+        ) : relatedNews.length > 0 ? (
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {relatedNews.map((article, index) => (
+              <li key={index} style={{ marginBottom: '20px', border: '1px solid #ddd', padding: '10px', borderRadius: '8px' }}>
+                <Typography variant="h6">{article.title}</Typography>
+                <Typography variant="body1" style={{ margin: '10px 0 0' }}>{article.description}</Typography>
+                <Link href={article.url} target="_blank" rel="noopener noreferrer" style={{ display: 'block', marginTop: '10px', color: '#007BFF', textDecoration: 'underline' }}>
+                  Read More
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <Typography variant="body1">No related news available.</Typography>
+        )}
+      </div>
+      
+      );
+    };
   
 
   return (
