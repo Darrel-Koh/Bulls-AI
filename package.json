@@ -11,8 +11,10 @@
     "nodemailer": "^6.9.8"
   },
   "scripts": {
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix mern/client && npm run build --prefix mern/client && npm install --prefix mern/server"
-  }, 
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start"
+  },
   "engines": {
     "node": "21.3.x"
   }
