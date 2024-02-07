@@ -11,7 +11,7 @@ const LoginPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
-  const [registerAccountType, setRegisterAccountType] = useState(""); // Added state for account type
+  const [registerAccountType, setRegisterAccountType] = useState("Basic"); // Added state for account type
   const navigate = useNavigate();
   const { setUserId, setUserName } = useContext(AuthContext);
 
@@ -49,6 +49,8 @@ const LoginPage = () => {
       if (!registerEmail || !registerPassword || !registerUsername) {
         throw new Error("Please fill in all the registration fields.");
       }
+
+      console.log("Register Account Type:", registerAccountType);
 
       const response = await axios.post("http://localhost:5050/register", {
         registerEmail,

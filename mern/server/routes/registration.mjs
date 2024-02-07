@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
       username: registerUsername, // Change field name to 'username'
       email: registerEmail,
       password: hashedPassword,
-      account_type: registerAccountType,
+      account_type: registerAccountType || "Basic",
       favList: [
         {
           list_name: "Favourite",
