@@ -4,8 +4,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/AuthContext";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:5050';
-
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("login");
   const [loginEmail, setLoginEmail] = useState("");
@@ -28,7 +26,7 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post(`${BASE_URL}/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/login`, {
         email: loginEmail,
         password: loginPassword,
       });
