@@ -8,7 +8,7 @@ export default function GlossaryPage() {
   useEffect(() => {
     async function fetchGlossaryData() {
       try {
-        const response = await fetch(`http://localhost:5050/glossary/`);
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/glossary/`);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch glossary data: ${response.statusText}`);

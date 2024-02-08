@@ -2,3 +2,4 @@ node_modules/
 mern/server/node_modules/
 mern/client/node_modules/
 config.env
+.env
