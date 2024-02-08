@@ -14,6 +14,7 @@ import modelsRouter from "./routes/models.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import dotenv from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,6 +27,9 @@ import searchRoute from "./routes/searchRoute.mjs";
 import compression from 'compression';
 
 // const PORT = 5050;
+
+dotenv.config();
+
 const app = express();
 
 app.use(cors());
@@ -74,9 +78,13 @@ app.use("/glossary", glossary);
 //   });
 // } 
 if(process.env.NODE_ENV === 'production'){
-  app.use(express.static('../client/build'));
+  // Serve static files from the React app
+  app.use(express.static(path.join(__dirname, '../client/build')));
+
+  // The "catchall" handler: for any request that doesn't
+  // match one above, send back React's index.html file.
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
 }
 else {
@@ -84,7 +92,6 @@ else {
     res.send("API is running");
   });
 }
-
 
 
 const port = process.env.PORT || 5050;
