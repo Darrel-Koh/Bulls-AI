@@ -21,11 +21,11 @@ import tickerpage from "./routes/tickerpageGet.mjs";
 import tickerListRouter from "./routes/addtickerlistGet.mjs";
 import deletetickerListRouter from "./routes/deletetickerlistGet.mjs";
 import deleteTicker from "./routes/deleteTicker.mjs";
-import mainpage from "./routes/mainpage.mjs";
 import searchRoute from "./routes/searchRoute.mjs";
 import compression from 'compression';
 import updateAccountRouter from "./routes/updateAccount.mjs";
 import recommendationDataRoute from "./routes/recommendationData.mjs";
+import updatePasswordRouter from "./routes/updatePassword.mjs";
 
 const PORT = 5050;
 const app = express();
@@ -39,17 +39,17 @@ app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter);
 app.use("/forget-password", forgetPasswordRouter);
-app.use("/change-password", changePasswordRouter); // Use the changePassword router
+app.use("/updatePassword", updatePasswordRouter); // Use the changePassword router
 app.use("/model", modelsRouter);
 
 // Serve static files from the "tfjs_models" directory
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
-// load suggestions
-//app.use("/api/data", mainpage);
 // fetch search route 
 app.use("/api/search", searchRoute);
+// updata account from basic to professional
 app.post("/update-account", updateAccountRouter);
+// recommendation table
 app.use('/recommendation-data', recommendationDataRoute);
 
 

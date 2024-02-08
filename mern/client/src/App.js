@@ -21,6 +21,7 @@ import ProfileUser from "./components/ProfileUser";
 import PricingPage from './components/PricingPage';
 import UserInfo from "./components/UserInfo";
 import PaymentPage from "./components/PaymentPage";
+import UpdatePassword from "./components/updatePassword";
 
 const App = () => {
   const [userId, setUserId] = useState(null);
@@ -46,7 +47,7 @@ const App = () => {
             <Route path="/UserInfo" element={<UserInfo />} />
             <Route path="/PricingPage" element={<PricingPage />} />
             <Route path="/PaymentPage" element={<PaymentPage />} />
-            <Route path="/change-password" element={<ChangePassword />} />{" "}
+            <Route path="/updatePassword" element={<UpdatePassword />} />
             {/* Add this line */}        
 
           </Routes>
