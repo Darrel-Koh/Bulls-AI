@@ -52,7 +52,7 @@ const LoginPage = () => {
         throw new Error("Please fill in all the registration fields.");
       }
 
-      const response = await axios.post(`${BASE_URL}/register`, {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, {
         registerEmail,
         registerPassword,
         registerUsername,
@@ -90,7 +90,7 @@ const LoginPage = () => {
 
     if (email) {
       try {
-        await axios.post(`${BASE_URL}/forget-password`, {
+        await axios.post(`${process.env.REACT_APP_BASE_URL}/forget-password`, {
           email,
         });
         alert("Password reset initiated. Check your email for instructions.");
