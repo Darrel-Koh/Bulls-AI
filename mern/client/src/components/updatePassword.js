@@ -3,6 +3,8 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import AuthContext from "./AuthContext";
+import { TextField, Button, Typography, Box, Container, Grid } from "@mui/material";
+
 
 const updatePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -65,39 +67,53 @@ const updatePassword = () => {
     return { password, setPassword };
 }
 
-  return (
-    <div>
-      <h2>Update Password</h2>
+return (
+  <Container maxWidth="sm">
+    <Box mt={4}>
+      <Typography variant="h4" align="center">Update Password</Typography>
       <form onSubmit={handleUpdatePassword}>
-        <div>
-          <label>Current Password:</label>
-          <input
-            type="password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>New Password:</label>
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Confirm New Password:</label>
-          <input
-            type="password"
-            value={confirmNewPassword}
-            onChange={(e) => setConfirmNewPassword(e.target.value)}
-          />
-        </div>
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-        <button type="submit">Change Password</button>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              type="password"
+              label="Current Password"
+              fullWidth
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              type="password"
+              label="New Password"
+              fullWidth
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              type="password"
+              label="Confirm New Password"
+              fullWidth
+              value={confirmNewPassword}
+              onChange={(e) => setConfirmNewPassword(e.target.value)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+          </Grid>
+          <Grid item xs={12}>
+            <Button type="submit" variant="contained" color="primary" fullWidth>
+              Change Password
+            </Button>
+          </Grid>
+        </Grid>
       </form>
-    </div>
-  );
+    </Box>
+  </Container>
+);
 };
+
 
 export default updatePassword;

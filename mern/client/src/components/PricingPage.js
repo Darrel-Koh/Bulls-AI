@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Button, Container, Paper } from '@mui/material';
+import { Typography, Button, Container, Paper, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import PricingPlan from './PricingPlan';
 import "../components/style.css";
 import { useNavigate } from 'react-router-dom'; // Import useHistory hook for navigation
@@ -7,14 +7,27 @@ import { useNavigate } from 'react-router-dom'; // Import useHistory hook for na
 const PricingPage = () => {
     const [selectedPlan, setSelectedPlan] = useState(null);
     const navigate = useNavigate();
+    const [openDialog, setOpenDialog] = useState(false); // State to control dialog visibility
+
+
     const handlePlanSelect = (planName) => {
       setSelectedPlan(planName);
+      if (planName === "Basic Plan") {
+        setOpenDialog(true); // Open dialog for Basic Plan
+    }
+};
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
     };
+
   
     const handleChangePlan = () => {
         // Navigate to PaymentPage when "Change Plan" button is clicked
         navigate("/PaymentPage", { state: { selectedPlan } });
     };
+
+    
     return (
       <Container maxWidth="md" className="pricing-page">
         <Typography variant="h3" align="center" gutterBottom>
@@ -55,19 +68,34 @@ const PricingPage = () => {
         </Paper>
 
         {selectedPlan && (
-          <div className="selected-plan" style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center' }}>
             <Typography variant="h6" style={{ marginTop: '20px', fontWeight: 'bold', color: '#333' }}>
-            Selected Plan: {selectedPlan}
+                Selected Plan: {selectedPlan}
             </Typography>
-            <Button variant="contained" color="primary" onClick={handleChangePlan}>
-              Change Plan
-            </Button>
-          </div>
+            {/* Render the button conditionally */}
+            {selectedPlan !== "Basic Plan" && (
+                <Button variant="contained" color="primary" onClick={handleChangePlan} style={{ marginTop: '20px' }}>
+                    Change Plan
+                </Button>
+            )}
+        </div>
         )}
 
         <footer style={{ marginTop: '50px', padding: '20px', backgroundColor: '#f4f4f4', textAlign: 'center' }}>
           <Typography variant="body2">&copy; 2023 Bulls Ai. All rights reserved.</Typography>
         </footer>
+
+
+         {/* Dialog for Basic Plan */}
+         <Dialog open={openDialog} onClose={handleCloseDialog}>
+                <DialogTitle>Basic Plan Information</DialogTitle>
+                <DialogContent>
+                    <Typography variant="body1">Basic Plan is free of charge.</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">Close</Button>
+                </DialogActions>
+            </Dialog>
       </Container>
     );
 };

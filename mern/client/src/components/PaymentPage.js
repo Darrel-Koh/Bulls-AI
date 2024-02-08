@@ -34,31 +34,31 @@ const PaymentPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             // Check if userId is not null before accessing properties
             if (!userId) {
                 console.error('User ID not found in localStorage', userId);
                 return;
             }
-
-            // Your payment processing logic goes here
-
+    
             // Send a request to update the user account type
-            const response = await axios.patch(`http://localhost:5050/update-account/${encodeURIComponent(userId)}`, {
-                newAccountType: selectedPlan,
+            const response = await axios.post("http://localhost:5050/updateAccount", {
+                newAccountType: "Professional", // Update the account type to "Professional"
+                userId: userId // Pass the userId to the server
             });
-
-            if (!response.data) {
+    
+            if (response.status === 200) {
+                // After successful account update, navigate to a confirmation page
+                navigate('/UserInfo');
+            } else {
                 throw new Error(`Failed to update: ${response.statusText}`);
             }
-
-            // After successful payment and account update, navigate to a confirmation page
-            navigate('/UserInfo');
         } catch (error) {
             console.error('Error processing payment:', error);
         }
     };
+    
 
     
     const handleCancel = () => {

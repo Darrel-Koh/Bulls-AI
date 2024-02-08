@@ -5,35 +5,33 @@ import User from '../models/User.js'; // Import the User model
 
 const router = express.Router();
 
-router.patch('/update-account/:id', async (req, res) => {
-    const userId = req.params.id;
-    const { newAccountType } = req.body;
-
-    // Validate newAccountType
-    if (!newAccountType) {
-        return res.status(400).json({ error: 'New account type is required' });
-    }
-
+// Endpoint to update user's account type
+router.post("/", async (req, res) => {
+    const { newAccountType, userId } = req.body;
+    // const userId = req.user.id; // Assuming you have middleware to extract user information
+    const o_id = new ObjectId(userId);
+  
     try {
-        // Update account type using Mongoose methods
-        const user = await User.findByIdAndUpdate(
-            userId,
-            { account_type: newAccountType },
-            { new: true } // Return the updated document
-        );
-
-        // Check if the user exists
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        // Successful update
-        return res.status(200).json({ message: 'Account type updated successfully', user });
+      // Retrieve user information from the database based on userId
+      const userInfo = await bullsdb.collection("users").findOne({ _id: o_id });
+  
+      if (!userInfo) {
+        // Send 401 Unauthorized status code and error message
+        return res.status(401).send("User not found.");
+      }
+  
+      // Update the user's account type in the database
+      await bullsdb
+        .collection("users")
+        .updateOne({ _id: o_id }, { $set: { account_type: newAccountType } });
+  
+      // Send a success response
+      res.status(200).send("Account type updated successfully.");
     } catch (error) {
-        console.error('Error updating account type:', error);
-        return res.status(500).send('Internal Server Error');
+      console.error("Error updating account type:", error.message);
+      // Send 500 Internal Server Error status code and error message
+      res.status(500).send("Internal Server Error");
     }
-});
-
-export default router;
-
+  });
+  
+  export default router;

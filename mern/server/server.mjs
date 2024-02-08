@@ -48,7 +48,7 @@ app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 // fetch search route 
 app.use("/api/search", searchRoute);
 // updata account from basic to professional
-app.post("/update-account", updateAccountRouter);
+app.use("/updateAccount", updateAccountRouter);
 // recommendation table
 app.use('/recommendation-data', recommendationDataRoute);
 

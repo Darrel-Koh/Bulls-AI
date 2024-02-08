@@ -16,7 +16,6 @@ import MainPage from "./components/mainPage";
 import UserList from "./components/recordList2";
 import { useState } from "react";
 import AuthContext from "./components/AuthContext";
-import ChangePassword from "./components/ChangePassword"; // Import the new ChangePassword component
 import ProfileUser from "./components/ProfileUser";
 import PricingPage from './components/PricingPage';
 import UserInfo from "./components/UserInfo";
