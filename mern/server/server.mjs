@@ -67,16 +67,25 @@ app.get("/db-test", async (req, res) => {
 app.use("/glossary", glossary);
 
 
+// if(process.env.NODE_ENV === 'production'){
+//   app.use(express.static('client/build'));
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+//   });
+// } 
 if(process.env.NODE_ENV === 'production'){
-  app.use(express.static('client/build'));
+  app.use(express.static('../client/build'));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'client', 'build', 'index.html'));
   });
-} else {
+}
+else {
   app.get("*", (req, res) => {
     res.send("API is running");
   });
 }
+
+
 
 const port = process.env.PORT || 5050;
 app.listen(port, () => {
