@@ -16,6 +16,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '21.3'
+      - name: Print directory structure
+        run: pwd && ls -R
 
       - name: Install client dependencies
         run: npm install --prefix ../mern/client
