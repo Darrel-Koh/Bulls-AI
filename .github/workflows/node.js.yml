@@ -1,0 +1,37 @@
+name: CICD
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '21.3'
+
+      - name: Install client dependencies
+        run: npm install --prefix MERN/client
+
+      - name: Run client tests
+        run: npm test --prefix MERN/client
+
+      - name: Build client
+        run: npm run build --prefix MERN/client
+
+      - name: Install server dependencies
+        run: npm install --prefix MERN/server
+
+      - name: Run server tests
+        run: npm test --prefix MERN/server
+
+      # Additional steps if needed for server build or other checks
+
+  # Add deployment steps here if you want to deploy to Heroku or another platform
