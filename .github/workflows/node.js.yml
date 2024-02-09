@@ -18,19 +18,19 @@ jobs:
           node-version: '21.3'
 
       - name: Install client dependencies
-        run: npm install --prefix MERN/client
+        run: npm install --prefix ./MERN/client
 
       - name: Run client tests
-        run: npm test --prefix MERN/client
+        run: npm test --prefix ./MERN/client
 
       - name: Build client
-        run: npm run build --prefix MERN/client
+        run: npm run build --prefix ./MERN/client
 
       - name: Install server dependencies
-        run: npm install --prefix MERN/server
+        run: npm install --prefix ./MERN/server
 
       - name: Run server tests
-        run: npm test --prefix MERN/server
+        run: npm test --prefix ./MERN/server
 
       # Additional steps if needed for server build or other checks
 
