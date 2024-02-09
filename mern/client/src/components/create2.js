@@ -23,13 +23,13 @@ export default function Create() {
    // When a post request is sent to the create url, we'll add a new record to the database.
    const newPerson = { ...form };
 
-  //  await fetch("http://localhost:5050/user", {
-  //    method: "POST",
-  //    headers: {
-  //      "Content-Type": "application/json",
-  //    },
-  //    body: JSON.stringify(newPerson),
-  //  })
+   await fetch("http://localhost:5050/user", {
+     method: "POST",
+     headers: {
+       "Content-Type": "application/json",
+     },
+     body: JSON.stringify(newPerson),
+   })
    .catch(error => {
      window.alert(error);
      return;
