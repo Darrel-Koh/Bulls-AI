@@ -22,13 +22,13 @@ jobs:
       - name: Install client dependencies
         run: npm install --prefix ./mern/client
       
-      - name: Build client
+      - name: Start client
         run: npm start --prefix ./mern/client
 
       - name: Install server dependencies
         run: npm install --prefix ./mern/server
 
-      - name: Run server build
+      - name: Start build
         run: npm start --prefix ./mern/server
 
       # Additional steps if needed for server build or other checks
