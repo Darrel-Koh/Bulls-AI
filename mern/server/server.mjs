@@ -14,6 +14,7 @@ import modelsRouter from "./routes/models.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import dotenv from 'dotenv';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,7 +28,10 @@ import updateAccountRouter from "./routes/updateAccount.mjs";
 import recommendationDataRoute from "./routes/recommendationData.mjs";
 import updatePasswordRouter from "./routes/updatePassword.mjs";
 
-const PORT = 5050;
+// const PORT = 5050;
+
+dotenv.config();
+
 const app = express();
 
 app.use(cors());
@@ -71,6 +75,30 @@ app.get("/db-test", async (req, res) => {
 app.use("/glossary", glossary);
 
 
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+// if(process.env.NODE_ENV === 'production'){
+//   app.use(express.static('client/build'));
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
+//   });
+// } 
+if(process.env.NODE_ENV === 'production'){
+  // Serve static files from the React app
+  app.use(express.static(path.join(__dirname, '../client/build')));
+
+  // The "catchall" handler: for any request that doesn't
+  // match one above, send back React's index.html file.
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+  });
+}
+else {
+  app.get("*", (req, res) => {
+    res.send("API is running");
+  });
+}
+
+
+const port = process.env.PORT || 5050;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
 });

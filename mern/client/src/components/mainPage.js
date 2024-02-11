@@ -24,9 +24,10 @@ const MainPage = () => {
     try {
       setIsLoading(true);
       setErrorMessage('');
-
-      const response = await fetch('http://localhost:5050/recommendation-data');
-      
+  
+      // Fetch data from the /api/data endpoint
+      const response = await fetch(`h${process.env.REACT_APP_BASE_URL}/recommendation-data`);
+  
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -51,9 +52,10 @@ const MainPage = () => {
     }
   
     try {
-      setIsLoading(true); // Start loading when search is initiated
-
-      const response = await fetch(`http://localhost:5050/api/search?q=${encodedSearchTerm}`);
+      console.log('Sending request with search term:', encodedSearchTerm);
+  
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/search?q=${encodedSearchTerm}`);
+      console.log('Response:', response);
   
       if (!response.ok) {
         console.error('Search request failed:', response.status, response.statusText);
