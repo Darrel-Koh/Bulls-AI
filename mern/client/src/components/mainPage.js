@@ -26,7 +26,7 @@ const MainPage = () => {
       setErrorMessage('');
   
       // Fetch data from the /api/data endpoint
-      const response = await fetch(`h${process.env.REACT_APP_BASE_URL}/recommendation-data`);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data`);
   
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -77,7 +77,7 @@ const MainPage = () => {
     try {
       setIsLoading(true); // Start loading when search is initiated
 
-      const response = await fetch(`http://localhost:5050/api/search?q=${encodedSearchTerm}`);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/search?q=${encodedSearchTerm}`);
   
       if (!response.ok) {
         console.error('Search request failed:', response.status, response.statusText);
@@ -202,24 +202,24 @@ const MainPage = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((item, index) => (
-            <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? grey[200] : 'white' }}>
-              <TableCell>
-                <Link
-                  className="trading-link"
-                  onClick={() => handleSearchLink(item.trading_name)}
-                  style={{ color: '#007bff', cursor: 'pointer' }}
-                >
-                  {item.trading_name}
-                </Link>
-              </TableCell>
-              <TableCell>{item.symbol}</TableCell>
-              <TableCell>{item.last.toFixed(2)}</TableCell>
-              <TableCell className={item.chng > 0 ? 'positive-change' : 'negative-change'}>
-                {item.chng > 0 ? `+${item.chng}` : item.chng}
-              </TableCell>
-            </TableRow>
-          ))}
+        {data && Array.isArray(data) && data.map((item, index) => (
+          <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? grey[200] : 'white' }}>
+            <TableCell>
+              <Link
+                className="trading-link"
+                onClick={() => handleSearchLink(item.trading_name)}
+                style={{ color: '#007bff', cursor: 'pointer' }}
+              >
+                {item.trading_name}
+              </Link>
+            </TableCell>
+            <TableCell>{item.symbol}</TableCell>
+            <TableCell>{item.last.toFixed(2)}</TableCell>
+            <TableCell className={item.chng > 0 ? 'positive-change' : 'negative-change'}>
+              {item.chng > 0 ? `+${item.chng}` : item.chng}
+            </TableCell>
+          </TableRow>
+        ))}
         </TableBody>
       </Table>
     </div>

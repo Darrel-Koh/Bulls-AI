@@ -7,7 +7,6 @@ import user from "./routes/record2.mjs";
 import loginRouter from "./routes/login.mjs";
 import registrationRouter from "./routes/registration.mjs";
 import forgetPasswordRouter from "./routes/forgetPassword.mjs";
-import changePasswordRouter from "./routes/changepassword.mjs"; // Import the new changePassword router
 import { db, bullsdb } from "../server/db/conn.mjs";
 import glossary from "./routes/glossaryGet.mjs";
 import modelsRouter from "./routes/models.mjs";
@@ -43,7 +42,8 @@ app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter);
 app.use("/forget-password", forgetPasswordRouter);
-app.use("/updatePassword", updatePasswordRouter); // Use the changePassword router
+// update password
+app.use("/updatePassword", updatePasswordRouter);
 app.use("/model", modelsRouter);
 
 // Serve static files from the "tfjs_models" directory
@@ -51,7 +51,7 @@ app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
 // fetch search route 
 app.use("/api/search", searchRoute);
-// updata account from basic to professional
+// update account from basic to professional
 app.use("/updateAccount", updateAccountRouter);
 // recommendation table
 app.use('/recommendation-data', recommendationDataRoute);
@@ -93,7 +93,9 @@ if(process.env.NODE_ENV === 'production'){
 }
 else {
   app.get("*", (req, res) => {
-    res.send("API is running");
+    // res.send("API is running");
+    res.json({ message: "API is running" });
+
   });
 }
 

@@ -105,8 +105,8 @@ const addPaginationHeaders = (res, req, page, pageSize, totalPages) => {
 
 router.get("/", async (req, res) => {
     let collection = await bullsdb.collection("ticker_data");
-    // Limit to 632 collections for faster loading process
-    let results = await collection.find({}).toArray(); 
+    // Limit to 500 record: 1 minute
+    let results = await collection.find({}).limit(400).toArray(); 
     res.send(results).status(200);
 });
 

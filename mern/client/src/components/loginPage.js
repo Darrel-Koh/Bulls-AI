@@ -3,17 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/AuthContext";
 import BullsAiLogo from "../images/BullsAI logo_coloured_logo.png"; // Import BullsAI logo
-import {
-  Button,
-  Typography,
-  TextField,
-  Container,
-  Link,
-  Select,
-  MenuItem,
-  Box,
-  Avatar, // Import Avatar component
-} from "@mui/material";
+import { Button, Select, MenuItem, Box, Avatar, Container, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+
 
 const LoginPage = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -25,6 +16,9 @@ const LoginPage = () => {
   const [registerAccountType, setRegisterAccountType] = useState("Basic");
   const navigate = useNavigate();
   const { setUserId, setUserName } = useContext(AuthContext);
+  const [wrongPasswordDialogOpen, setWrongPasswordDialogOpen] = useState(false); // State for dialog visibility
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState('');
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -53,8 +47,14 @@ const LoginPage = () => {
       navigate("/mainPage");
     } catch (error) {
       console.error("Login failed:", error.message);
+        // Show wrong password dialog
+        setWrongPasswordDialogOpen(true); 
     }
   };
+
+  const handleCloseWrongPasswordDialog = () => {
+    setWrongPasswordDialogOpen(false);
+};
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -84,7 +84,8 @@ const LoginPage = () => {
         error.response.status === 400 &&
         error.response.data.startsWith("Password")
       ) {
-        alert(error.response.data);
+        setDialogContent(error.response.data);
+        setOpenDialog(true);      
       } else if (
         error.response &&
         error.response.status === 400 &&
@@ -95,6 +96,11 @@ const LoginPage = () => {
         console.error("Registration failed:", error.message);
       }
     }
+  };
+
+  
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   const handleForgotPassword = async () => {
@@ -236,6 +242,36 @@ const LoginPage = () => {
             </Box>
           </form>
         )}
+           {/* Wrong Password Dialog */}
+      <Dialog
+        open={wrongPasswordDialogOpen}
+        onClose={handleCloseWrongPasswordDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Wrong Password"}</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">Invalid email or password. Please try again.</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseWrongPasswordDialog} color="primary" autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Registration Error Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Registration Error</DialogTitle>
+        <DialogContent>
+          <p>{dialogContent}</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
       </div>
     </Container>
   );

@@ -17,7 +17,7 @@ const ViewTickers = () => {
  // News Section 
 useEffect(() => {
   console.log('Fetching related news for:', searchTerm);
-  const apiKey = 'a1f6019d3f084b21bd71242f6629ef1b'; // Replace with your actual News API key
+  const apiKey = '466de00744114cc8be03ca388f1f816f'; // Replace with your actual News API key
 
   const fetchRelatedNews = async () => {
     try {
@@ -25,7 +25,7 @@ useEffect(() => {
       const searchTermWithKeywords = `${searchTerm} ${stocksKeywords.join(' OR ')}`;
 
       // Construct the URL with language and sortBy parameters
-      const url = `https://newsapi.org/v2/everything?q=${searchTermWithKeywords}&apiKey=${apiKey}&language=en&sortBy=publishedAt`;
+      const url = `https://newsapi.org/v2/everything?q=${searchTermWithKeywords}&apiKey=${apiKey}&language=en&sortBy=publishedAt&sources=bbc-news`;
 
       const response = await fetch(url);
 
@@ -64,12 +64,19 @@ useEffect(() => {
 // result.trading_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 // result.symbol.toLowerCase().includes(searchTerm.toLowerCase())
 // );
-const filteredData = searchResults.filter((result) => {
+// const filteredData = searchResults.filter((result) => {
+//   const tradingName = result?.trading_name?.toLowerCase() || ''; // Check if trading_name is defined
+//   const symbol = result?.symbol?.toLowerCase() || ''; // Check if symbol is defined
+
+//   return tradingName.includes(searchTerm.toLowerCase()) || symbol.includes(searchTerm.toLowerCase());
+// });
+
+const filteredData = Array.isArray(searchResults) ? searchResults.filter((result) => {
   const tradingName = result?.trading_name?.toLowerCase() || ''; // Check if trading_name is defined
   const symbol = result?.symbol?.toLowerCase() || ''; // Check if symbol is defined
 
   return tradingName.includes(searchTerm.toLowerCase()) || symbol.includes(searchTerm.toLowerCase());
-});
+}) : [];
 
 
 const displayedData = filteredData.slice(startIndex, endIndex);

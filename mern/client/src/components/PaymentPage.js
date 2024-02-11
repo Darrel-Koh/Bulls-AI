@@ -43,7 +43,7 @@ const PaymentPage = () => {
             }
     
             // Send a request to update the user account type
-            const response = await axios.post("http://localhost:5050/updateAccount", {
+            const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/updateAccount`, {
                 newAccountType: "Professional", // Update the account type to "Professional"
                 userId: userId // Pass the userId to the server
             });

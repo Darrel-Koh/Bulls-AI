@@ -6,7 +6,7 @@ import AuthContext from "./AuthContext";
 import { TextField, Button, Typography, Box, Container, Grid } from "@mui/material";
 
 
-const updatePassword = () => {
+const UpdatePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
@@ -38,7 +38,7 @@ const updatePassword = () => {
     try {
       // Send request to backend to change password
       const response = await axios.post(
-        "http://localhost:5050/updatePassword",
+        `${process.env.REACT_APP_BASE_URL}/updatePassword`,
         {
           currentPassword,
           newPassword,
@@ -116,4 +116,4 @@ return (
 };
 
 
-export default updatePassword;
+export default UpdatePassword;
