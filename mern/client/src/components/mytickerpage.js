@@ -6,6 +6,7 @@ import AuthContext from './AuthContext';
 const MyTickerPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [tickerData, setTickerData] = useState([]);
   const [selectedTickers, setSelectedTickers] = useState([]);
@@ -187,6 +188,16 @@ const MyTickerPage = () => {
     padding: '10px',
     border: '1px solid #ddd',
   };
+ // eslint-disable-next-line no-unused-vars
+  const pageContainerStyle = {
+    maxWidth: '800px',
+    margin: '0 auto',
+    padding: '20px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  };
 
   const tabsContainerStyle = {
     display: 'flex',
@@ -248,6 +259,17 @@ const MyTickerPage = () => {
     } catch (error) {
       console.error('Error deleting ticker list:', error.message);
     }
+  };
+
+  const handleEditListName = () => {
+    // Check if a tab is selected
+    if (!selectedTab) {
+      alert('Please select a ticker list to edit.');
+      return;
+    }
+
+    // Navigate to EditTickerListPage with the selectedTab as a parameter
+    navigate(`/edit-tickerlist/${encodeURIComponent(selectedTab)}`);
   };
   
   return (
@@ -363,7 +385,10 @@ const MyTickerPage = () => {
               </button>
             </>
           )}
-        </div>
+          <button onClick={handleEditListName} style={actionButtonStyle}>
+      Edit List Name
+    </button>
+  </div>
         <div style={buttonRowStyle}>
           <div style={{ marginRight: '20px' }}>
             <button

@@ -11,6 +11,21 @@ router.post('/:id', async (req, res) => {
 
   try {
     const usersCollection = await bullsdb.collection('users');
+
+    // Check if the list_name already exists for the user
+    const existingUser = await usersCollection.findOne({
+      _id: new ObjectId(userId),
+      'favList.list_name': list_name,
+    });
+
+    if (existingUser) {
+      // If the list_name already exists, send a 409 Conflict status
+      console.log('Old List Name:', list_name);
+      return res.status(409).json({ error: 'List name already exists' });
+
+    }
+
+    // If the list_name doesn't exist, add it to the user's favorites list
     const result = await usersCollection.updateOne(
       { _id: new ObjectId(userId) },
       {
@@ -24,8 +39,7 @@ router.post('/:id', async (req, res) => {
     );
 
     if (result.matchedCount === 0) {
-      res.status(404).json({ error: 'User not found' });
-      return;
+      return res.status(404).json({ error: 'User not found' });
     }
 
     res.status(200).json({ message: 'Ticker list added successfully' });
