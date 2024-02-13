@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleForgetPassword = async () => {
     try {
@@ -23,6 +25,10 @@ const ForgetPassword = () => {
     }
   };
 
+  const redirectToLogin = () => {
+    navigate("/");
+  };
+
   return (
     <div>
       <h2>Forget Password</h2>
@@ -33,6 +39,8 @@ const ForgetPassword = () => {
         onChange={(e) => setEmail(e.target.value)}
       />
       <button onClick={handleForgetPassword}>Reset Password</button>
+      <button onClick={redirectToLogin}>Back to Login</button>{" "}
+      {/* Button to navigate to login page */}
       {message && <p>{message}</p>}
     </div>
   );
