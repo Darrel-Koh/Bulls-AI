@@ -13,7 +13,7 @@ const AddTickerPage = ({ onAddTickerList, onCancel }) => {
       // Check if listName is not null or empty
       if (listName.trim() !== '') {
         // Make a request to add the ticker list
-        const response = await axios.post(`http://localhost:5050/add-tickerlist/${encodeURIComponent(userId)}`, {
+        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/add-tickerlist/${encodeURIComponent(userId)}`, {
           list_name: listName,
         });
   
