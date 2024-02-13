@@ -17,6 +17,7 @@ import UserList from "./components/recordList2";
 import { useState } from "react";
 import AuthContext from "./components/AuthContext";
 import ChangePassword from "./components/ChangePassword"; // Import the new ChangePassword component
+import EditTickerListPage from "./components/edittickerlistpage";
 
 const App = () => {
   const [userId, setUserId] = useState(null);
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="/glossary" element={<GlossaryPage />} />
             <Route path="/my-ticker" element={<MyTickerPage />} />
             <Route path="/add-ticker" element={<AddTickerPage />} />
+            <Route path="/edit-tickerlist/:listName" element={<EditTickerListPage />} />
             <Route path="/recordListPage" element={<UserList />} />
             <Route path="/viewTickers" element={<ViewTickers />} />
         <Route path="/mainPage" element={<MainPage />} />
