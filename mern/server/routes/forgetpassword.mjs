@@ -1,5 +1,6 @@
 import express from "express";
 import nodemailer from "nodemailer";
+import bcrypt from "bcrypt"; // Import bcrypt
 import { db, bullsdb } from "../db/conn.mjs";
 
 const router = express.Router();
@@ -17,22 +18,25 @@ router.post("/", async (req, res) => {
     // Generate temporary password
     const temporaryPassword = Math.random().toString(36).slice(-8);
 
-    // Update user document in the database with the temporary password
+    // Hash the temporary password using bcrypt
+    const hashedTemporaryPassword = await bcrypt.hash(temporaryPassword, 10);
+
+    // Update user document in the database with the hashed temporary password
     await bullsdb
       .collection("users")
-      .updateOne({ email }, { $set: { password: temporaryPassword } });
+      .updateOne({ email }, { $set: { password: hashedTemporaryPassword } });
 
     // Send email with temporary password
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      service: "outlook",
       auth: {
-        user: "bullsai001@gmail.com",
+        user: "bullsai001@outlook.com",
         pass: "Applebanana!",
       },
     });
 
     const mailOptions = {
-      from: "bullsai001@gmail.com",
+      from: "bullsai001@outlook.com",
       to: email,
       subject: "Password Reset Request",
       text: `Your temporary password is: ${temporaryPassword}. Please change your password after logging in.`,
