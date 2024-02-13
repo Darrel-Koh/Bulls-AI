@@ -364,14 +364,19 @@ const MyTickerPage = () => {
       <div style={{ textAlign: 'center', marginTop: '10px', color: '#000' }}>
         No rows to display.
         <div style={buttonRowStyle}>
-          <button onClick={handleAddTickerClick} style={actionButtonStyle}>
-            Add Ticker List
-          </button>
-          {/* Add space between buttons */}
-          <span style={{ margin: '0 10px' }}></span>
-          <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
-            Delete List
-          </button>
+          {/* Only show buttons for 'Professional' users */}
+          {selectedUser && selectedUser.account_type === 'Professional' && (
+            <>
+              <button onClick={handleAddTickerClick} style={actionButtonStyle}>
+                Add Ticker List
+              </button>
+              {/* Add space between buttons */}
+              <span style={{ margin: '0 10px' }}></span>
+              <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
+                Delete List
+              </button>
+            </>
+          )}
         </div>
       </div>
     ) : (
@@ -389,9 +394,9 @@ const MyTickerPage = () => {
             </>
           )}
           <button onClick={handleEditListName} style={actionButtonStyle}>
-      Edit List Name
-    </button>
-  </div>
+            Edit List Name
+          </button>
+        </div>
         <div style={buttonRowStyle}>
           <div style={{ marginRight: '20px' }}>
             <button
@@ -410,8 +415,9 @@ const MyTickerPage = () => {
       </div>
     )
 )}
-      </div>
-    </div>
-  );
+</div>
+</div>
+);
+
           };
 export default MyTickerPage;

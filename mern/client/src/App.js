@@ -21,9 +21,10 @@ import EditTickerListPage from "./components/edittickerlistpage";
 const App = () => {
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState("");
+  const [status, setStatus] = useState("");
 
   return (
-    <AuthContext.Provider value={{ userId, setUserId, userName, setUserName }}>
+    <AuthContext.Provider value={{ userId, setUserId, userName, setUserName, status, setStatus }}>
       {userId && <Header />}
       <div style={{ margin: 20 }}>
         <Routes>
@@ -43,7 +44,7 @@ const App = () => {
           <Route path="/changepassword" element={<ChangePassword />} />
           <Route
             path="/forget-password"
-            element={<ForgetPassword userId={userId} />}
+            element={<ForgetPassword userId= "" />}
           />
           {/* Add a default route for unmatched paths */}
           <Route

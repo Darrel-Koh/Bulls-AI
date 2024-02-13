@@ -66,7 +66,7 @@ const navStyle = {
 
 const Header = () => {
   const authContext = useContext(AuthContext);
-  const { userId, userName, status, setUserId, setUserName, setStatus  } = authContext || {};
+  const { userId, userName, status, setUserId, setUserName, setStatus } = authContext || {};
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [loading, setLoading] = useState(true); // New state for loading status
@@ -82,6 +82,7 @@ const Header = () => {
       if (storedUserId && storedUserName && storedStatus) {
         setUserId(storedUserId);
         setUserName(storedUserName);
+       
               }
 
       // Set loading to false once authentication check is complete
@@ -140,7 +141,7 @@ const Header = () => {
       setUserId(null);
       setUserName('');
       setDropdownVisible(false);
-
+      setStatus('');
       navigate('/');
     }
   };

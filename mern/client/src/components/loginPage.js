@@ -33,12 +33,12 @@ const LoginPage = () => {
       );
 
       console.log("Login successful. Response:", response.data);
-      console.log("Status:", response.data.account_type);      navigate("/mainPage");
+      console.log("Status:", response.data.account_type);      
+      navigate("/mainPage");
       setUserId(response.data._id);
       setUserName(response.data.username);
-      
+      setStatus(response.data.account_type);
 
-      navigate("/mainPage");
     } catch (error) {
       console.error("Login failed:", error.message);
     }
