@@ -11,7 +11,7 @@ const ForgetPassword = () => {
         throw new Error("Please enter your email.");
       }
 
-      await axios.post("http://localhost:5050/forget-password", {
+      await axios.post(`${process.env.REACT_APP_BASE_URL}/forget-password`, {
         email,
       });
       setMessage(
