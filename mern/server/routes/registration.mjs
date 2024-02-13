@@ -12,15 +12,10 @@ const isStrongPassword = (password) => {
 
 // Register a new user
 router.post("/", async (req, res) => {
-  const {
-    registerEmail,
-    registerPassword,
-    registerUsername, // Change from 'registerFirstName' to 'registerUsername'
-    registerAccountType,
-  } = req.body;
+  const { registerEmail, registerPassword, registerUsername } = req.body;
 
   console.log(
-    `Received registration request: ${registerEmail}, ${registerUsername}, ${registerAccountType}`
+    `Received registration request: ${registerEmail}, ${registerUsername}`
   );
 
   try {
@@ -49,10 +44,10 @@ router.post("/", async (req, res) => {
 
     // If the email is not registered, insert the new user into the database
     const newUser = {
-      username: registerUsername, // Change field name to 'username'
+      username: registerUsername,
       email: registerEmail,
       password: hashedPassword,
-      account_type: registerAccountType,
+      account_type: "Basic", // Set account type directly to "Basic"
       favList: [
         {
           list_name: "Favourite",

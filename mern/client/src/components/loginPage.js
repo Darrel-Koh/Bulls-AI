@@ -1,4 +1,3 @@
-// loginPage.js
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +10,6 @@ const LoginPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
-  const [registerAccountType, setRegisterAccountType] = useState(""); // Added state for account type
   const navigate = useNavigate();
   const { setUserId, setUserName } = useContext(AuthContext);
 
@@ -26,10 +24,13 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/login`, {
-        email: loginEmail,
-        password: loginPassword,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/login`,
+        {
+          email: loginEmail,
+          password: loginPassword,
+        }
+      );
 
       console.log("Login successful. Response:", response.data);
       navigate("/mainPage");
@@ -50,19 +51,22 @@ const LoginPage = () => {
         throw new Error("Please fill in all the registration fields.");
       }
 
-      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, {
-        registerEmail,
-        registerPassword,
-        registerUsername,
-        registerAccountType,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/register`,
+        {
+          registerEmail,
+          registerPassword,
+          registerUsername,
+        }
+      );
+
+      console.log("Registration successful");
 
       window.alert("Registration successful");
 
       setRegisterEmail("");
       setRegisterPassword("");
       setRegisterUsername("");
-      setRegisterAccountType("");
       setActiveTab("login");
     } catch (error) {
       if (
@@ -83,20 +87,10 @@ const LoginPage = () => {
     }
   };
 
-  const handleForgotPassword = async () => {
-    const email = prompt("Enter your email to reset password:");
+  const handleForgotPassword = async (event) => {
+    event.preventDefault(); // Prevent default navigation behavior
 
-    if (email) {
-      try {
-        await axios.post(`${process.env.REACT_APP_BASE_URL}/forget-password`, {
-          email,
-        });
-        alert("Password reset initiated. Check your email for instructions.");
-      } catch (error) {
-        console.error("Password reset failed:", error.message);
-        alert("Password reset failed. Please try again later.");
-      }
-    }
+    navigate("/forget-password");
   };
 
   const submitButtonStyle = {
@@ -215,18 +209,6 @@ const LoginPage = () => {
                   onChange={(e) => setRegisterUsername(e.target.value)}
                   style={{ width: "100%", padding: "8px" }}
                 />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
-                <label htmlFor="registerAccountType">Account Type:</label>
-                <select
-                  id="registerAccountType"
-                  value={registerAccountType}
-                  onChange={(e) => setRegisterAccountType(e.target.value)}
-                  style={{ width: "100%", padding: "8px" }}
-                >
-                  <option value="Basic">Basic</option>
-                  <option value="Professional">Professional</option>
-                </select>
               </div>
               <button type="submit" style={submitButtonStyle}>
                 Register
