@@ -1,7 +1,19 @@
 {
   "dependencies": {
+    "axios": "^1.6.7",
+    "compression": "^1.7.4",
     "express": "^4.18.2",
+    "lazy-load": "^0.0.2",
+    "memory-cache": "^0.2.0",
     "mongodb": "^6.3.0",
-    "mongoose": "^8.0.3"
+    "mongoose": "^8.0.3",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^6.9.8"
+  },
+  "scripts": {
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix mern/client && npm run build --prefix mern/client && npm install --prefix mern/server"
+  }, 
+  "engines": {
+    "node": "21.3.x"
   }
 }

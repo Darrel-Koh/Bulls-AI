@@ -22,9 +22,9 @@ const MyTickerPage = () => {
         setTickerData([]);
         return;
       }
-
-      const response = await axios.get(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
-
+  
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/my-ticker/${encodeURIComponent(userId)}`);
+  
       if (!response.data) {
         throw new Error(`Failed to fetch user data: ${response.statusText}`);
       }
@@ -40,9 +40,7 @@ const MyTickerPage = () => {
         .flatMap((list) => list.tickers)
         .map(async (tickerId) => {
           try {
-            const tickerResponse = await axios.get(
-              `http://localhost:5050/my-ticker/ticker/${encodeURIComponent(tickerId)}`
-            );
+            const tickerResponse = await axios.get(`${process.env.REACT_APP_BASE_URL}/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
             if (!tickerResponse.data) {
               throw new Error(`Failed to fetch ticker data: ${tickerResponse.statusText}`);
             }
@@ -98,9 +96,7 @@ const MyTickerPage = () => {
       }
 
       const response = await axios.delete(
-        `http://localhost:5050/delete-tickers/one/${encodeURIComponent(userId)}/${encodeURIComponent(
-          listName
-        )}/${encodeURIComponent(tickerId)}`
+        `${process.env.REACT_APP_BASE_URL}/delete-tickers/one/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(tickerId)}`
       );
 
       if (!response.data) {
@@ -136,7 +132,7 @@ const MyTickerPage = () => {
       }
 
       const response = await axios.delete(
-        `http://localhost:5050/delete-tickers/multiple/${encodeURIComponent(userId)}/${encodeURIComponent(
+        `${process.env.REACT_APP_BASE_URL}/delete-tickers/multiple/${encodeURIComponent(userId)}/${encodeURIComponent(
           selectedTab
         )}`,
         { data: { tickers: selectedTickers } }
@@ -245,11 +241,9 @@ const MyTickerPage = () => {
       if (!confirmation) {
         return; // Do nothing if the user cancels the confirmation
       }
-  
-      const response = await axios.delete(
-        `http://localhost:5050/delete-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`
-      );
-  
+
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/delete-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`);
+
       if (!response.data) {
         throw new Error(`Failed to delete ticker list: ${response.statusText}`);
       }
