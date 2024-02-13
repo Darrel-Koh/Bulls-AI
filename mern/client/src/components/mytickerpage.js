@@ -77,14 +77,9 @@ const MyTickerPage = () => {
 
   const handleTabClick = (list_name) => {
     setSelectedTab(list_name);
-  };
 
-  const modifyListNameForBasic = (list, index) => {
-    if (selectedUser && selectedUser.account_type === 'Basic') {
-      return index === 0 ? 'Default List' : list.list_name;
-    }
 
-    return list.list_name;
+    return list_name;
   };
 
   const handleDeleteTicker = async (listName, tickerId) => {
@@ -260,11 +255,11 @@ const MyTickerPage = () => {
       <div style={tabsContainerStyle}>
         {selectedUser &&
           selectedUser.favList &&
-          selectedUser.favList.map((list, index) => (
+          selectedUser.favList.map((list) => (
             <ListSelectionBox
               key={list.list_name}
               list={list.list_name}
-              label={modifyListNameForBasic(list, index)}
+              label={list.list_name}
               selectedTab={selectedTab}
               onSelect={handleTabClick}
             />
@@ -390,5 +385,5 @@ const MyTickerPage = () => {
       </div>
     </div>
   );
-}
+          };
 export default MyTickerPage;

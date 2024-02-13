@@ -82,7 +82,7 @@ const Header = () => {
       if (storedUserId && storedUserName && storedStatus) {
         setUserId(storedUserId);
         setUserName(storedUserName);
-        setStatus(storedStatus);
+        
       }
 
       // Set loading to false once authentication check is complete
