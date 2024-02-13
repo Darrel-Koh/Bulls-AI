@@ -1,4 +1,3 @@
-// loginPage.js
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +10,6 @@ const LoginPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
-  const [registerAccountType, setRegisterAccountType] = useState("Basic"); // Added state for account type
   const navigate = useNavigate();
   const { setUserId, setUserName } = useContext(AuthContext);
 
@@ -50,13 +48,10 @@ const LoginPage = () => {
         throw new Error("Please fill in all the registration fields.");
       }
 
-      console.log("Register Account Type:", registerAccountType);
-
       const response = await axios.post("http://localhost:5050/register", {
         registerEmail,
         registerPassword,
         registerUsername,
-        registerAccountType,
       });
 
       console.log("Registration successful");
@@ -66,7 +61,6 @@ const LoginPage = () => {
       setRegisterEmail("");
       setRegisterPassword("");
       setRegisterUsername("");
-      setRegisterAccountType("");
       setActiveTab("login");
     } catch (error) {
       if (
@@ -209,18 +203,6 @@ const LoginPage = () => {
                   onChange={(e) => setRegisterUsername(e.target.value)}
                   style={{ width: "100%", padding: "8px" }}
                 />
-              </div>
-              <div style={{ marginBottom: "15px" }}>
-                <label htmlFor="registerAccountType">Account Type:</label>
-                <select
-                  id="registerAccountType"
-                  value={registerAccountType}
-                  onChange={(e) => setRegisterAccountType(e.target.value)}
-                  style={{ width: "100%", padding: "8px" }}
-                >
-                  <option value="Basic">Basic</option>
-                  <option value="Professional">Professional</option>
-                </select>
               </div>
               <button type="submit" style={submitButtonStyle}>
                 Register
