@@ -2,6 +2,11 @@ import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from './AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 
 const EditTickerListPage = () => {
   const [newListName, setNewListName] = useState('');
@@ -15,47 +20,45 @@ const EditTickerListPage = () => {
         throw new Error('List Name cannot be empty');
       }
 
-      // Make a request to check if the new list_name already exists
-      const response = await axios.put(`http://localhost:5050/edit-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(newListName)}`);
-
-      // Navigate back to MyTickerPage if the request is successful
+      const response = await axios.put(`${process.env.REACT_APP_BASE_URL}/edit-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(newListName)}`);
       navigate('/my-ticker');
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        // If the server returns a 409 error (List name already exists), display the error message
         alert(error.response.data.error);
       } else {
-        // Handle other errors
         console.error('Error editing ticker list:', error.message);
-        alert(error.message); // Display error message
+        alert(error.message);
       }
     }
   };
 
   const handleCancel = () => {
-    // Navigate back to MyTickerPage
     navigate('/my-ticker');
   };
 
   return (
-    <div>
-      <h2>Edit Ticker List</h2>
-      <label htmlFor="newListName">New List Name:</label>
-      <input
-        type="text"
-        id="newListName"
-        value={newListName}
-        onChange={(e) => setNewListName(e.target.value)}
-        style={{ width: '100%', padding: '8px' }}
-      />
-
-      <button onClick={handleConfirm} style={{ margin: '10px', padding: '10px' }}>
-        Confirm
-      </button>
-      <button onClick={handleCancel} style={{ margin: '10px', padding: '10px' }}>
-        Cancel
-      </button>
-    </div>
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Edit Ticker List
+        </Typography>
+        <TextField
+          id="newListName"
+          label="New List Name"
+          variant="outlined"
+          fullWidth
+          value={newListName}
+          onChange={(e) => setNewListName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <Button variant="contained" onClick={handleConfirm} sx={{ mr: 2 }}>
+          Confirm
+        </Button>
+        <Button variant="contained" onClick={handleCancel}>
+          Cancel
+        </Button>
+      </Box>
+    </Container>
   );
 };
 
