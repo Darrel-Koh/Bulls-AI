@@ -24,10 +24,13 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5050/login", {
-        email: loginEmail,
-        password: loginPassword,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/login`,
+        {
+          email: loginEmail,
+          password: loginPassword,
+        }
+      );
 
       console.log("Login successful. Response:", response.data);
       navigate("/mainPage");
@@ -48,11 +51,14 @@ const LoginPage = () => {
         throw new Error("Please fill in all the registration fields.");
       }
 
-      const response = await axios.post("http://localhost:5050/register", {
-        registerEmail,
-        registerPassword,
-        registerUsername,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/register`,
+        {
+          registerEmail,
+          registerPassword,
+          registerUsername,
+        }
+      );
 
       console.log("Registration successful");
 

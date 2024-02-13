@@ -34,7 +34,7 @@ const ChangePassword = () => {
     try {
       // Send request to backend to change password
       const response = await axios.post(
-        "http://localhost:5050/changepassword",
+        `${process.env.REACT_APP_BASE_URL}/change-password`,
         {
           currentPassword,
           newPassword,

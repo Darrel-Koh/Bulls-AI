@@ -6,6 +6,7 @@ import AuthContext from './AuthContext';
 const MyTickerPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedTab, setSelectedTab] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(null);
   const [tickerData, setTickerData] = useState([]);
   const [selectedTickers, setSelectedTickers] = useState([]);
@@ -20,7 +21,7 @@ const MyTickerPage = () => {
         return;
       }
   
-      const response = await axios.get(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/my-ticker/${encodeURIComponent(userId)}`);
   
       if (!response.data) {
         throw new Error(`Failed to fetch user data: ${response.statusText}`);
@@ -37,7 +38,7 @@ const MyTickerPage = () => {
         .flatMap((list) => list.tickers)
         .map(async (tickerId) => {
           try {
-            const tickerResponse = await axios.get(`http://localhost:5050/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
+            const tickerResponse = await axios.get(`${process.env.REACT_APP_BASE_URL}/my-ticker/ticker/${encodeURIComponent(tickerId)}`);
             if (!tickerResponse.data) {
               throw new Error(`Failed to fetch ticker data: ${tickerResponse.statusText}`);
             }
@@ -79,7 +80,7 @@ const MyTickerPage = () => {
       }
 
       const response = await axios.delete(
-        `http://localhost:5050/delete-tickers/one/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(tickerId)}`
+        `${process.env.REACT_APP_BASE_URL}/delete-tickers/one/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(tickerId)}`
       );
 
       if (!response.data) {
@@ -116,7 +117,7 @@ const MyTickerPage = () => {
       }
 
       const response = await axios.delete(
-        `http://localhost:5050/delete-tickers/multiple/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`,
+        `${process.env.REACT_APP_BASE_URL}/delete-tickers/multiple/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`,
         { data: { tickers: selectedTickers } }
       );
 
@@ -174,7 +175,7 @@ const MyTickerPage = () => {
     padding: '10px',
     border: '1px solid #ddd',
   };
-
+ // eslint-disable-next-line no-unused-vars
   const pageContainerStyle = {
     maxWidth: '800px',
     margin: '0 auto',
@@ -235,7 +236,7 @@ const MyTickerPage = () => {
         return; // Do nothing if the user cancels the confirmation
       }
 
-      const response = await axios.delete(`http://localhost:5050/delete-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`);
+      const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/delete-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`);
 
       if (!response.data) {
         throw new Error(`Failed to delete ticker list: ${response.statusText}`);
@@ -246,6 +247,17 @@ const MyTickerPage = () => {
     } catch (error) {
       console.error('Error deleting ticker list:', error.message);
     }
+  };
+
+  const handleEditListName = () => {
+    // Check if a tab is selected
+    if (!selectedTab) {
+      alert('Please select a ticker list to edit.');
+      return;
+    }
+
+    // Navigate to EditTickerListPage with the selectedTab as a parameter
+    navigate(`/edit-tickerlist/${encodeURIComponent(selectedTab)}`);
   };
 
   return (
@@ -324,6 +336,9 @@ const MyTickerPage = () => {
     </button>
     <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
       Delete List
+    </button>
+    <button onClick={handleEditListName} style={actionButtonStyle}>
+      Edit List Name
     </button>
   </div>
   <div style={buttonRowStyle}>

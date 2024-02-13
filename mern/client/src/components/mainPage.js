@@ -27,7 +27,7 @@ const MainPage = () => {
 
       // Fetch data from the /api/data endpoint
       const response = await fetch(
-        `http://localhost:5050/api/data?page=${page}&pageSize=${size}`
+        `${process.env.REACT_APP_BASE_URL}/api/data?page=${page}&pageSize=${size}`
       );
 
       if (!response.ok) {
@@ -60,7 +60,7 @@ const MainPage = () => {
       console.log("Sending request with search term:", encodedSearchTerm);
 
       const response = await fetch(
-        `http://localhost:5050/api/search?q=${encodedSearchTerm}`
+        `${process.env.REACT_APP_BASE_URL}/api/search?q=${encodedSearchTerm}`
       );
       console.log("Response:", response);
 

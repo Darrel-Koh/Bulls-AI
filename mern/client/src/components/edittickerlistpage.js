@@ -1,39 +1,38 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import AuthContext from './AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 
-const AddTickerPage = ({ onAddTickerList, onCancel }) => {
-  const [listName, setListName] = useState('');
+const EditTickerListPage = () => {
+  const [newListName, setNewListName] = useState('');
   const { userId } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { listName } = useParams();
 
   const handleConfirm = async () => {
     try {
-      if (listName.trim() !== '') {
-        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/add-tickerlist/${encodeURIComponent(userId)}`, {
-          list_name: listName,
-        });
-        navigate('/my-ticker');
+      if (newListName.trim() === '') {
+        throw new Error('List Name cannot be empty');
       }
+
+      const response = await axios.put(`${process.env.REACT_APP_BASE_URL}/edit-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(newListName)}`);
+      navigate('/my-ticker');
     } catch (error) {
       if (error.response && error.response.status === 409) {
         alert(error.response.data.error);
       } else {
-        console.error('Error adding ticker list:', error.message);
+        console.error('Error editing ticker list:', error.message);
+        alert(error.message);
       }
     }
   };
 
   const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
     navigate('/my-ticker');
   };
 
@@ -41,15 +40,15 @@ const AddTickerPage = ({ onAddTickerList, onCancel }) => {
     <Container maxWidth="sm">
       <Box sx={{ mt: 4 }}>
         <Typography variant="h4" gutterBottom>
-          Add Ticker List
+          Edit Ticker List
         </Typography>
         <TextField
-          id="listName"
-          label="List Name"
+          id="newListName"
+          label="New List Name"
           variant="outlined"
           fullWidth
-          value={listName}
-          onChange={(e) => setListName(e.target.value)}
+          value={newListName}
+          onChange={(e) => setNewListName(e.target.value)}
           sx={{ mb: 2 }}
         />
         <Button variant="contained" onClick={handleConfirm} sx={{ mr: 2 }}>
@@ -63,4 +62,4 @@ const AddTickerPage = ({ onAddTickerList, onCancel }) => {
   );
 };
 
-export default AddTickerPage;
+export default EditTickerListPage;

@@ -6,7 +6,9 @@
   "main": "server.mjs",
   "scripts": {
     "start": "node server.mjs",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "heroku-postbuild": "echo 'Running heroku-postbuild script' && cd ../client && npm install && npm run build && mv build ../server/public",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo 'No build step'"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,7 @@
     "mongoose": "^8.1.1",
     "mongoose-paginate-v2": "^1.8.0",
     "node-cache": "^5.1.2",
-    "nodemailer": "^6.9.8"
+    "nodemailer": "^6.9.8",
+    "react-lazyload": "^3.2.0"
   }
 }
