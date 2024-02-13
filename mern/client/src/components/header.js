@@ -82,8 +82,7 @@ const Header = () => {
       if (storedUserId && storedUserName && storedStatus) {
         setUserId(storedUserId);
         setUserName(storedUserName);
-        
-      }
+              }
 
       // Set loading to false once authentication check is complete
       setLoading(false);
@@ -140,7 +139,6 @@ const Header = () => {
 
       setUserId(null);
       setUserName('');
-      setStatus('');
       setDropdownVisible(false);
 
       navigate('/');

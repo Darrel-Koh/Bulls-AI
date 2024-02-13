@@ -47,6 +47,7 @@ const MyTickerPage = () => {
             }
 
             const tickerData = tickerResponse.data;
+            console.log('tickerData:', tickerData);
             return {
               tickerId,
               tickerData,
@@ -83,9 +84,11 @@ const MyTickerPage = () => {
     return list_name;
   };
 
-  const handleDeleteTicker = async (listName, tickerId) => {
+  const handleDeleteTicker = async (listName, tickerId, tickerName) => {
+    
     try {
-      const confirmation = window.confirm(`Are you sure you want to delete the ticker with ID ${tickerId}?`);
+      console.log('tickerData name:', tickerName);
+      const confirmation = window.confirm(`Are you sure you want to delete the ticker "${tickerName}"?`);
 
       if (!confirmation) {
         return;
@@ -328,7 +331,7 @@ const MyTickerPage = () => {
                         <td style={tableCellStyle}>{latestTransaction.Volume}</td>
                         <td style={tableCellStyle}>
                           <button
-                            onClick={() => handleDeleteTicker(list.list_name, tickerId)}
+                            onClick={() => handleDeleteTicker(list.list_name, tickerId, tickerInfo.tickerData.trading_name)}
                             style={{ backgroundColor: 'red', color: 'white' }}
                           >
                             Delete
