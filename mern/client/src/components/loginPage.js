@@ -35,7 +35,6 @@ const LoginPage = () => {
       console.log("Status:", response.data.account_type);      navigate("/mainPage");
       setUserId(response.data._id);
       setUserName(response.data.username);
-      setStatus(response.data.account_type);
       
 
       navigate("/mainPage");
