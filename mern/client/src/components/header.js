@@ -82,6 +82,7 @@ const Header = () => {
       if (storedUserId && storedUserName && storedStatus) {
         setUserId(storedUserId);
         setUserName(storedUserName);
+        setStatus(storedStatus);
        
               }
 
