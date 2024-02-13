@@ -131,6 +131,9 @@ const Header = () => {
         <Button component={RouterLink} to="/glossary" color="inherit" style={{ marginRight: '10px' }}>
           Glossary
         </Button>
+        <Button component={RouterLink} to="/PricingPage" color="inherit" style={{ marginRight: '10px' }}>
+          Upgrade Plan
+        </Button>
         {userId ? (
           <div>
             <IconButton onClick={handleMenu} color="inherit">

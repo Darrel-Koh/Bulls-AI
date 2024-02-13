@@ -50,9 +50,7 @@ const UserInfo = () => {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Box mt={2} display="flex" justifyContent="flex-end">
-                        <Button onClick={handleModify} variant="contained" color="primary">Modify Information</Button>
-                    </Box>
+        
                     <Box mt={2} display="flex" justifyContent="flex-end">
                     <Button onClick={handleUpdatePassword} variant="contained" color="primary">Update Password</Button>
                     </Box>

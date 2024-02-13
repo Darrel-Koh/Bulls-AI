@@ -33,6 +33,7 @@ const MainPage = () => {
       }
       
       const tickersData = await response.json();
+      console.log('API Response:', tickersData);
       setData(tickersData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -150,7 +151,7 @@ const MainPage = () => {
             color="primary"
             startIcon={<SearchIcon />}
             style={{ height: '56px', minWidth: "120px" }} // Adjusted button size and width
-            disabled={isLoading}
+            disabled={isLoading || searchTerm.trim() === ''}
           >
             {isLoading ? (
               <CircularProgress size={24} color="inherit" /> // Display CircularProgress when loading
@@ -167,8 +168,14 @@ const MainPage = () => {
           ))}
         </datalist>
       )}
-      {errorMessage && <Typography variant="body1" className="error-message">{errorMessage}</Typography>}
-  
+     {!isLoading && data && data.length === 0 && (
+        <Typography variant="body1" className="no-results-message">No results found.</Typography>
+      )}
+
+      {errorMessage && (
+        <Typography variant="body1" className="error-message">{errorMessage}</Typography>
+      )}
+
       {isLoading && (
         <Typography variant="body1" className="loading-message">Loading...</Typography>
       )}
@@ -223,8 +230,6 @@ const MainPage = () => {
         </TableBody>
       </Table>
     </div>
-  
-
   
       <footer className="footer">
         <Typography variant="body2">&copy; 2023 Bulls Ai. All rights reserved.</Typography>

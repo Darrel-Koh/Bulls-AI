@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Typography, Button, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link } from '@mui/material';
-import { grey } from '@mui/material/colors';import "../components/style.css";
+import { grey } from '@mui/material/colors';
+import "../components/style.css";
 
 const ViewTickers = () => {
   const location = useLocation();
