@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Typography, Button, TextField, Container } from '@mui/material';
+import { Typography, Button, TextField, Container, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,6 +9,7 @@ const PaymentPage = () => {
     const selectedPlan = location.state ? location.state.selectedPlan : 'No Plan Selected';
     const navigate = useNavigate();
     const [userId, setUserId] = useState(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
         // Retrieve user ID from localStorage
@@ -50,6 +51,7 @@ const PaymentPage = () => {
     
             if (response.status === 200) {
                 // After successful account update, navigate to a confirmation page
+                setDialogOpen(true);
                 navigate('/UserInfo');
             } else {
                 throw new Error(`Failed to update: ${response.statusText}`);
@@ -66,6 +68,11 @@ const PaymentPage = () => {
 
     };
 
+    const handleCloseDialog = () => {
+        setDialogOpen(false);
+    };
+
+
     return (
         <Container maxWidth="sm" style={{ textAlign: 'center', marginTop: '50px' }}>
             <Typography variant="h4" style={{ marginBottom: '20px', textAlign: 'center', fontWeight: 'bold', color: '#333' }}>
@@ -79,6 +86,7 @@ const PaymentPage = () => {
                     onChange={handleInputChange}
                     fullWidth
                     required
+                    style={{ marginBottom: '10px' }} // Add margin at the bottom
                 />
                 <TextField
                     name="expirationDate"
@@ -87,6 +95,7 @@ const PaymentPage = () => {
                     onChange={handleInputChange}
                     fullWidth
                     required
+                    style={{ marginBottom: '10px' }} // Add margin at the bottom
                 />
                 <TextField
                     name="cvv"
@@ -95,6 +104,7 @@ const PaymentPage = () => {
                     onChange={handleInputChange}
                     fullWidth
                     required
+                    style={{ marginBottom: '10px' }} // Add margin at the bottom
                 />
                 <TextField
                     name="nameOnCard"
@@ -103,8 +113,9 @@ const PaymentPage = () => {
                     onChange={handleInputChange}
                     fullWidth
                     required
+                    style={{ marginBottom: '20px' }} // Add larger margin at the bottom
                 />
-               <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '20px' }}>
                     <Button type="submit" variant="contained" color="primary" style={{ marginRight: '10px' }}>
                         Pay Now
                     </Button>
@@ -112,8 +123,16 @@ const PaymentPage = () => {
                         Cancel
                     </Button>
                 </div>
-
             </form>
+            <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+                <DialogTitle>Account Updated</DialogTitle>
+                <DialogContent>
+                    <Typography variant="body1">Your account has been updated successfully.</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">OK</Button>
+                </DialogActions>
+            </Dialog>
         </Container>
     );
 };
