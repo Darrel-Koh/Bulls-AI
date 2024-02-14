@@ -7,7 +7,6 @@ import user from "./routes/record2.mjs";
 import loginRouter from "./routes/login.mjs";
 import registrationRouter from "./routes/registration.mjs";
 import forgetPasswordRouter from "./routes/forgetpassword.mjs";
-import changePasswordRouter from "./routes/changepassword.mjs"; // Import the new changePassword router
 import { db, bullsdb } from "../server/db/conn.mjs";
 import glossary from "./routes/glossaryGet.mjs";
 import modelsRouter from "./routes/models.mjs";
@@ -22,10 +21,13 @@ import tickerpage from "./routes/tickerpageGet.mjs";
 import tickerListRouter from "./routes/addtickerlistGet.mjs";
 import deletetickerListRouter from "./routes/deletetickerlistGet.mjs";
 import deleteTicker from "./routes/deleteTicker.mjs";
-import mainpage from "./routes/mainpage.mjs";
 import searchRoute from "./routes/searchRoute.mjs";
 import compression from "compression";
 import edittickerlistRouter from "./routes/edittickerlistpageGet.mjs";
+import updateAccountRouter from "./routes/updateAccount.mjs";
+import recommendationDataRoute from "./routes/recommendationData.mjs";
+import updatePasswordRouter from "./routes/updatePassword.mjs";
+import searchLor from "./routes/searchLor.mjs";
 
 // const PORT = 5050;
 
@@ -42,15 +44,22 @@ app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter);
 app.use("/forget-password", forgetPasswordRouter);
-app.use("/changepassword", changePasswordRouter); // Use the changePassword router
+// update password
+app.use("/updatePassword", updatePasswordRouter);
 app.use("/model", modelsRouter);
+app.use("/edit-tickerlist", edittickerlistRouter);
 app.use("/edit-tickerlist", edittickerlistRouter);
 
 // Serve static files from the "tfjs_models" directory
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
-app.use("/api/data", mainpage);
-app.use("/api/search", mainpage);
+// fetch search route 
+app.use("/mainPage/search", searchLor);
+// update account from basic to professional
+app.use("/updateAccount", updateAccountRouter);
+// recommendation table
+app.use('/recommendation-data', recommendationDataRoute);
+
 
 app.use("/my-ticker", tickerpage);
 app.use("/add-tickerlist", tickerListRouter);
@@ -73,21 +82,25 @@ app.use("/glossary", glossary);
 //   app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 //   });
-// }
-if (process.env.NODE_ENV === "production") {
+// } 
+if(process.env.NODE_ENV === 'production'){
   // Serve static files from the React app
-  app.use(express.static(path.join(__dirname, "../client/build")));
+  app.use(express.static(path.join(__dirname, '../client/build')));
 
   // The "catchall" handler: for any request that doesn't
   // match one above, send back React's index.html file.
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
-  });
-} else {
-  app.get("*", (req, res) => {
-    res.send("API is running");
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
   });
 }
+else {
+  app.get("*", (req, res) => {
+    // res.send("API is running");
+    res.json({ message: "API is running" });
+
+  });
+}
+
 
 const port = process.env.PORT || 5050;
 app.listen(port, () => {

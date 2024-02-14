@@ -26,3 +26,212 @@
     box-shadow: 0 7px 8px 0 rgba(0, 0, 0, 0.5), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+  /*pricing.js*/
+
+.pricing-page {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .pricing-plans {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .pricing-plan {
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    padding: 20px;
+    width: 250px;
+  }
+  
+  .basic-plan {
+    background-color: #64b5f6;
+    color: #fff;
+  }
+  
+  .premium-plan {
+    background-color: #f48fb1;
+    color: #fff;
+  }
+  
+  .pricing-plan h2 {
+    margin-top: 0;
+  }
+  
+  .pricing-plan h3 {
+    margin: 10px 0;
+  }
+  
+  .pricing-plan ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .pricing-plan ul li {
+    margin-bottom: 5px;
+  }
+  
+  .selected-plan {
+    margin-top: 20px;
+  }
+
+
+  .pricing-plan {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .plan-name {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .plan-price {
+    font-size: 1.2rem;
+    color: #666;
+  }
+  
+  .plan-features {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .plan-features li {
+    margin-bottom: 5px;
+  }
+  
+  .select-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .select-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .pricing-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .pricing-header {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+  
+  .pricing-plans {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .selected-plan {
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  .change-plan-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  /*mainPage.js*/
+ 
+  
+  .search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 80%; /* Adjust the width as needed */
+    font-size: 16px;
+  }
+  
+  
+  .button-search {
+    padding: 12px;
+    background-color: #321FDE;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 30%;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .button-search:hover {
+    background-color: #1a3dc1;
+  }
+  
+  .error-message {
+    color: red;
+  }
+  
+  .loading-message {
+    color: #333;
+  }
+  
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f4f4f4;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .recommendations-container {
+    margin-top: 20px;
+  }
+  
+  .recommendations-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .recommendations-table th,
+  .recommendations-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .recommendations-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .recommendations-table tbody tr.even-row {
+    background-color: #f9f9f9;
+  }
+  
+  .recommendations-table tbody tr.odd-row {
+    background-color: #ffffff;
+  }
