@@ -15,7 +15,7 @@ const LoginPage = () => {
   const [registerUsername, setRegisterUsername] = useState("");
   // const [registerAccountType, setRegisterAccountType] = useState("Basic");
   const navigate = useNavigate();
-  const { setUserId, setUserName } = useContext(AuthContext);
+  const { setUserId, setUserName, setStatus } = useContext(AuthContext);
   const [wrongPasswordDialogOpen, setWrongPasswordDialogOpen] = useState(false); // State for dialog visibility
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState('');
@@ -41,8 +41,6 @@ const LoginPage = () => {
       console.log("Login successful. Response:",userData);
       setUserId(response.data._id);
       setUserName(response.data.username);
-
-      localStorage.setItem("userData", JSON.stringify(userData));
 
       navigate("/mainPage");
     } catch (error) {
