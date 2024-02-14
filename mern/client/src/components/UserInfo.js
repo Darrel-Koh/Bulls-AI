@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box } from '@mui/material';
 
@@ -7,17 +8,26 @@ const UserInfo = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Retrieve user data from local storage
-        const storedUserData = localStorage.getItem('userData');
-        if (storedUserData) {
-            setUserData(JSON.parse(storedUserData));
-        }
-    }, []);
+        // Retrieve the user ID from local storage
+        const userId = localStorage.getItem('userId');
 
-    const handleModify = () => {
-        // Redirect to ProfileUser.js
-        navigate('/ProfileUser');
-    };
+        // Function to fetch user information from the backend
+        const fetchUserData = async () => {
+            try {
+                // Make a GET request to the "/userInfo" endpoint with the user ID as a parameter
+                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/userInfo/${userId}`);
+
+                // Update the state with the user information received from the backend
+                setUserData(response.data);
+            } catch (error) {
+                console.error('Error fetching user information:', error);
+            }
+        };
+
+        // Call the fetchUserData function when the component mounts
+        fetchUserData();
+    }, []); // Empty dependency array ensures the effect runs only once
+
     const handleUpdatePassword = () => {
         // Redirect to ProfileUser.js
         navigate('/updatePassword');
@@ -40,10 +50,6 @@ const UserInfo = () => {
                                     <TableCell>{userData.username}</TableCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TableCell><strong>ID:</strong></TableCell>
-                                    <TableCell>{userData._id}</TableCell>
-                                </TableRow>
-                                <TableRow>
                                     <TableCell><strong>Account Type:</strong></TableCell>
                                     <TableCell>{userData.account_type}</TableCell>
                                 </TableRow>
@@ -63,5 +69,5 @@ const UserInfo = () => {
         </div>
     );
 };
-
 export default UserInfo;
+
