@@ -42,16 +42,20 @@ const MainPage = () => {
       setIsLoading(false);
     }
   };
+  
+  
+  
+
 
   const handleSearch = async () => {
     const trimmedSearchTerm = searchTerm.trim();
     const encodedSearchTerm = encodeURIComponent(trimmedSearchTerm);
-
+  
     if (!trimmedSearchTerm) {
-      setErrorMessage("Please enter a search term.");
+      setErrorMessage('Please enter a search term.');
       return;
     }
-
+  
     try {
       console.log("Sending request with search term:", encodedSearchTerm);
 
@@ -87,10 +91,14 @@ const MainPage = () => {
       const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/search?q=${encodedSearchTerm}`);
   
       if (!response.ok) {
-        console.error('Search request failed:', response.status, response.statusText);
+        console.error(
+          "Search request failed:",
+          response.status,
+          response.statusText
+        );
         return;
       }
-  
+
       const searchData = await response.json();
       navigate('/viewTickers', { state: { searchResults: searchData, searchTerm: trimmedLinkParams } });
     } catch (error) {
