@@ -60,7 +60,7 @@ const MainPage = () => {
       console.log("Sending request with search term:", encodedSearchTerm);
 
       const response = await fetch(
-        `${process.env.REACT_APP_BASE_URL}/api/search?q=${encodedSearchTerm}`
+        `${process.env.REACT_APP_BASE_URL}/mainPage/search/${encodedSearchTerm}`
       );
       console.log("Response:", response);
 
@@ -88,7 +88,7 @@ const MainPage = () => {
     try {
       setIsLoading(true); // Start loading when search is initiated
 
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/search?q=${encodedSearchTerm}`);
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/mainPage/search/${encodedSearchTerm}`);
   
       if (!response.ok) {
         console.error(
