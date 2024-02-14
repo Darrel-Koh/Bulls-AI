@@ -375,6 +375,9 @@ const MyTickerPage = () => {
               <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
                 Delete List
               </button>
+              <button onClick={handleEditListName} style={actionButtonStyle}>
+                Edit List Name
+              </button>
             </>
           )}
         </div>
@@ -391,11 +394,12 @@ const MyTickerPage = () => {
               <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
                 Delete List
               </button>
+              <button onClick={handleEditListName} style={actionButtonStyle}>
+                Edit List Name
+              </button>
             </>
           )}
-          <button onClick={handleEditListName} style={actionButtonStyle}>
-            Edit List Name
-          </button>
+        
         </div>
         <div style={buttonRowStyle}>
           <div style={{ marginRight: '20px' }}>

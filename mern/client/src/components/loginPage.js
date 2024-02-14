@@ -43,7 +43,7 @@ const LoginPage = () => {
       setUserName(response.data.username);
 
       localStorage.setItem("userData", JSON.stringify(userData));
-
+      navigate("/mainPage");
     } catch (error) {
       console.error("Login failed:", error.message);
         // Show wrong password dialog
