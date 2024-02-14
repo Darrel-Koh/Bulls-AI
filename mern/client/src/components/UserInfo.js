@@ -32,6 +32,32 @@ const UserInfo = () => {
         // Redirect to ProfileUser.js
         navigate('/updatePassword');
     };
+    
+    const handleDowngrade = async () => { 
+        try { 
+          const response = await axios.post( 
+            `${process.env.REACT_APP_BASE_URL}/updateAccount`, 
+            { 
+              newAccountType: "Basic", 
+              userId: userData._id, 
+            } 
+          ); 
+     
+          if (response.status === 200) { 
+            // Update user data after successful downgrade 
+            setUserData({ ...userData, account_type: "Basic" }); 
+            localStorage.setItem( 
+              "userData", 
+              JSON.stringify({ ...userData, account_type: "Basic" }) 
+            ); 
+          } else { 
+            throw new Error(`Failed to downgrade: ${response.statusText}`); 
+          } 
+        } catch (error) { 
+          console.error("Error downgrading account:", error); 
+        } 
+      }; 
+
 
     return (
         <div className="user-info-container">
@@ -58,14 +84,31 @@ const UserInfo = () => {
                     </TableContainer>
         
                     <Box mt={2} display="flex" justifyContent="flex-end">
-                    <Button onClick={handleUpdatePassword} variant="contained" color="primary">Update Password</Button>
+                    <Button onClick={handleUpdatePassword} variant="contained" color="primary"  style={{ 
+                            marginLeft: "10px",
+                            backgroundColor: "#321FDE" 
+                        }} 
+                    >Update Password
+                    </Button> 
+                    {userData.account_type === "Professional" && ( 
+                   <Button 
+                        onClick={handleDowngrade} 
+                        variant="contained" 
+                        color="secondary" 
+                        style={{ 
+                            marginLeft: "10px",
+                            backgroundColor: "black" 
+                        }} 
+                    > 
+                        End Subscription
+                    </Button> 
+                    )}
                     </Box>
 
-
                 </div>
-            ) : (
-                <Typography variant="body1" className="no-user-data">No user data available.</Typography>
-            )}
+                    ) : (
+                        <Typography variant="body1" className="no-user-data">No user data available.</Typography>
+                    )}
         </div>
     );
 };
