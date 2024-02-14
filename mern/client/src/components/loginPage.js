@@ -36,10 +36,13 @@ const LoginPage = () => {
         password: loginPassword,
       });
 
-      console.log("Login successful. Response:", response.data);
-      navigate("/mainPage");
+      const userData = response.data;
+
+      console.log("Login successful. Response:",userData);
       setUserId(response.data._id);
       setUserName(response.data.username);
+
+      localStorage.setItem("userData", JSON.stringify(userData));
 
       navigate("/mainPage");
     } catch (error) {
