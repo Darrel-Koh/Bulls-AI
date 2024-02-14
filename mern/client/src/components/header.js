@@ -128,6 +128,9 @@ const Header = () => {
       </RouterLink>
       <div style={{ flexGrow: 1 }} />
       <Box display="flex" alignItems="center"> {/* Wrap elements in a Box */}
+      <Button component={RouterLink} to="/my-ticker" color="inherit" style={{ marginRight: '10px' }}>
+          Ticker List
+        </Button>
         <Button component={RouterLink} to="/glossary" color="inherit" style={{ marginRight: '10px' }}>
           Glossary
         </Button>
@@ -153,9 +156,9 @@ const Header = () => {
               }}
               getContentAnchorEl={null}
             >
-              <MenuItem component={RouterLink} to="/my-ticker" onClick={handleClose}>
+              {/* <MenuItem component={RouterLink} to="/my-ticker" onClick={handleClose}>
                 My Ticker
-              </MenuItem>
+              </MenuItem> */}
               <MenuItem component={RouterLink} to="/UserInfo" onClick={handleClose}>
                 Profile
               </MenuItem>

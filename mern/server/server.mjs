@@ -27,6 +27,7 @@ import edittickerlistRouter from "./routes/edittickerlistpageGet.mjs";
 import updateAccountRouter from "./routes/updateAccount.mjs";
 import recommendationDataRoute from "./routes/recommendationData.mjs";
 import updatePasswordRouter from "./routes/updatePassword.mjs";
+import userInfo from "./routes/userInfo.mjs";
 
 // const PORT = 5050;
 
@@ -58,6 +59,7 @@ app.use("/api/search", searchRoute);
 app.use("/updateAccount", updateAccountRouter);
 // recommendation table
 app.use('/recommendation-data', recommendationDataRoute);
+app.use("/userInfo", userInfo);
 
 
 app.use("/my-ticker", tickerpage);

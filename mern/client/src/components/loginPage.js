@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/AuthContext";
 import BullsAiLogo from "../images/BullsAI logo_coloured_logo.png"; // Import BullsAI logo
 import { Button, Select, MenuItem, Box, Avatar, Container, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Tabs, Tab } from '@mui/material';
 
 
 const LoginPage = () => {
@@ -98,7 +99,10 @@ const LoginPage = () => {
     }
   };
 
-  
+  const handleTabChange = (event, newTab) => {
+    setActiveTab(newTab);
+};
+
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
@@ -136,38 +140,20 @@ const LoginPage = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <div style={{ textAlign: "center", marginTop: "100px" }}>
+    <Container maxWidth="sm" style={{ textAlign: "center", marginTop: "100px" }}>
+    <div style={{ textAlign: "center", marginTop: "100px" }}>
         <Avatar
           alt="BullsAI Logo"
           src={BullsAiLogo}
           sx={{ width: 100, height: 100, margin: "0 auto 20px" }} // Styling for the logo
         />
-        <div style={{ marginBottom: "20px" }}>
-          <Button
-            variant="contained"
-            style={{
-              marginRight: "10px",
-              backgroundColor: activeTab === "login" ? "#28a745" : "#007bff",
-              color: "white",
-              fontSize: "18px",
-            }}
-            onClick={() => setActiveTab("login")}
-          >
-            Login
-          </Button>
-          <Button
-            variant="contained"
-            style={{
-              backgroundColor: activeTab === "register" ? "#28a745" : "#007bff",
-              color: "white",
-              fontSize: "18px",
-            }}
-            onClick={() => setActiveTab("register")}
-          >
-            Register
-          </Button>
+            <div style={{ marginBottom: "20px", display: "flex", justifyContent: "center" }}>
+       <Tabs value={activeTab} onChange={handleTabChange} indicatorColor="primary">
+                <Tab label="Login" value="login" />
+                <Tab label="Register" value="register" />
+            </Tabs>
         </div>
+
         {activeTab === "login" && (
           <form onSubmit={handleLogin}>
             <TextField
@@ -186,7 +172,7 @@ const LoginPage = () => {
               fullWidth
               margin="normal"
             />
-      <Button type="submit" variant="contained" style={{ backgroundColor: '#4CAF50', marginRight: '10px' }}>
+      <Button type="submit" variant="contained" style={{ backgroundColor: 'black', marginRight: '10px' }}>
               Login
             </Button>
                 <Button
@@ -235,7 +221,7 @@ const LoginPage = () => {
               <MenuItem value="Professional">Professional</MenuItem>
             </Select> */}
             <Box display="flex" justifyContent="center" mt={2}> {/* Align buttons in the center */}
-              <Button type="submit" variant="contained" style={submitButtonStyle}>
+              <Button type="submit" variant="contained" style={{backgroundColor: "black"}}>
                 Register
               </Button>
              
