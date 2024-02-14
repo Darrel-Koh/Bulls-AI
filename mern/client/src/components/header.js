@@ -1,68 +1,22 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from '../components/AuthContext';
-
-const buttonStyle = {
-  textDecoration: 'none',
-  color: '#fff',
-  padding: '10px',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-};
-
-const redButtonStyle = {
-  ...buttonStyle,
-  backgroundColor: '#dc3545',
-};
-
-const roundedButtonStyle = {
-  ...buttonStyle,
-  borderRadius: '8px',
-  position: 'relative',
-  display: 'flex',
-  alignItems: 'center',
-};
-
-const dropdownStyle = {
-  position: 'absolute',
-  top: 'calc(100% + 10px)',
-  right: 0,
-  zIndex: '1',
-  display: 'flex',
-  flexDirection: 'column',
-  backgroundColor: '#333',
-};
-
-const dropdownItemStyle = {
-  ...buttonStyle,
-  marginLeft: '0',
-  borderRadius: '0',
-};
-
-const arrowStyle = {
-  marginLeft: '5px',
-  transform: 'rotate(180deg)',
-  transition: 'transform 0.3s ease',
-};
-
-const headerStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  padding: '10px',
-  backgroundColor: '#333',
-  color: '#fff',
-};
-
-const logoStyle = {
-  textDecoration: 'none',
-  color: '#fff',
-  fontSize: '1.5rem',
-};
-
-const navStyle = {
-  display: 'flex',
-};
+import BullsAiLogo from '../images/BullsAI logo_coloured_logo.png';
+import {
+  Typography,
+  Button,
+  Link,
+  Menu,
+  MenuItem,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Avatar,
+  ListItemIcon,
+  ListItemText,
+  Box, // Added Box component for wrapping elements
+} from '@mui/material';
+import { AccountCircle } from '@mui/icons-material';
 
 const Header = () => {
   const authContext = useContext(AuthContext);
@@ -72,6 +26,17 @@ const Header = () => {
   const [loading, setLoading] = useState(true); // New state for loading status
   const [isLoggedOut, setIsLoggedOut] = useState(false); // New state for logout status
   const dropdownRef = useRef(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -151,39 +116,67 @@ const Header = () => {
     return null;
   }
 
+
+
+
   return (
-    <header style={headerStyle}>
-      <Link to="/mainPage" style={{ ...logoStyle, marginRight: '20px' }}>
-        Home
-      </Link>
-      <div style={navStyle}>
-        <Link to="/glossary" style={{ ...buttonStyle, marginRight: '10px' }}>
+    <AppBar position="static" style={{ background: 'black' }}>
+    <Toolbar>
+      <RouterLink to="/mainPage" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+        <Avatar alt="BullsAI Logo" src={BullsAiLogo} />
+        <Typography variant="body1" style={{ marginLeft: '8px', fontFamily: 'helvetica, sans-serif', fontSize: '18px' }}>BULLS AI</Typography>
+      </RouterLink>
+      <div style={{ flexGrow: 1 }} />
+      <Box display="flex" alignItems="center"> {/* Wrap elements in a Box */}
+        <Button component={RouterLink} to="/glossary" color="inherit" style={{ marginRight: '10px' }}>
           Glossary
-        </Link>
-        <div style={{ position: 'relative' }} ref={dropdownRef}>
-          <span
-            style={{ ...roundedButtonStyle, cursor: 'pointer', backgroundColor: '#28a745' }}
-            onClick={toggleDropdown}
-          >
-            <span style={{ marginLeft: '5px' }}>Welcome, {userName}</span>
-            <span style={{ ...arrowStyle, transform: dropdownVisible ? 'rotate(90deg)' : 'rotate(180deg)' }}>
-              ➤
-            </span>
-          </span>
-          {dropdownVisible && (
-            <div style={{ ...dropdownStyle, width: '155px' }}>
-              <Link to="/my-ticker" style={dropdownItemStyle} onClick={handleDropdownOptionClick}>
+        </Button>
+        <Button component={RouterLink} to="/PricingPage" color="inherit" style={{ marginRight: '10px' }}>
+          Upgrade Plan
+        </Button>
+        {userId ? (
+          <div>
+            <IconButton onClick={handleMenu} color="inherit">
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              getContentAnchorEl={null}
+            >
+              <MenuItem component={RouterLink} to="/my-ticker" onClick={handleClose}>
                 My Ticker
-              </Link>
-              <button onClick={handleLogout} style={{ ...dropdownItemStyle, ...redButtonStyle }}>
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    </header>
-  );
+              </MenuItem>
+              <MenuItem component={RouterLink} to="/UserInfo" onClick={handleClose}>
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <AccountCircle fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </MenuItem>
+            </Menu>
+          </div>
+        ) : (
+          <Button component={RouterLink} to="/login" color="inherit">
+            Login
+          </Button>
+        )}
+      </Box>
+    </Toolbar>
+  </AppBar>
+);
 };
 
 export default Header;
+

@@ -14,9 +14,13 @@ import MainPage from "./components/mainPage";
 import UserList from "./components/recordList2";
 import { useState } from "react";
 import AuthContext from "./components/AuthContext";
-import ChangePassword from "./components/ChangePassword";
 import ForgetPassword from "./components/ForgetPassword";
 import EditTickerListPage from "./components/edittickerlistpage";
+import ProfileUser from "./components/ProfileUser";
+import PricingPage from './components/PricingPage';
+import UserInfo from "./components/UserInfo";
+import PaymentPage from "./components/PaymentPage";
+import UpdatePassword from "./components/updatePassword";
 
 const App = () => {
   const [userId, setUserId] = useState(null);
@@ -40,7 +44,11 @@ const App = () => {
           <Route path="/recordListPage" element={<UserList />} />
           <Route path="/viewTickers" element={<ViewTickers />} />
           <Route path="/mainPage" element={<MainPage />} />
-          <Route path="/changepassword" element={<ChangePassword />} />
+          <Route path="/ProfileUser" element={<ProfileUser />} />
+          <Route path="/UserInfo" element={<UserInfo />} />
+          <Route path="/PricingPage" element={<PricingPage />} />
+          <Route path="/PaymentPage" element={<PaymentPage />} />
+          <Route path="/updatePassword" element={<UpdatePassword />} />
           <Route
             path="/forget-password"
             element={<ForgetPassword userId={userId} />}
