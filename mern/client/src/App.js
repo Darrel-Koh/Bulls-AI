@@ -12,7 +12,7 @@ import Create from "./components/create2";
 import LoginPage from "./components/loginPage";
 import MainPage from "./components/mainPage";
 import UserList from "./components/recordList2";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AuthContext from "./components/AuthContext";
 import ForgetPassword from "./components/ForgetPassword";
 import EditTickerListPage from "./components/edittickerlistpage";
@@ -23,11 +23,35 @@ import PaymentPage from "./components/PaymentPage";
 import UpdatePassword from "./components/updatePassword";
 
 const App = () => {
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
+  const [status, setStatus] = useState("");
+
+  // Check localStorage on component mount
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    const storedUserName = localStorage.getItem("userName");
+    const storedStatus = localStorage.getItem("status");
+
+    if (storedUserId) {
+      setUserId(storedUserId);
+      setUserName(storedUserName);
+      setStatus(storedStatus);
+     
+    }
+  }, []);
+
+  // Update localStorage when user info changes
+  useEffect(() => {
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("userName", userName);
+    localStorage.setItem("status", status);
+
+  
+  }, [userId, userName, status]);
 
   return (
-    <AuthContext.Provider value={{ userId, setUserId, userName, setUserName }}>
+    <AuthContext.Provider value={{ userId, setUserId, userName, setUserName, status, setStatus }}>
       {userId && <Header />}
       <div style={{ margin: 20 }}>
         <Routes>
@@ -51,7 +75,7 @@ const App = () => {
           <Route path="/updatePassword" element={<UpdatePassword />} />
           <Route
             path="/forget-password"
-            element={<ForgetPassword userId={userId} />}
+            element={<ForgetPassword userId= "" />}
           />
           {/* Add a default route for unmatched paths */}
           <Route

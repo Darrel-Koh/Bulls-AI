@@ -28,6 +28,7 @@ import updateAccountRouter from "./routes/updateAccount.mjs";
 import recommendationDataRoute from "./routes/recommendationData.mjs";
 import updatePasswordRouter from "./routes/updatePassword.mjs";
 import userInfo from "./routes/userInfo.mjs";
+import searchLor from "./routes/searchLor.mjs";
 
 // const PORT = 5050;
 
@@ -54,7 +55,7 @@ app.use("/edit-tickerlist", edittickerlistRouter);
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
 // fetch search route 
-app.use("/api/search", searchRoute);
+app.use("/mainPage/search", searchLor);
 // update account from basic to professional
 app.use("/updateAccount", updateAccountRouter);
 // recommendation table
