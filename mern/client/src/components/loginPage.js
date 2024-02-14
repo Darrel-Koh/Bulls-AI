@@ -13,7 +13,7 @@ const LoginPage = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerUsername, setRegisterUsername] = useState("");
-  const [registerAccountType, setRegisterAccountType] = useState("Basic");
+  // const [registerAccountType, setRegisterAccountType] = useState("Basic");
   const navigate = useNavigate();
   const { setUserId, setUserName } = useContext(AuthContext);
   const [wrongPasswordDialogOpen, setWrongPasswordDialogOpen] = useState(false); // State for dialog visibility
@@ -67,8 +67,8 @@ const LoginPage = () => {
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, {
         registerEmail,
         registerPassword,
-        registerUsername,
-        registerAccountType,
+        registerUsername
+        // registerAccountType,
       });
 
       window.alert("Registration successful");
@@ -76,7 +76,7 @@ const LoginPage = () => {
       setRegisterEmail("");
       setRegisterPassword("");
       setRegisterUsername("");
-      setRegisterAccountType("Basic");
+      // setRegisterAccountType("Basic");
       setActiveTab("login");
     } catch (error) {
       if (
@@ -225,7 +225,7 @@ const LoginPage = () => {
               fullWidth
               margin="normal"
             />
-            <Select
+            {/* <Select
               value={registerAccountType}
               onChange={(e) => setRegisterAccountType(e.target.value)}
               fullWidth
@@ -233,7 +233,7 @@ const LoginPage = () => {
             >
               <MenuItem value="Basic">Basic</MenuItem>
               <MenuItem value="Professional">Professional</MenuItem>
-            </Select>
+            </Select> */}
             <Box display="flex" justifyContent="center" mt={2}> {/* Align buttons in the center */}
               <Button type="submit" variant="contained" style={submitButtonStyle}>
                 Register
