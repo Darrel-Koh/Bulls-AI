@@ -15,6 +15,7 @@ const MainPage = () => {
   const navigate = useNavigate();
   const [sortBy, setSortBy] = useState(''); // State to track sorting column
   const [sortDirection, setSortDirection] = useState('asc'); // State to track sorting direction
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     fetchData();
@@ -43,7 +44,13 @@ const MainPage = () => {
     }
   };
   
-  
+  useEffect(() => {
+    // Retrieve user data from local storage
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+        setUserData(JSON.parse(storedUserData));
+    }
+}, []);
   
 
 
@@ -145,6 +152,11 @@ const MainPage = () => {
 
   return (
     <div className="main-container">
+      {userData && (
+                <Typography variant="h4" gutterBottom>
+                    Welcome, {userData.username}!
+                </Typography>
+            )}
       <Grid container alignItems="center" spacing={2}>
         <Grid item xs={10}>
           <TextField
