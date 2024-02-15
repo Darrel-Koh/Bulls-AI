@@ -3,6 +3,8 @@ import express from "express";
 import { db, bullsdb } from "../db/conn.mjs";
 import * as tf from '@tensorflow/tfjs';
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
 
 const router = express.Router();
 global.fetch = fetch;
@@ -21,26 +23,35 @@ router.get('/:ticker', async (req, res) => {
         }
 
         // Convert model JSON and weights data to TensorFlow.js model
-        const modelJson = doc.model_json.toString();
+        const modelJson = JSON.parse(doc.model_json.toString());
         const modelWeights = doc.model_weights[0]; // Assuming only one set of weights for simplicity
 
         // Print out the model JSON
         console.log('Model JSON:', modelJson);
 
+        const modelConfig = modelJson.modelTopology.modelConfig;
 
-        // Inspect the model topology
-        // console.log('Model Weight:', modelWeights);
+        const fs = require('fs');
+        const path = require('path');
+
+        // Load the weight data from a file
+        const weightData = fs.readFileSync(path.resolve(__dirname, 'path/to/your/weights/file'));
 
         // Construct model artifacts
         const modelArtifacts = {
             modelTopology: modelJson.modelTopology,
-            weightData: modelWeights // Assuming modelWeights is already loaded properly
+            weightSpecs: modelJson.weightsManifest[0].weights,
+            weightData: weightData,
+            format: modelJson.format,
+            generatedBy: modelJson.generatedBy,
+            convertedBy: modelJson.convertedBy
         };
 
-
         // Load the model from memory
-        // const model = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
-
+        const model = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
+        
+        
+        // const model = await tf.models.modelFromJSON(modelConfig);
         // Verify model summary (optional)
         // model.summary();
 
