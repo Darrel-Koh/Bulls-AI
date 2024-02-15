@@ -6,6 +6,12 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import path from 'path';
 
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const router = express.Router();
 global.fetch = fetch;
 
@@ -24,18 +30,15 @@ router.get('/:ticker', async (req, res) => {
 
         // Convert model JSON and weights data to TensorFlow.js model
         const modelJson = JSON.parse(doc.model_json.toString());
-        const modelWeights = doc.model_weights[0]; // Assuming only one set of weights for simplicity
 
-        // Print out the model JSON
-        console.log('Model JSON:', modelJson);
+        // Extract the weights path from the model JSON
+        const weightsPath = modelJson.weightsManifest[0].paths[0]; // Assuming the path is stored here
 
-        const modelConfig = modelJson.modelTopology.modelConfig;
+        // Resolve the weights path relative to the current directory
+        const absoluteWeightsPath = path.resolve(__dirname, weightsPath);
 
-        const fs = require('fs');
-        const path = require('path');
-
-        // Load the weight data from a file
-        const weightData = fs.readFileSync(path.resolve(__dirname, 'path/to/your/weights/file'));
+        // Load the weight data from the file
+        const weightData = fs.readFileSync(absoluteWeightsPath);
 
         // Construct model artifacts
         const modelArtifacts = {
@@ -49,23 +52,6 @@ router.get('/:ticker', async (req, res) => {
 
         // Load the model from memory
         const model = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
-        
-        
-        // const model = await tf.models.modelFromJSON(modelConfig);
-        // Verify model summary (optional)
-        // model.summary();
-
-        // Construct model artifacts
-        // const modelArtifacts = {
-        //     modelTopology: JSON.parse(modelJson),
-        //     weightData: modelWeights
-        // };
-
-        // Load the model from memory
-        // const model = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
-
-        // Print model summary (optional)
-        // model.summary();
 
         // Send success response
         res.send({ status: 'success', message: 'Model loaded successfully' });
