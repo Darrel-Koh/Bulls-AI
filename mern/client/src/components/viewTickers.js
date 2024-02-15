@@ -28,26 +28,39 @@ const ViewTickers = () => {
         setFavList([]);
         return;
       }
-
-      const response = await axios.get(`http://localhost:5050/my-ticker/${encodeURIComponent(userId)}`);
-
+  
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/my-ticker/${encodeURIComponent(userId)}`);
+  
       if (!response.data) {
         throw new Error(`Failed to fetch user data: ${response.statusText}`);
       }
-
+  
       const userData = response.data;
-      setFavList(userData.favList || []);
-
+  
+      // Check user account type
+      if (userData.account_type === 'Basic') {
+        // If user is Basic, retrieve only the first index in the array
+        setFavList(userData.favList && userData.favList.length > 0 ? [userData.favList[0]] : []);
+      } else {
+        // If user is not Basic, retrieve everything
+        setFavList(userData.favList || []);
+      }
+  
       const filteredID = Array.isArray(searchResults) ? searchResults : [searchResults];
       console.log(filteredID[0]._id);
+      console.log(userData.account_type);
+  
       const availableLists = userData.favList.filter((list) => !list.tickers.includes(filteredID[0]._id));
       setSelectedList(availableLists.length > 0 ? availableLists[0].list_name : null);
       console.log(availableLists[0].list_name);
       console.log(filteredID[0]._id);
+  
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
+  
+  
 
   useEffect(() => {
     console.log('Fetching related news for:', searchTerm);
@@ -128,7 +141,7 @@ const ViewTickers = () => {
       console.log('Record ID name:', recordIdName);
       window.alert(recordIdName + " has been added to " + listToAdd);
       const response = await axios.put(
-        `http://localhost:5050/my-ticker/update/${encodeURIComponent(userId)}/${encodeURIComponent(listToAdd)}`,
+        `${process.env.REACT_APP_BASE_URL}/my-ticker/update/${encodeURIComponent(userId)}/${encodeURIComponent(listToAdd)}`,
         { tickerId: recordId }
       );
       window.location.reload();
@@ -177,22 +190,36 @@ const renderListDropdown = (result) => {
   const firstAvailableList = availableLists.find((list) => !list.tickers.includes(result._id));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <div style={{ marginBottom: '10px' }}>
-      <select onChange={(e) => handleListSelection(e.target.value)} value={selectedList || (firstAvailableList ? firstAvailableList.list_name : '')}>
-          {availableLists.map((list) => (
-            <option key={list.list_name} value={list.list_name}>
-              {list.list_name}
-            </option>
-          ))}
-        </select>
-        <Button onClick={() => handleAddToFavourite(result._id, result.trading_name)} variant="contained" style={favouriteButtonStyle}>
-                    Add to Favourite
-        </Button>
-      </div>
+    <div style={{ position: 'relative', marginBottom: '10px' }}>
+      <select
+        onChange={(e) => handleListSelection(e.target.value)}
+        value={selectedList || (firstAvailableList ? firstAvailableList.list_name : '')}
+        style={{ position: 'absolute', marginLeft: '15px', top: 0 }}
+      >
+        {availableLists.map((list) => (
+          <option key={list.list_name} value={list.list_name}>
+            {list.list_name}
+          </option>
+        ))}
+      </select>
+      <Button
+        onClick={() => handleAddToFavourite(result._id, result.trading_name)}
+        variant="contained"
+        style={{
+          position: 'relative',
+          zIndex: 1,
+          marginTop: '25px', // Adjust the marginTop to align the button and dropdown
+          backgroundColor: '#FFD700',
+          color: 'black',
+          alignContent: 'center'
+        }}
+      >
+        Add to Favourite
+      </Button>
     </div>
   );
-};
+  
+          };  
 
 
   const renderTable = () => {
