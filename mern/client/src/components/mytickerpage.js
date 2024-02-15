@@ -33,7 +33,12 @@ const MyTickerPage = () => {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // State for Snackbar
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for the Snackbar
   const [isDeleteSelectedConfirmationOpen, setIsDeleteSelectedConfirmationOpen] = useState(false); // State for delete selected confirmation dialog
-  const [isDeleteSingleConfirmationOpen, setIsDeleteSConfirmationOpen] = useState(false); // State for delete selected confirmation dialog
+  const [isDeleteSingleConfirmationOpen, setIsDeleteSingleConfirmationOpen] = useState(false); // State for delete single confirmation dialog
+  const [deleteTickerId, setDeleteTickerId] = useState(null); // State to store the tickerId to be deleted
+  const [deleteTickerName, setDeleteTickerName] = useState(''); // State to store the tickerName to be deleted
+  const [deleteListName, setDeleteListName] = useState(''); // State to store the tickerName to be deleted
+  const [deleteListUser, setDeleteListUser] = useState(null);
+
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -105,18 +110,23 @@ const MyTickerPage = () => {
     return list_name;
   };
 
-  const handleDeleteTicker = async (listName, tickerId, tickerName) => {
-    
-    try {
-      console.log('tickerData name:', tickerName);
-      const confirmation = window.confirm(`Are you sure you want to delete the ticker "${tickerName}"?`);
+  const handleDeleteSingleConfirmationOpen = (selectedTab, tickerId, tickerName) => {
+    setDeleteTickerId(tickerId);
+    setDeleteTickerName(tickerName);
+    setDeleteListName(selectedTab);
+    setDeleteListUser(userId);
+    setIsDeleteSingleConfirmationOpen(true);
+  };
 
-      if (!confirmation) {
-        return;
-      }
+  const handleDeleteSingleConfirmationClose = () => {
+    setIsDeleteSingleConfirmationOpen(false);
+  };
+
+  const handleDeleteSingleTicker = async () => {
+    try {
 
       const response = await axios.delete(
-        `${process.env.REACT_APP_BASE_URL}/delete-tickers/one/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(tickerId)}`
+        `${process.env.REACT_APP_BASE_URL}/delete-tickers/one/${encodeURIComponent(deleteListUser)}/${encodeURIComponent(deleteListName)}/${encodeURIComponent(deleteTickerId)}`
       );
 
       if (!response.data) {
@@ -126,6 +136,8 @@ const MyTickerPage = () => {
       fetchUserData();
     } catch (error) {
       console.error('Error deleting ticker:', error.message);
+    } finally {
+      handleDeleteSingleConfirmationClose(); // Close the confirmation dialog after deletion
     }
   };
 
@@ -477,7 +489,7 @@ const MyTickerPage = () => {
               <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction['Adj Close']}</td>
               <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction.Volume}</td>
               <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                <Button onClick={() => handleDeleteTicker(list.list_name, tickerId, tickerInfo.tickerData.trading_name)} variant="contained" color="error">
+                <Button onClick={() => handleDeleteSingleConfirmationOpen(list.list_name, tickerId, tickerInfo.tickerData.trading_name)} variant="contained" color="error">
                   Delete
                 </Button>
               </td>
@@ -562,6 +574,29 @@ const MyTickerPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+     <Dialog
+        open={isDeleteSingleConfirmationOpen}
+        onClose={handleDeleteSingleConfirmationClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmation</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this ticker "{deleteTickerName}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteSingleConfirmationClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleDeleteSingleTicker()} color="primary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>       
+
       <Snackbar
         open={isSnackbarOpen}
         autoHideDuration={6000}
