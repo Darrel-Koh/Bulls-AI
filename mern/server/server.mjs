@@ -52,7 +52,7 @@ app.use("/edit-tickerlist", edittickerlistRouter);
 app.use("/edit-tickerlist", edittickerlistRouter);
 
 // Serve static files from the "tfjs_models" directory
-app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
+// app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
 // fetch search route 
 app.use("/mainPage/search", searchLor);

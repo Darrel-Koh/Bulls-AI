@@ -27,11 +27,28 @@ router.get('/:ticker', async (req, res) => {
         // Print out the model JSON
         console.log('Model JSON:', modelJson);
 
+
+        // Inspect the model topology
+        // console.log('Model Weight:', modelWeights);
+
         // Construct model artifacts
         const modelArtifacts = {
-            modelTopology: JSON.parse(modelJson),
-            weightData: modelWeights
+            modelTopology: modelJson.modelTopology,
+            weightData: modelWeights // Assuming modelWeights is already loaded properly
         };
+
+
+        // Load the model from memory
+        // const model = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
+
+        // Verify model summary (optional)
+        // model.summary();
+
+        // Construct model artifacts
+        // const modelArtifacts = {
+        //     modelTopology: JSON.parse(modelJson),
+        //     weightData: modelWeights
+        // };
 
         // Load the model from memory
         // const model = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
