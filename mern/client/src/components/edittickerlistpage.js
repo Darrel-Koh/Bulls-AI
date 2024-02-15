@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import AuthContext from './AuthContext';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,12 +7,23 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const EditTickerListPage = () => {
   const [newListName, setNewListName] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [errorOpen, setErrorOpen] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState(''); 
   const { userId } = useContext(AuthContext);
   const navigate = useNavigate();
   const { listName } = useParams();
+
+  useEffect(() => {
+    // Set the initial value of newListName to the current list name
+    setNewListName(listName);
+  }, [listName]); // Trigger effect whenever listName changes
 
   const handleConfirm = async () => {
     try {
@@ -21,12 +32,23 @@ const EditTickerListPage = () => {
       }
 
       const response = await axios.put(`${process.env.REACT_APP_BASE_URL}/edit-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(newListName)}`);
-      navigate('/my-ticker');
+      
+      // Show success Snackbar
+      setSnackbarMessage('Ticker list edited successfully');
+      setSnackbarOpen(true);
+
+      // Navigate after a short delay to allow Snackbar to display
+      setTimeout(() => {
+        navigate('/my-ticker');
+      }, 2000); // Adjust the delay time as needed
     } catch (error) {
       if (error.response && error.response.status === 409) {
-        alert(error.response.data.error);
+        // Display error message as Material-UI Alert
+        setErrorMessage(error.response.data.error);
+        setErrorOpen(true);
       } else {
         console.error('Error editing ticker list:', error.message);
+        // Show error alert
         alert(error.message);
       }
     }
@@ -34,6 +56,14 @@ const EditTickerListPage = () => {
 
   const handleCancel = () => {
     navigate('/my-ticker');
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false); // Close the Snackbar
+  };
+
+  const handleErrorClose = () => {
+    setErrorOpen(false); // Close the Error Alert
   };
 
   return (
@@ -58,6 +88,16 @@ const EditTickerListPage = () => {
           Cancel
         </Button>
       </Box>
+      <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+        <Alert onClose={handleErrorClose} severity="error" sx={{ width: '100%' }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
