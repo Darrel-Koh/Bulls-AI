@@ -33,6 +33,7 @@ const MyTickerPage = () => {
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // State for Snackbar
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for the Snackbar
   const [isDeleteSelectedConfirmationOpen, setIsDeleteSelectedConfirmationOpen] = useState(false); // State for delete selected confirmation dialog
+  const [isDeleteSingleConfirmationOpen, setIsDeleteSConfirmationOpen] = useState(false); // State for delete selected confirmation dialog
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -379,8 +380,6 @@ const MyTickerPage = () => {
           .filter((list) => selectedTab === null || list.list_name === selectedTab)
           .every((list) => list.tickers.length === 0) ? (
             <div>
-            No rows to display.
-            <div>
               {/* Only show buttons for 'Professional' users */}
               {selectedUser && selectedUser.account_type === 'Professional' && (
                 <>
@@ -388,17 +387,17 @@ const MyTickerPage = () => {
                   Add Ticker List
                 </Button>
                 <span style={{ margin: '0 5px' }}></span>
-                <Button onClick={handleDeleteTickerList} variant="contained" color="error">
-                  Delete List
-                </Button>
-                <span style={{ margin: '0 5px' }}></span>
                 <Button onClick={handleEditListName} variant="contained" color="primary">
                   Edit List Name
+                </Button>
+                <span style={{ margin: '0 5px' }}></span>
+                <Button onClick={handleDeleteTickerList} variant="contained" color="error">
+                  Delete List
                 </Button>
                 </>
               )}
             </div>
-          </div>
+          
 
         ) : (
           <div>
@@ -410,12 +409,12 @@ const MyTickerPage = () => {
                   Add Ticker List
                 </Button>
                 <span style={{ margin: '0 5px' }}></span>
-                <Button onClick={handleDeleteTickerList} variant="contained" color="error">
-                  Delete List
-                </Button>
-                <span style={{ margin: '0 5px' }}></span>
                 <Button onClick={handleEditListName} variant="contained" color="primary">
                   Edit List Name
+                </Button>
+                <span style={{ margin: '0 5px' }}></span>
+                <Button onClick={handleDeleteTickerList} variant="contained" color="error">
+                  Delete List
                 </Button>
                 </>
               )}
@@ -441,46 +440,57 @@ const MyTickerPage = () => {
               <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Select</th>
             </tr>
           </thead>
+
           <tbody>
-            {selectedUser &&
-              selectedUser.favList &&
-              selectedUser.favList
-                .filter((list) => selectedTab === null || list.list_name === selectedTab)
-                .map((list) =>
-                  list.tickers.map((tickerId, index) => {
-                    const tickerInfo = tickerData.find((data) => data && data.tickerId === tickerId);
+  {(!isLoading && selectedUser && selectedUser.favList &&
+    selectedUser.favList
+      .filter((list) => selectedTab === null || list.list_name === selectedTab)
+      .every((list) => list.tickers.length === 0)) ? (
+    <tr>
+      <td colSpan="7" style={{ textAlign: 'center', marginTop: '10px' }}>
+        No rows to display.
+      </td>
+    </tr>
+  ) : (
+    selectedUser &&
+    selectedUser.favList &&
+    selectedUser.favList
+      .filter((list) => selectedTab === null || list.list_name === selectedTab)
+      .map((list) =>
+        list.tickers.map((tickerId, index) => {
+          const tickerInfo = tickerData.find((data) => data && data.tickerId === tickerId);
 
-                    if (!tickerInfo) {
-                      return null;
-                    }
+          if (!tickerInfo) {
+            return null;
+          }
 
-                    // Find the latest transaction
-                    const latestTransaction = tickerInfo.tickerData.transactions.reduce((latest, transaction) => {
-                      return latest.Date > transaction.Date ? latest : transaction;
-                    }, {});
+          // Find the latest transaction
+          const latestTransaction = tickerInfo.tickerData.transactions.reduce((latest, transaction) => {
+            return latest.Date > transaction.Date ? latest : transaction;
+          }, {});
 
-                    return (
-                      <tr key={index}>
-                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{tickerInfo.tickerData.trading_name}</td>
-                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{tickerInfo.tickerData.symbol}</td>
-                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction.Date}</td>
-                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction['Adj Close']}</td>
-                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction.Volume}</td>
-                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                          <Button onClick={() => handleDeleteTicker(list.list_name, tickerId, tickerInfo.tickerData.trading_name)} variant="contained" color="error">
-                            Delete
-                          </Button>
-                        </td>
-                        <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                          <Checkbox onChange={() => handleCheckboxChange(tickerId)} checked={selectedTickers.includes(tickerId)} />
-                        </td>
-                      </tr>
-                    );
-                    
-                  })
-                  
-                )}
-          </tbody>
+          return (
+            <tr key={index}>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{tickerInfo.tickerData.trading_name}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{tickerInfo.tickerData.symbol}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction.Date}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction['Adj Close']}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction.Volume}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                <Button onClick={() => handleDeleteTicker(list.list_name, tickerId, tickerInfo.tickerData.trading_name)} variant="contained" color="error">
+                  Delete
+                </Button>
+              </td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                <Checkbox onChange={() => handleCheckboxChange(tickerId)} checked={selectedTickers.includes(tickerId)} />
+              </td>
+            </tr>
+          );
+        })
+      )
+  )}
+</tbody>
+
 
           
           {isLoading && (
@@ -498,13 +508,13 @@ const MyTickerPage = () => {
       <Box mt={4} display="flex" justifyContent="space-between">
       <Box sx={{ display: 'flex', gap: 1 }}>
     
-    <Button onClick={handleDeleteSelectedTickers} variant="contained" color="error">
-      Delete Selected
-    </Button>
-    <Button onClick={handleDeselectAll} variant="contained" color="primary">
-      Deselect All
-    </Button>
-  </Box>
+      <Button onClick={handleDeselectAll} variant="contained" color="primary">
+        Deselect All
+      </Button>
+      <Button onClick={handleDeleteSelectedTickers} variant="contained" color="error">
+        Delete Selected
+      </Button>
+    </Box>
 </Box>
 
 
