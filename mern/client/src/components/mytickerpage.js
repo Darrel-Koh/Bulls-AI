@@ -133,6 +133,9 @@ const MyTickerPage = () => {
         throw new Error(`Failed to delete ticker: ${response.statusText}`);
       }
 
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(`Ticker "${deleteTickerName}" successfully deleted.`);
+
       fetchUserData();
     } catch (error) {
       console.error('Error deleting ticker:', error.message);
@@ -171,6 +174,9 @@ const MyTickerPage = () => {
       if (!response.data) {
         throw new Error(`Failed to delete tickers: ${response.statusText}`);
       }
+
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(`Tickers selected are successfully deleted.`);
 
       // Call the fetchUserData function after the deletion
       fetchUserData();
