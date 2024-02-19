@@ -5,6 +5,7 @@ import { TextField, Button, Table, TableHead, TableBody, TableRow, TableCell, Ty
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
 import { grey } from '@mui/material/colors';
+import { Snackbar } from '@mui/material';
 
 const MainPage = () => {
   const [data, setData] = useState([]);
@@ -16,6 +17,31 @@ const MainPage = () => {
   const [sortBy, setSortBy] = useState(''); // State to track sorting column
   const [sortDirection, setSortDirection] = useState('asc'); // State to track sorting direction
   const [userData, setUserData] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  // Inside your fetch and search functions where errors occur
+  const handleFetchError = (errorMessage) => {
+    setSnackbarMessage(errorMessage);
+    setSnackbarOpen(true);
+  };
+
+  // Inside your handleSearch function
+  const handleSearchError = (errorMessage) => {
+    setSnackbarMessage(errorMessage);
+    setSnackbarOpen(true);
+    setIsLoading(false); // Ensure loading indicator is stopped
+  };
+
+  const handleSnackbarOpen = (message) => {
+    setSnackbarMessage(message);
+    setSnackbarOpen(true);
+  };
+
 
   useEffect(() => {
     fetchData();
@@ -38,7 +64,7 @@ const MainPage = () => {
       setData(tickersData);
     } catch (error) {
       console.error("Error fetching data:", error);
-      setErrorMessage("Error fetching data. Please try again.");
+      handleFetchError("Error fetching data. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -64,6 +90,8 @@ const MainPage = () => {
     }
   
     try {
+      setIsLoading(true); // Start loading feedback
+
       console.log("Sending request with search term:", encodedSearchTerm);
 
       const response = await fetch(
@@ -77,6 +105,8 @@ const MainPage = () => {
           response.status,
           response.statusText
         );
+        setSnackbarMessage('Search request failed.');
+        setSnackbarOpen(true);
         return;
       }
 
@@ -84,6 +114,7 @@ const MainPage = () => {
       navigate('/viewTickers', { state: { searchResults: searchData, searchTerm: trimmedSearchTerm } });
     } catch (error) {
       console.error("Error searching data:", error);
+      handleSearchError('Error searching data. Please try again.'); // Handle error with Snackbar
     } finally {
       setIsLoading(false); // Stop loading when search completes
     }
@@ -256,11 +287,42 @@ const MainPage = () => {
         </TableBody>
       </Table>
     </div>
+    
   
       <footer className="footer">
         <Typography variant="body2">&copy; 2023 Bulls Ai. All rights reserved.</Typography>
       </footer>
+
+
+       {/* Snackbar for error messages */}
+       <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleSnackbarClose}
+        message={snackbarMessage}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }} // Adjust as needed
+        action={
+          <Button size="small" onClick={handleSnackbarClose}>
+            Close
+          </Button>
+        }
+      />
+
+      {isLoading && (
+        <CircularProgress size={24} color="inherit" />
+      )}
+
+      {!isLoading && data && data.length === 0 && (
+        <Snackbar
+          open={true} // Always open for showing the "No results found" message
+          message="No results found."
+          onClose={handleSnackbarClose}
+        />
+      )}
     </div>
+
+   
+        
   );
 };
   

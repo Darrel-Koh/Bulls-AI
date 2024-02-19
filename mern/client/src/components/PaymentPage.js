@@ -9,6 +9,7 @@ const PaymentPage = () => {
     const navigate = useNavigate();
     const [userId, setUserId] = useState(null);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     useEffect(() => {
         // Retrieve user ID from localStorage
@@ -34,6 +35,13 @@ const PaymentPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Perform basic validation checks
+        if (!isValidCardNumber(paymentInfo.cardNumber) || !isValidExpirationDate(paymentInfo.expirationDate) || !isValidCVV(paymentInfo.cvv) || !isValidNameOnCard(paymentInfo.nameOnCard)) {
+            console.error('Validation failed. Please check your inputs.');
+            setSnackbarMessage('Validation failed. Please check your inputs.');
+            setSnackbarOpen(true);
+            return;
+        }
         try {
             // Check if userId is not null before accessing properties
             if (!userId) {
@@ -49,10 +57,11 @@ const PaymentPage = () => {
 
             if (response.status === 200) {
                 // After successful account update, show Snackbar for success message
-                setSnackbarOpen(true);
+                setSnackbarMessage('Account type updated.');
+                setSnackbarOpen(true);;
                 setTimeout(() => {
                     navigate('/UserInfo');
-                }, 2000);
+                }, 4000);
             } else {
                 throw new Error(`Failed to update: ${response.statusText}`);
             }
@@ -68,6 +77,92 @@ const PaymentPage = () => {
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
+
+  // Function to validate the card number format
+const isValidCardNumber = (cardNumber) => {
+    // Check if the card number is empty
+    if (!cardNumber) {
+        setSnackbarMessage('Please enter a valid card number with 13 to 16 digits.');
+        setSnackbarOpen(true);
+        return false;
+    }
+
+    // Remove spaces and dashes from the card number
+    const strippedCardNumber = cardNumber.replace(/\s+/g, '').replace(/-/g, '');
+
+    // Validate the card number using a regular expression
+    const cardNumberRegex = /^[0-9]{13,16}$/;
+    if (!cardNumberRegex.test(strippedCardNumber)) {
+        setSnackbarMessage('Please enter a valid card number with 13 to 16 digits.');
+        setSnackbarOpen(true);
+        return false;
+    }
+
+    return true;
+};
+
+// Function to validate the expiration date format and ensure it's in the future
+const isValidExpirationDate = (expirationDate) => {
+    // Check if the expiration date is empty
+    if (!expirationDate) {
+        setSnackbarMessage('Please enter a valid expiration date in the format MM/YYYY.');
+        setSnackbarOpen(true);
+        return false;
+    }
+
+    // Split the expiration date into month and year
+    const [month, year] = expirationDate.split('/').map((part) => parseInt(part, 10));
+
+    // Validate the expiration date format and ensure it's in the future
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear() % 100; // Get last two digits of the current year
+
+    if (
+        !(month >= 1 && month <= 12) ||
+        !(year >= currentYear) ||
+        !((year > currentYear) || (year === currentYear && month > (currentDate.getMonth() + 1)))
+    ) {
+        setSnackbarMessage('Please enter a valid expiration date in the format MM/YYYY.');
+        setSnackbarOpen(true);
+        return false;
+    }
+
+    return true;
+};
+
+// Function to validate the CVV format based on the card type
+const isValidCVV = (cvv) => {
+    // Check if the CVV is empty
+    if (!cvv) {
+        setSnackbarMessage('Please enter a valid CVV with 3 to 4 digits.');
+        setSnackbarOpen(true);
+        return false;
+    }
+
+    // Validate the CVV format based on the card type
+    const cvvRegex = /^[0-9]{3,4}$/;
+    if (!cvvRegex.test(cvv)) {
+        setSnackbarMessage('Please enter a valid CVV with 3 to 4 digits.');
+        setSnackbarOpen(true);
+        return false;
+    }
+
+    return true;
+};
+
+// Function to validate the name on the card
+const isValidNameOnCard = (nameOnCard) => {
+    // Check if the name on card is empty
+    if (!nameOnCard.trim()) {
+        setSnackbarMessage('Please enter the name on the card.');
+        setSnackbarOpen(true);
+        return false;
+    }
+
+    return true;
+};
+
+
 
     return (
         <Container maxWidth="sm" style={{ textAlign: 'center', marginTop: '50px' }}>
@@ -120,7 +215,7 @@ const PaymentPage = () => {
                     </Button>
                 </div>
             </form>
-            {/* Snackbar for success message */}
+            {/* Snackbar for success message
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={3000}
@@ -130,7 +225,13 @@ const PaymentPage = () => {
                     vertical: 'bottom',
                     horizontal: 'center',
                 }}
-            />
+            /> */}
+                        <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+/>
         </Container>
     );
 };
