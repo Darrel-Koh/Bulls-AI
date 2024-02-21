@@ -3,8 +3,6 @@ import express from "express";
 import { db, bullsdb } from "../db/conn.mjs";
 import * as tf from '@tensorflow/tfjs';
 import fetch from 'node-fetch';
-import fs from 'fs';
-import path from 'path';
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -31,14 +29,8 @@ router.get('/:ticker', async (req, res) => {
         // Convert model JSON and weights data to TensorFlow.js model
         const modelJson = JSON.parse(doc.model_json.toString());
 
-        // Extract the weights path from the model JSON
-        const weightsPath = modelJson.weightsManifest[0].paths[0]; // Assuming the path is stored here
-
-        // Resolve the weights path relative to the current directory
-        const absoluteWeightsPath = path.resolve(__dirname, weightsPath);
-
-        // Load the weight data from the file
-        const weightData = fs.readFileSync(absoluteWeightsPath);
+        // Use the weights data directly from MongoDB
+        const weightData = doc.model_weights.buffer;
 
         // Construct model artifacts
         const modelArtifacts = {
@@ -52,6 +44,7 @@ router.get('/:ticker', async (req, res) => {
 
         // Load the model from memory
         const model = await tf.loadLayersModel(tf.io.fromMemory(modelArtifacts));
+        model.summary();
 
         // Send success response
         res.send({ status: 'success', message: 'Model loaded successfully' });
