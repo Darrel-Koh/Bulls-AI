@@ -103,8 +103,9 @@ const Header = () => {
       localStorage.removeItem('userId');
       localStorage.removeItem('userName');
       localStorage.removeItem('status');
+      localStorage.removeItem('userData');
 
-      setUserId(null);
+      setUserId('');
       setUserName('');
       setDropdownVisible(false);
       setStatus('');

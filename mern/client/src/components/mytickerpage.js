@@ -2,6 +2,22 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AuthContext from './AuthContext';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle'
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const MyTickerPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -13,6 +29,16 @@ const MyTickerPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // State for confirmation dialog
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // State for Snackbar
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for the Snackbar
+  const [isDeleteSelectedConfirmationOpen, setIsDeleteSelectedConfirmationOpen] = useState(false); // State for delete selected confirmation dialog
+  const [isDeleteSingleConfirmationOpen, setIsDeleteSingleConfirmationOpen] = useState(false); // State for delete single confirmation dialog
+  const [deleteTickerId, setDeleteTickerId] = useState(null); // State to store the tickerId to be deleted
+  const [deleteTickerName, setDeleteTickerName] = useState(''); // State to store the tickerName to be deleted
+  const [deleteListName, setDeleteListName] = useState(''); // State to store the tickerName to be deleted
+  const [deleteListUser, setDeleteListUser] = useState(null);
+
 
   const fetchUserData = useCallback(async () => {
     try {
@@ -84,27 +110,37 @@ const MyTickerPage = () => {
     return list_name;
   };
 
-  const handleDeleteTicker = async (listName, tickerId, tickerName) => {
-    
-    try {
-      console.log('tickerData name:', tickerName);
-      const confirmation = window.confirm(`Are you sure you want to delete the ticker "${tickerName}"?`);
+  const handleDeleteSingleConfirmationOpen = (selectedTab, tickerId, tickerName) => {
+    setDeleteTickerId(tickerId);
+    setDeleteTickerName(tickerName);
+    setDeleteListName(selectedTab);
+    setDeleteListUser(userId);
+    setIsDeleteSingleConfirmationOpen(true);
+  };
 
-      if (!confirmation) {
-        return;
-      }
+  const handleDeleteSingleConfirmationClose = () => {
+    setIsDeleteSingleConfirmationOpen(false);
+  };
+
+  const handleDeleteSingleTicker = async () => {
+    try {
 
       const response = await axios.delete(
-        `${process.env.REACT_APP_BASE_URL}/delete-tickers/one/${encodeURIComponent(userId)}/${encodeURIComponent(listName)}/${encodeURIComponent(tickerId)}`
+        `${process.env.REACT_APP_BASE_URL}/delete-tickers/one/${encodeURIComponent(deleteListUser)}/${encodeURIComponent(deleteListName)}/${encodeURIComponent(deleteTickerId)}`
       );
 
       if (!response.data) {
         throw new Error(`Failed to delete ticker: ${response.statusText}`);
       }
 
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(`Ticker "${deleteTickerName}" successfully deleted.`);
+
       fetchUserData();
     } catch (error) {
       console.error('Error deleting ticker:', error.message);
+    } finally {
+      handleDeleteSingleConfirmationClose(); // Close the confirmation dialog after deletion
     }
   };
 
@@ -119,21 +155,19 @@ const MyTickerPage = () => {
   };
 
   const handleDeleteSelectedTickers = async () => {
+    setIsDeleteSelectedConfirmationOpen(true); // Open delete selected confirmation dialog
+  };
+
+  const handleDeleteSelectedTickersConfirmed = async () => {
     try {
+      setIsDeleteSelectedConfirmationOpen(false); // Close confirmation dialog
+
       if (selectedTickers.length === 0) {
         throw new Error('No tickers selected for deletion');
       }
 
-      const confirmation = window.confirm(`Are you sure you want to delete the selected tickers?`);
-
-      if (!confirmation) {
-        return;
-      }
-
       const response = await axios.delete(
-        `${process.env.REACT_APP_BASE_URL}/delete-tickers/multiple/${encodeURIComponent(userId)}/${encodeURIComponent(
-          selectedTab
-        )}`,
+        ` ${process.env.REACT_APP_BASE_URL}/delete-tickers/multiple/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`,
         { data: { tickers: selectedTickers } }
       );
 
@@ -141,7 +175,12 @@ const MyTickerPage = () => {
         throw new Error(`Failed to delete tickers: ${response.statusText}`);
       }
 
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(`Tickers selected are successfully deleted.`);
+
+      // Call the fetchUserData function after the deletion
       fetchUserData();
+      // Clear the selected tickers
       setSelectedTickers([]);
     } catch (error) {
       console.error('Error deleting tickers:', error.message);
@@ -150,26 +189,6 @@ const MyTickerPage = () => {
 
   const handleDeselectAll = () => {
     setSelectedTickers([]);
-  };
-
-  const ListSelectionBox = ({ list, label, selectedTab, onSelect }) => {
-    const isSelected = list === selectedTab;
-    const isBasicUser = selectedUser && selectedUser.account_type === 'Basic';
-
-    const boxStyle = {
-      padding: '10px',
-      border: isSelected ? '2px solid #007bff' : '1px solid #ddd',
-      backgroundColor: isSelected ? '#f2f2f2' : '#fff',
-      color: isSelected ? '#007bff' : '#000',
-      cursor: 'pointer',
-      display: isBasicUser ? (isSelected ? 'block' : 'none') : 'block',
-    };
-
-    return (
-      <div style={boxStyle} onClick={() => onSelect(list)}>
-        {label}
-      </div>
-    );
   };
 
   const actionButtonStyle = {
@@ -244,24 +263,36 @@ const MyTickerPage = () => {
       if (!selectedTab) {
         throw new Error('No ticker list selected for deletion');
       }
-  
-      const confirmation = window.confirm(`Are you sure you want to delete the ticker list "${selectedTab}"?`);
-  
-      if (!confirmation) {
-        return; // Do nothing if the user cancels the confirmation
-      }
+
+      setIsConfirmationOpen(true); // Open confirmation dialog
+    } catch (error) {
+      console.error('Error deleting ticker list:', error.message);
+    }
+  };
+
+  const handleConfirmationYes = async () => {
+    try {
+      setIsConfirmationOpen(false); // Close confirmation dialog
 
       const response = await axios.delete(`${process.env.REACT_APP_BASE_URL}/delete-tickerlist/${encodeURIComponent(userId)}/${encodeURIComponent(selectedTab)}`);
 
       if (!response.data) {
         throw new Error(`Failed to delete ticker list: ${response.statusText}`);
       }
-  
+
+      // Show Snackbar
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(`Ticker list "${selectedTab}" successfully deleted.`);
+
       // Call the fetchUserData function after the deletion
       fetchUserData();
     } catch (error) {
       console.error('Error deleting ticker list:', error.message);
     }
+  };
+
+  const handleConfirmationNo = () => {
+    setIsConfirmationOpen(false); // Close confirmation dialog
   };
 
   const handleEditListName = () => {
@@ -274,154 +305,320 @@ const MyTickerPage = () => {
     // Navigate to EditTickerListPage with the selectedTab as a parameter
     navigate(`/edit-tickerlist/${encodeURIComponent(selectedTab)}`);
   };
+
+  const renderTabs = () => {
+    if (!selectedUser || !selectedUser.favList) return null;
+  
+    const isBasicUser = selectedUser.account_type === 'Basic';
+  
+    if (isBasicUser) {
+      return (
+        <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
+          {selectedUser.favList.slice(0, 1).map((list) => (
+            <Box
+              key={list.list_name}
+              mr={2}
+              mb={2}
+              onClick={() => handleTabClick(list.list_name)}
+              style={{
+                cursor: 'pointer',
+                border:
+                  selectedTab === list.list_name
+                    ? '2px solid #007bff'
+                    : '1px solid #ddd',
+                padding: '10px',
+                backgroundColor:
+                  selectedTab === list.list_name ? '#f2f2f2' : '#fff',
+                color: selectedTab === list.list_name ? '#007bff' : '#000',
+              }}
+            >
+              {list.list_name}
+            </Box>
+          ))}
+        </Box>
+      );
+    } else if (selectedUser.favList.length <= 5) {
+      return (
+        <Box display="flex" justifyContent="flex-start" flexWrap="wrap">
+          {selectedUser.favList.map((list) => (
+            <Box
+              key={list.list_name}
+              mr={2}
+              mb={2}
+              onClick={() => handleTabClick(list.list_name)}
+              style={{
+                cursor: 'pointer',
+                border:
+                  selectedTab === list.list_name
+                    ? '2px solid #007bff'
+                    : '1px solid #ddd',
+                padding: '10px',
+                backgroundColor:
+                  selectedTab === list.list_name ? '#f2f2f2' : '#fff',
+                color: selectedTab === list.list_name ? '#007bff' : '#000',
+              }}
+            >
+              {list.list_name}
+            </Box>
+          ))}
+        </Box>
+      );
+    } else {
+      return (
+        <FormControl>
+          <InputLabel>Select List</InputLabel>
+          <Select
+            value={selectedTab || ''}
+            onChange={(event) => setSelectedTab(event.target.value)}
+          >
+            {selectedUser.favList.map((list) => (
+              <MenuItem key={list.list_name} value={list.list_name}>
+                {list.list_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
+  };
   
   return (
-    <div style={containerStyle}>
-      <div style={tabsContainerStyle}>
-        {selectedUser &&
-          selectedUser.favList &&
-          selectedUser.favList.map((list) => (
-            <ListSelectionBox
-              key={list.list_name}
-              list={list.list_name}
-              label={list.list_name}
-              selectedTab={selectedTab}
-              onSelect={handleTabClick}
-            />
-          ))}
-      </div>
-  
-      <div style={tableContainerStyle}>
-        <table style={tableStyle}>
+    <Box mt={4}>
+      <Typography variant="h4" gutterBottom>
+        My Ticker Page
+      </Typography>
+
+
+
+      {renderTabs()}
+      <Box sx={{ display: 'flex', gap: 1 }}>
+
+      {!isLoading && selectedUser && selectedUser.favList && (
+        selectedUser.favList
+          .filter((list) => selectedTab === null || list.list_name === selectedTab)
+          .every((list) => list.tickers.length === 0) ? (
+            <div>
+              {/* Only show buttons for 'Professional' users */}
+              {selectedUser && selectedUser.account_type === 'Professional' && (
+                <>
+                 <Button onClick={handleAddTickerClick} variant="contained" color="primary">
+                  Add Ticker List
+                </Button>
+                <span style={{ margin: '0 5px' }}></span>
+                <Button onClick={handleEditListName} variant="contained" color="primary">
+                  Edit List Name
+                </Button>
+                <span style={{ margin: '0 5px' }}></span>
+                <Button onClick={handleDeleteTickerList} variant="contained" color="error">
+                  Delete List
+                </Button>
+                </>
+              )}
+            </div>
+          
+
+        ) : (
+          <div>
+            <div>
+              {/* Only show buttons for 'Professional' users */}
+              {selectedUser && selectedUser.account_type === 'Professional' && (
+                <>
+                 <Button onClick={handleAddTickerClick} variant="contained" color="primary">
+                  Add Ticker List
+                </Button>
+                <span style={{ margin: '0 5px' }}></span>
+                <Button onClick={handleEditListName} variant="contained" color="primary">
+                  Edit List Name
+                </Button>
+                <span style={{ margin: '0 5px' }}></span>
+                <Button onClick={handleDeleteTickerList} variant="contained" color="error">
+                  Delete List
+                </Button>
+                </>
+              )}
+
+            </div>
+            
+          </div>
+
+        )
+    )}
+    </Box>
+      <Box mt={4} display="flex" justifyContent="center">
+
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
-              <th style={tableHeaderStyle}>Trading Name</th>
-              <th style={tableHeaderStyle}>Symbol</th>
-              <th style={tableHeaderStyle}>Latest Transaction Date</th>
-              <th style={tableHeaderStyle}>Latest Adj Close</th>
-              <th style={tableHeaderStyle}>Latest Volume</th>
-              <th style={tableHeaderStyle}>Actions</th>
-              <th style={tableHeaderStyle}>Select</th>
+              <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Trading Name</th>
+              <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Symbol</th>
+              <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Latest Transaction Date</th>
+              <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Latest Adj Close</th>
+              <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Latest Volume</th>
+              <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Actions</th>
+              <th style={{ padding: '10px', backgroundColor: '#f2f2f2', border: '1px solid #ddd' }}>Select</th>
             </tr>
           </thead>
-          <tbody>
-            {selectedUser &&
-              selectedUser.favList &&
-              selectedUser.favList
-                .filter((list) => selectedTab === null || list.list_name === selectedTab)
-                .map((list) =>
-                  list.tickers.map((tickerId, index) => {
-                    const tickerInfo = tickerData.find((data) => data && data.tickerId === tickerId);
-  
-                    if (!tickerInfo) {
-                      return null;
-                    }
-  
-                    // Find the latest transaction
-                    const latestTransaction = tickerInfo.tickerData.transactions.reduce((latest, transaction) => {
-                      return latest.Date > transaction.Date ? latest : transaction;
-                    }, {});
-  
-                    return (
-                      <tr key={index}>
-                        <td style={tableCellStyle}>{tickerInfo.tickerData.trading_name}</td>
-                        <td style={tableCellStyle}>{tickerInfo.tickerData.symbol}</td>
-                        <td style={tableCellStyle}>{latestTransaction.Date}</td>
-                        <td style={tableCellStyle}>{latestTransaction['Adj Close']}</td>
-                        <td style={tableCellStyle}>{latestTransaction.Volume}</td>
-                        <td style={tableCellStyle}>
-                          <button
-                            onClick={() => handleDeleteTicker(list.list_name, tickerId, tickerInfo.tickerData.trading_name)}
-                            style={{ backgroundColor: 'red', color: 'white' }}
-                          >
-                            Delete
-                          </button>
-                        </td>
-                        <td style={tableCellStyle}>
-                          <input
-                            type="checkbox"
-                            onChange={() => handleCheckboxChange(tickerId)}
-                            checked={selectedTickers.includes(tickerId)}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })
-                )}
-          </tbody>
-        </table>
-  
-        {isLoading && (
-          <div style={{ textAlign: 'center', marginTop: '10px', color: '#007bff' }}>
-            Loading...
-          </div>
-        )}
-  
-  {!isLoading && selectedUser && selectedUser.favList && (
-  selectedUser.favList
-    .filter((list) => selectedTab === null || list.list_name === selectedTab)
-    .every((list) => list.tickers.length === 0) ? (
-      <div style={{ textAlign: 'center', marginTop: '10px', color: '#000' }}>
-        No rows to display.
-        <div style={buttonRowStyle}>
-          {/* Only show buttons for 'Professional' users */}
-          {selectedUser && selectedUser.account_type === 'Professional' && (
-            <>
-              <button onClick={handleAddTickerClick} style={actionButtonStyle}>
-                Add Ticker List
-              </button>
-              {/* Add space between buttons */}
-              <span style={{ margin: '0 10px' }}></span>
-              <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
-                Delete List
-              </button>
-              <button onClick={handleEditListName} style={actionButtonStyle}>
-                Edit List Name
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    ) : (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <div style={{ ...buttonRowStyle, justifyContent: 'space-between' }}>
-          {/* Only show buttons for 'Professional' users */}
-          {selectedUser && selectedUser.account_type === 'Professional' && (
-            <>
-              <button onClick={handleAddTickerClick} style={actionButtonStyle}>
-                Add Ticker List
-              </button>
-              <button onClick={handleDeleteTickerList} style={actionButtonStyle}>
-                Delete List
-              </button>
-              <button onClick={handleEditListName} style={actionButtonStyle}>
-                Edit List Name
-              </button>
-            </>
-          )}
-        
-        </div>
-        <div style={buttonRowStyle}>
-          <div style={{ marginRight: '20px' }}>
-            <button
-              onClick={handleDeleteSelectedTickers}
-              style={{ ...actionButtonStyle, backgroundColor: 'red' }}
-            >
-              Delete Selected
-            </button>
-          </div>
-          <div>
-            <button onClick={handleDeselectAll} style={actionButtonStyle}>
-              Deselect All
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-)}
-</div>
-</div>
-);
 
-          };
+          <tbody>
+  {(!isLoading && selectedUser && selectedUser.favList &&
+    selectedUser.favList
+      .filter((list) => selectedTab === null || list.list_name === selectedTab)
+      .every((list) => list.tickers.length === 0)) ? (
+    <tr>
+      <td colSpan="7" style={{ textAlign: 'center', marginTop: '10px' }}>
+        No rows to display.
+      </td>
+    </tr>
+  ) : (
+    selectedUser &&
+    selectedUser.favList &&
+    selectedUser.favList
+      .filter((list) => selectedTab === null || list.list_name === selectedTab)
+      .map((list) =>
+        list.tickers.map((tickerId, index) => {
+          const tickerInfo = tickerData.find((data) => data && data.tickerId === tickerId);
+
+          if (!tickerInfo) {
+            return null;
+          }
+
+          // Find the latest transaction
+          const latestTransaction = tickerInfo.tickerData.transactions.reduce((latest, transaction) => {
+            return latest.Date > transaction.Date ? latest : transaction;
+          }, {});
+
+          return (
+            <tr key={index}>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{tickerInfo.tickerData.trading_name}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{tickerInfo.tickerData.symbol}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction.Date}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction['Adj Close']}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>{latestTransaction.Volume}</td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                <Button onClick={() => handleDeleteSingleConfirmationOpen(list.list_name, tickerId, tickerInfo.tickerData.trading_name)} variant="contained" color="error">
+                  Delete
+                </Button>
+              </td>
+              <td style={{ padding: '10px', border: '1px solid #ddd' }}>
+                <Checkbox onChange={() => handleCheckboxChange(tickerId)} checked={selectedTickers.includes(tickerId)} />
+              </td>
+            </tr>
+          );
+        })
+      )
+  )}
+</tbody>
+
+
+          
+          {isLoading && (
+            <tr>
+                <td colSpan="7" style={{ textAlign: 'center', marginTop: '10px', color: '#007bff' }}>
+                    Loading...
+                </td>
+            </tr>
+        )}
+         
+        </table>
+
+      
+      </Box>
+      <Box mt={4} display="flex" justifyContent="space-between">
+      <Box sx={{ display: 'flex', gap: 1 }}>
+    
+      <Button onClick={handleDeselectAll} variant="contained" color="primary">
+        Deselect All
+      </Button>
+      <Button onClick={handleDeleteSelectedTickers} variant="contained" color="error">
+        Delete Selected
+      </Button>
+    </Box>
+</Box>
+
+
+       
+       
+        <Dialog
+        open={isConfirmationOpen}
+        onClose={handleConfirmationNo}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmation</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete the ticker list "{selectedTab}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleConfirmationNo} color="primary">
+            No
+          </Button>
+          <Button onClick={handleConfirmationYes} color="primary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={isDeleteSelectedConfirmationOpen}
+        onClose={() => setIsDeleteSelectedConfirmationOpen(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmation</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete the selected tickers?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleteSelectedConfirmationOpen(false)} color="primary">
+            No
+          </Button>
+          <Button onClick={handleDeleteSelectedTickersConfirmed} color="primary" autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+     <Dialog
+        open={isDeleteSingleConfirmationOpen}
+        onClose={handleDeleteSingleConfirmationClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Confirmation</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this ticker "{deleteTickerName}"?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteSingleConfirmationClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={() => handleDeleteSingleTicker()} color="primary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>       
+
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setIsSnackbarOpen(false)}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={() => setIsSnackbarOpen(false)}
+          severity="success"
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
+    </Box>
+  );
+};
+
 export default MyTickerPage;
