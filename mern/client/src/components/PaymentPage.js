@@ -176,7 +176,7 @@ const isValidNameOnCard = (nameOnCard) => {
             <form onSubmit={handleSubmit}>
                 <TextField
                     name="cardNumber"
-                    label="Card Number"
+                    label="Card Number (16-Digits)"
                     value={paymentInfo.cardNumber}
                     onChange={handleInputChange}
                     fullWidth
@@ -185,7 +185,7 @@ const isValidNameOnCard = (nameOnCard) => {
                 />
                 <TextField
                     name="expirationDate"
-                    label="Expiration Date"
+                    label="Expiration Date (MM/YY)"
                     value={paymentInfo.expirationDate}
                     onChange={handleInputChange}
                     fullWidth
@@ -194,7 +194,7 @@ const isValidNameOnCard = (nameOnCard) => {
                 />
                 <TextField
                     name="cvv"
-                    label="CVV"
+                    label="CVV (3-Digits)"
                     value={paymentInfo.cvv}
                     onChange={handleInputChange}
                     fullWidth

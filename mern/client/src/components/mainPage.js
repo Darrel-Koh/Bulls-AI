@@ -316,6 +316,7 @@ const MainPage = () => {
         <Snackbar
           open={true} // Always open for showing the "No results found" message
           message="No results found."
+        autoHideDuration={4000}
           onClose={handleSnackbarClose}
         />
       )}

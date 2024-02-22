@@ -113,17 +113,17 @@ const Header = () => {
       setDropdownVisible(false);
       setStatus('');
       navigate('/');
-    }
-  };
+    };
+  
 
-  const handleDropdownOptionClick = () => {
-    setDropdownVisible(false);
-  };
+  // const handleDropdownOptionClick = () => {
+  //   setDropdownVisible(false);
+  // };
 
-  if (loading || isLoggedOut) {
-    // You can show a loading indicator or null during the initial loading phase or after logout
-    return null;
-  }
+  //   if (loading || isLoggedOut) {
+  //     // You can show a loading indicator or null during the initial loading phase or after logout
+  //     return null;
+  //   }
 
   const handleLogoutConfirm = () => {
     handleLogout();
@@ -218,8 +218,10 @@ const Header = () => {
             </Toolbar>
         </AppBar>
     </div>
-);
+  );
+
 };
+
 
 export default Header;
 
