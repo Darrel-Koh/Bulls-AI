@@ -69,9 +69,9 @@ const ViewTickers = () => {
 
     const fetchRelatedNews = async () => {
       try {
-        const stocksKeywords = ['stocks', 'financial', 'market', 'finance'];
+        const stocksKeywords = ['stocks', 'financial'];
         const searchTermWithKeywords = `${searchTerm} ${stocksKeywords.join(' OR ')}`;
-        const url = `https://newsapi.org/v2/everything?q=${searchTermWithKeywords}&apiKey=${apiKey}&language=en&sortBy=publishedAt&sources=bbc-news`;
+        const url = `https://newsapi.org/v2/everything?q=${searchTermWithKeywords}&apiKey=${apiKey}&language=en`;
 
         const response = await fetch(url);
 
