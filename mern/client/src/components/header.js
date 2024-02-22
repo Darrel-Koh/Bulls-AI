@@ -108,13 +108,13 @@ const Header = () => {
     localStorage.removeItem('status');
     localStorage.removeItem('userData');
 
-    setUserId();
-    setUserName('');
-    setDropdownVisible(false);
-    setStatus('');
-    navigate('/');
-};
-
+      setUserId('');
+      setUserName('');
+      setDropdownVisible(false);
+      setStatus('');
+      navigate('/');
+    }
+  };
 
   const handleDropdownOptionClick = () => {
     setDropdownVisible(false);

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Typography, Button, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link } from '@mui/material';
+import { Typography, Button, CircularProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Link, Snackbar } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import "../components/style.css";
 import AuthContext from './AuthContext';
 import axios from 'axios';
+import MuiAlert from '@mui/material/Alert';
 
 const ViewTickers = () => {
   const location = useLocation();
@@ -20,6 +21,8 @@ const ViewTickers = () => {
   const [selectedList, setSelectedList] = useState(null);
   const { userId } = useContext(AuthContext);
   const [lastListAdded, setLastListAdded] = useState(false);
+   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // State for Snackbar
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for the Snackbar
 
 
   const fetchUserData = async () => {
@@ -103,6 +106,7 @@ const ViewTickers = () => {
   }, [searchResults, searchTerm]);
 
   const handleAddToFavourite = async (recordId, recordIdName) => {
+    
     const availableLists = favList.filter((list) => !list.tickers.includes(recordId));
     setSelectedList(availableLists[0].list_name);
     try {
@@ -112,6 +116,8 @@ const ViewTickers = () => {
       
       // Check if there is a selected list; if not, use the last list from the dropdown
       let listToAdd = availableLists[0].list_name;
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(`Added ${recordIdName} to ${listToAdd}`);
   
       if (!listToAdd) {
         throw new Error('No list selected or no available lists');
@@ -136,16 +142,20 @@ const ViewTickers = () => {
         setLastListAdded(false);
       }      
       
-
+      
+     
       console.log('Adding record to list:', listToAdd);
       console.log('Record ID name:', recordIdName);
-      window.alert(recordIdName + " has been added to " + listToAdd);
+
       const response = await axios.put(
         `${process.env.REACT_APP_BASE_URL}/my-ticker/update/${encodeURIComponent(userId)}/${encodeURIComponent(listToAdd)}`,
         { tickerId: recordId }
       );
-      window.location.reload();
-  
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+
       if (!response.data) {
         throw new Error('Failed to update ticker details');
       }
@@ -315,9 +325,27 @@ const renderListDropdown = (result) => {
       <footer className="footer">
         <Typography variant="body2">&copy; 2023 Bulls Ai. All rights reserved.</Typography>
       </footer>
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setIsSnackbarOpen(false)}
+        >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={() => setIsSnackbarOpen(false)}
+          severity="success"
+        >
+          {snackbarMessage}
+        </MuiAlert>
+        </Snackbar>
+
     </div>
+
   );
+  
 };
+
 
 const favouriteButtonStyle = {
   backgroundColor: '#FFD700',
