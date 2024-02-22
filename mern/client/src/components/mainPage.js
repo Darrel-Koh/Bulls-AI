@@ -43,32 +43,32 @@ const MainPage = () => {
   };
 
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
-  const fetchData = async () => {
-    try {
-      setIsLoading(true);
-      setErrorMessage('');
+  // const fetchData = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     setErrorMessage('');
   
-      // Fetch data from the /api/data endpoint
-      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data`);
+  //     // Fetch data from the /api/data endpoint
+  //     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data`);
   
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
       
-      const tickersData = await response.json();
-      console.log('API Response:', tickersData);
-      setData(tickersData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      handleFetchError("Error fetching data. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //     const tickersData = await response.json();
+  //     console.log('API Response:', tickersData);
+  //     setData(tickersData);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //     handleFetchError("Error fetching data. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   
   useEffect(() => {
     // Retrieve user data from local storage

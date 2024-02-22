@@ -119,7 +119,8 @@ const LoginPage = () => {
       await axios.post(`${process.env.REACT_APP_BASE_URL}/forget-password`, {
         email,
       });
-      alert("Password reset initiated. Check your email for instructions.");
+      setSnackbarMessage('Password reset initiated. Check your email for instructions.');
+      setSnackbarOpen(true);    
     } catch (error) {
       console.error("Password reset failed:", error.message);
       setSnackbarMessage('Password reset failed. Please try again later.');
