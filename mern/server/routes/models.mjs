@@ -17,7 +17,7 @@ global.fetch = fetch;
 router.get('/:ticker', async (req, res) => {
     try {
         // Fetch model data from MongoDB
-        const collection = bullsdb.collection('models');
+        const collection = bullsdb.collection('ticker_data');
         const doc = await collection.findOne({ symbol: req.params.ticker });
 
         // Check if model data exists
