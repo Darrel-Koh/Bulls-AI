@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import AuthContext from "./AuthContext";
 import { TextField, Button, Typography, Box, Container, Grid } from "@mui/material";
+import { Snackbar } from '@mui/material';
 
 
 const UpdatePassword = () => {
@@ -12,6 +13,8 @@ const UpdatePassword = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const { userId } = useContext(AuthContext);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const handleUpdatePassword = async (event) => {
     event.preventDefault();
@@ -54,10 +57,12 @@ const UpdatePassword = () => {
       setErrorMessage("");
 
       // Display success message to user
-      alert("Password changed successfully!");
+      setSnackbarMessage('Password updated successfully.');
+      setSnackbarOpen(true);
     } catch (error) {
+      setSnackbarMessage('Failed to change password. Please try again..');
+      setSnackbarOpen(true);
       console.error("Error changing password:", error.message);
-      setErrorMessage("Failed to change password. Please try again.");
     }
   };
 
@@ -111,6 +116,12 @@ return (
         </Grid>
       </form>
     </Box>
+    <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackbarMessage}
+      />
   </Container>
 );
 };

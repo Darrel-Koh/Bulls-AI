@@ -5,6 +5,7 @@ import AuthContext from "../components/AuthContext";
 import BullsAiLogo from "../images/BullsAI logo_coloured_logo.png"; // Import BullsAI logo
 import { Button, Select, MenuItem, Box, Avatar, Container, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Tabs, Tab } from '@mui/material';
+import { Snackbar } from '@mui/material';
 
 
 const LoginPage = () => {
@@ -20,7 +21,12 @@ const LoginPage = () => {
   const [wrongPasswordDialogOpen, setWrongPasswordDialogOpen] = useState(false); // State for dialog visibility
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState('');
-
+  // Define state for the forgot password dialog
+  const [email, setEmail] = useState("");
+  const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -71,7 +77,8 @@ const LoginPage = () => {
         // registerAccountType,
       });
 
-      window.alert("Registration successful");
+      setSnackbarMessage("Registration successful");
+      setSnackbarOpen(true);
 
       setRegisterEmail("");
       setRegisterPassword("");
@@ -91,7 +98,8 @@ const LoginPage = () => {
         error.response.status === 400 &&
         error.response.data === "Email is already registered"
       ) {
-        alert("Email is already registered. Please use another email.");
+        setSnackbarMessage('Email is already registered. Please use another email.');
+        setSnackbarOpen(true);
       } else {
         console.error("Registration failed:", error.message);
       }
@@ -107,36 +115,29 @@ const LoginPage = () => {
   };
 
   const handleForgotPassword = async () => {
-    const email = prompt("Enter your email to reset password:");
-
-    if (email) {
-      try {
-        await axios.post(`${process.env.REACT_APP_BASE_URL}/forget-password`, {
-          email,
-        });
-        alert("Password reset initiated. Check your email for instructions.");
-      } catch (error) {
-        console.error("Password reset failed:", error.message);
-        alert("Password reset failed. Please try again later.");
-      }
-    }
+    try {
+      await axios.post(`${process.env.REACT_APP_BASE_URL}/forget-password`, {
+        email,
+      });
+      setSnackbarMessage('Password reset initiated. Check your email for instructions.');
+      setSnackbarOpen(true);    
+    } catch (error) {
+      console.error("Password reset failed:", error.message);
+      setSnackbarMessage('Password reset failed. Please try again later.');
+      setSnackbarOpen(true);
+    }    
+    handleCloseDialog();
   };
 
-  const submitButtonStyle = {
-    backgroundColor: "#4CAF50",
-    color: "white",
-    padding: "15px 25px",
-    border: "none",
-    borderRadius: "15px",
-    cursor: "pointer",
-    marginBottom: "100px",
-    fontSize: "18px",
+  const handleOpenResetDialog = () => {
+    setOpen(true);
   };
 
-  const handleRegisterButton = () => {
-    setActiveTab("register");
-    navigate("/");
+  const handleCloseResetDialog = () => {
+    setOpen(false);
   };
+
+
 
   return (
     <Container maxWidth="sm" style={{ textAlign: "center", marginTop: "100px" }}>
@@ -177,7 +178,7 @@ const LoginPage = () => {
                 <Button
           variant="text"
           color="primary"
-          onClick={handleForgotPassword}
+          onClick={handleOpenResetDialog}
           style={{ marginTop: "10px", marginLeft: "10px" }}
         >
           Forgot Password?
@@ -210,15 +211,7 @@ const LoginPage = () => {
               fullWidth
               margin="normal"
             />
-            {/* <Select
-              value={registerAccountType}
-              onChange={(e) => setRegisterAccountType(e.target.value)}
-              fullWidth
-              margin="normal"
-            >
-              <MenuItem value="Basic">Basic</MenuItem>
-              <MenuItem value="Professional">Professional</MenuItem>
-            </Select> */}
+        
             <Box display="flex" justifyContent="center" mt={2}> {/* Align buttons in the center */}
               <Button type="submit" variant="contained" style={{backgroundColor: "black"}}>
                 Register
@@ -257,6 +250,35 @@ const LoginPage = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+       {/* Forgot Password Dialog */}
+       <Dialog open={open} onClose={handleCloseResetDialog}>
+        <DialogTitle>Reset Password</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Email Address"
+            type="email"
+            fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseResetDialog} color="primary">Cancel</Button>
+          <Button onClick={handleForgotPassword} color="primary">Reset Password</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+      open={snackbarOpen}
+      autoHideDuration={6000} // Adjust the duration as needed
+      onClose={() => setSnackbarOpen(false)}
+      message={snackbarMessage}
+    />
+  
+
       </div>
     </Container>
   );
