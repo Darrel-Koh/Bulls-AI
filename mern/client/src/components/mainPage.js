@@ -44,17 +44,17 @@ const MainPage = () => {
   };
 
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+  fetchData();
+ }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     setErrorMessage('');
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage('');
   
-  //     // Fetch data from the /api/data endpoint
-  //     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data`);
+      // Fetch data from the /api/data endpoint
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data`);
   
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

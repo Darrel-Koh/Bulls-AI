@@ -51,7 +51,7 @@ const ViewTickers = () => {
   
       const filteredID = Array.isArray(searchResults) ? searchResults : [searchResults];
       
-  
+      console.log('filteredID:', filteredID);
       const availableLists = userData.favList.filter((list) => !list.tickers.includes(filteredID[0]._id));
       setSelectedList(availableLists.length > 0 ? availableLists[0].list_name : null);
       
