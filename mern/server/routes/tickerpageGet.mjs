@@ -83,5 +83,56 @@ router.get("/ticker/:id", async (req, res) => {
   }
 });
 
+  router.put("/update/:userId/:list_name", async (req, res) => {
+    try {
+      const collection = await bullsdb.collection("users");
+      const { userId, list_name } = req.params;
+      const { tickerId } = req.body;
+
+      console.log("userId:", userId);
+      console.log("list_name:", list_name);
+  
+      if (!ObjectId.isValid(tickerId)) {
+        return res.status(400).send("Invalid ticker ID");
+      }
+  
+      const user = await collection.findOne({ _id: new ObjectId(userId) });
+  
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+  
+      const existingList = user.favList.find(list => list.list_name === list_name);
+  
+      if (!existingList) {
+        return res.status(404).send("List not found");
+      }
+  
+      if (existingList.tickers.includes(tickerId)) {
+        return res.status(409).json({
+          error: "Record ID already exists in the list",
+        });
+      }
+  
+      const updateQuery = { "_id": new ObjectId(userId), "favList.list_name": list_name };
+      const updateData = {
+        $addToSet: {
+          "favList.$.tickers": tickerId,
+        },
+      };
+  
+      const result = await collection.updateOne(updateQuery, updateData);
+  
+      if (result.matchedCount === 0) {
+        res.status(404).send("List not found");
+      } else {
+        res.status(200).send("Ticker details updated successfully");
+      }
+    } catch (error) {
+      console.log("Error updating ticker details:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
 
 export default router;

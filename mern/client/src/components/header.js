@@ -17,6 +17,11 @@ import {
   Box, // Added Box component for wrapping elements
 } from '@mui/material';
 import { AccountCircle } from '@mui/icons-material';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const Header = () => {
   const authContext = useContext(AuthContext);
@@ -27,6 +32,7 @@ const Header = () => {
   const [isLoggedOut, setIsLoggedOut] = useState(false); // New state for logout status
   const dropdownRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -97,94 +103,125 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    const confirmLogout = window.confirm('Are you sure you want to log out?');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('status');
+    localStorage.removeItem('userData');
 
-    if (confirmLogout) {
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('status');
-
-      setUserId(null);
+      setUserId('');
       setUserName('');
       setDropdownVisible(false);
       setStatus('');
       navigate('/');
-    }
+    };
+  
+
+  // const handleDropdownOptionClick = () => {
+  //   setDropdownVisible(false);
+  // };
+
+  //   if (loading || isLoggedOut) {
+  //     // You can show a loading indicator or null during the initial loading phase or after logout
+  //     return null;
+  //   }
+
+  const handleLogoutConfirm = () => {
+    handleLogout();
+    setAnchorEl(null);
   };
 
-  const handleDropdownOptionClick = () => {
-    setDropdownVisible(false);
+  const handleDialogOpen = () => {
+    setOpenDialog(true);
   };
 
-  if (loading || isLoggedOut) {
-    // You can show a loading indicator or null during the initial loading phase or after logout
-    return null;
-  }
-
-
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+  };
 
 
   return (
-    <AppBar position="static" style={{ background: 'black' }}>
-    <Toolbar>
-      <RouterLink to="/mainPage" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-        <Avatar alt="BullsAI Logo" src={BullsAiLogo} />
-        <Typography variant="body1" style={{ marginLeft: '8px', fontFamily: 'helvetica, sans-serif', fontSize: '18px' }}>BULLS AI</Typography>
-      </RouterLink>
-      <div style={{ flexGrow: 1 }} />
-      <Box display="flex" alignItems="center"> {/* Wrap elements in a Box */}
-      <Button component={RouterLink} to="/my-ticker" color="inherit" style={{ marginRight: '10px' }}>
-          Ticker List
-        </Button>
-        <Button component={RouterLink} to="/glossary" color="inherit" style={{ marginRight: '10px' }}>
-          Glossary
-        </Button>
-        <Button component={RouterLink} to="/PricingPage" color="inherit" style={{ marginRight: '10px' }}>
-          Upgrade Plan
-        </Button>
-        {userId ? (
-          <div>
-            <IconButton onClick={handleMenu} color="inherit">
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              getContentAnchorEl={null}
-            >
-              {/* <MenuItem component={RouterLink} to="/my-ticker" onClick={handleClose}>
-                My Ticker
-              </MenuItem> */}
-              <MenuItem component={RouterLink} to="/UserInfo" onClick={handleClose}>
-                Profile
-              </MenuItem>
-              <MenuItem onClick={handleLogout}>
-                <ListItemIcon>
-                  <AccountCircle fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Logout" />
-              </MenuItem>
-            </Menu>
-          </div>
-        ) : (
-          <Button component={RouterLink} to="/login" color="inherit">
-            Login
-          </Button>
-        )}
-      </Box>
-    </Toolbar>
-  </AppBar>
-);
+    <div>
+        <AppBar position="static" style={{ background: 'black' }}>
+            <Toolbar>
+                <RouterLink to="/mainPage" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                    <Avatar alt="BullsAI Logo" src={BullsAiLogo} />
+                    <Typography variant="body1" style={{ marginLeft: '8px', fontFamily: 'helvetica, sans-serif', fontSize: '18px' }}>BULLS AI</Typography>
+                </RouterLink>
+                <div style={{ flexGrow: 1 }} />
+                <Box display="flex" alignItems="center">
+                    <Button component={RouterLink} to="/my-ticker" color="inherit" style={{ marginRight: '10px' }}>
+                        Ticker List
+                    </Button>
+                    <Button component={RouterLink} to="/glossary" color="inherit" style={{ marginRight: '10px' }}>
+                        Glossary
+                    </Button>
+                    <Button component={RouterLink} to="/PricingPage" color="inherit" style={{ marginRight: '10px' }}>
+                        Upgrade Plan
+                    </Button>
+                    {userId ? (
+                        <div>
+                            <IconButton onClick={handleMenu} color="inherit">
+                                <AccountCircle />
+                            </IconButton>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                getContentAnchorEl={null}
+                            >
+                                <MenuItem component={RouterLink} to="/UserInfo" onClick={handleClose}>
+                                    Profile
+                                </MenuItem>
+                                <MenuItem onClick={handleDialogOpen}>
+                                    <ListItemIcon>
+                                        <AccountCircle fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Logout" />
+                                </MenuItem>
+                            </Menu>
+                            <Dialog
+                                open={openDialog}
+                                onClose={handleDialogClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">{"Are you sure you want to log out?"}</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="alert-dialog-description">
+                                        This action will log you out of your account.
+                                    </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleDialogClose} color="primary">
+                                        Cancel
+                                    </Button>
+                                    <Button onClick={handleLogoutConfirm} color="primary" autoFocus>
+                                        Confirm Logout
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+                        </div>
+                    ) : (
+                            <Button component={RouterLink} to="/login" color="inherit">
+                                Login
+                            </Button>
+                        )}
+                </Box>
+            </Toolbar>
+        </AppBar>
+    </div>
+  );
+
 };
+
 
 export default Header;
 
