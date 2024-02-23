@@ -10,14 +10,13 @@ router.get("/:tickername", async (req, res) => {
         const query = { trading_name: req.params.tickername };
         const result = await collection.findOne(query);
 
-        if (!result || !result.plot_data) {
-            res.status(404).json({ message: "Plot data not found" });
+        if (!result) {
+            res.status(404).json({ message: "Data not found" });
             return;
         }
 
-        // Send the plot data as a response
-        res.set("Content-Type", "image/png");
-        res.send(result.plot_data.buffer);
+        // Send the result as a JSON response
+        res.json(result);
     } catch (error) {
         console.error("Error:", error);
         res.status(500).json({ message: "Internal server error" });
