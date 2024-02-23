@@ -65,7 +65,7 @@ const ViewTickers = () => {
 
   useEffect(() => {
     console.log('Fetching related news for:', searchTerm);
-    const apiKey = '466de00744114cc8be03ca388f1f816f';
+    const apiKey = '9281952933294c1db4cd37047165cae3';
 
     const fetchRelatedNews = async () => {
       try {
