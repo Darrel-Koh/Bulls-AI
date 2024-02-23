@@ -367,7 +367,7 @@ const renderListDropdown = (result) => {
         ) : (
           <Typography variant="body1">No plot data available.</Typography>
         )} */}
-        <img src={plotImageUrl} alt="Plot" />
+        <img src={plotImageUrl} alt="Currently Unavailable" />
       </div>
 
       {renderTable()}
