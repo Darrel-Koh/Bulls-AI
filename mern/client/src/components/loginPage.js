@@ -49,7 +49,6 @@ const LoginPage = () => {
       setUserId(response.data._id);
       setUserName(response.data.username);
 
-      localStorage.setItem("userData", JSON.stringify(userData));
       navigate("/mainPage");
     } catch (error) {
       console.error("Login failed:", error.message);

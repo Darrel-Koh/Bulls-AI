@@ -13,11 +13,28 @@ global.fetch = fetch;
 // const writeModelFiles = require('../functions/writeModelFiles.js');
 
 
-router.get('/', async (req, res) => {
-  const collection = bullsdb.collection('models');
-  const docs = await collection.find().toArray();
-  res.send(docs);
+router.get('/:symbol', async (req, res) => {
+    const collection = bullsdb.collection('plots');
+    const doc = await collection.findOne({ symbol: req.params.symbol });
+  
+    if (doc && doc.plot_data) {
+      try {
+        const img = Buffer.from(doc.plot_data.buffer, 'binary');
+        res.writeHead(200, {
+          'Content-Type': 'image/png',
+          'Content-Length': img.length
+        });
+        res.end(img);
+      } catch (error) {
+        console.error('Error converting image data:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    } else {
+      console.log('Image document not found:', req.params.symbol);
+      res.status(404).json({ message: 'Not found' });
+    }
 });
+
 /* 
 
 This route will be used to load the model in the browser.
