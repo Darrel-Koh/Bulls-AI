@@ -23,7 +23,8 @@ const ViewTickers = () => {
   const [lastListAdded, setLastListAdded] = useState(false);
    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // State for Snackbar
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for the Snackbar
-
+  const [plotImageUrl, setPlotImageUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchUserData = async () => {
     try {
@@ -62,6 +63,27 @@ const ViewTickers = () => {
       console.error('Error fetching user data:', error);
     }
   };
+
+  const fetchPlotData = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/mainPage/search/${searchTerm}`); // Adjust the URL according to your API endpoint
+      if (!response.data) {
+        throw new Error('No plot data available');
+      }
+      console.log(response.data);
+      const plotData = response.data.plot_data;
+      // console.log(plotData);
+      if (plotData) {
+        const imageUrl = `data:image/png;base64,${plotData}`;
+        setPlotImageUrl(imageUrl);
+      } else {
+        console.log('Plot data not found in the response');
+      }
+    } catch (error) {
+      console.error('Error fetching plot data:', error);
+    }
+  };
+
   
   
 
@@ -98,6 +120,7 @@ const ViewTickers = () => {
       fetchRelatedNews();
     }
     fetchUserData();
+    fetchPlotData();
   }, [userId, searchTerm]);
 
   useEffect(() => {
@@ -231,6 +254,23 @@ const renderListDropdown = (result) => {
   
           };  
 
+  // fetch(`${process.env.REACT_APP_BASE_URL}/mainPage/SIA`)
+  // .then(response => response.json())
+  // .then(data => {
+  //   const plotData = data.plot_data;
+  //   if (plotData) {
+  //     const imageUrl = `data:image/png;base64,${plotData.buffer}`;
+  //     // Now you can use the `imageUrl` to display the plot data in your component
+  //     console.log(imageUrl); // Check if the URL is correctly formed
+  //   } else {
+  //     console.log('Plot data not found in the response');
+  //   }
+  // })
+  // .catch(error => {
+  //   console.error('Error fetching plot data:', error);
+  // });
+
+
 
   const renderTable = () => {
     // Wrap the single object in an array if it's not already an array
@@ -318,9 +358,21 @@ const renderListDropdown = (result) => {
           Return to Main Page
         </Button>
       </div>
+      
+      <div>
+        {/* {loading ? (
+          <CircularProgress />
+        ) : plotImageUrl ? (
+          <img src={plotImageUrl} alt="Plot" />
+        ) : (
+          <Typography variant="body1">No plot data available.</Typography>
+        )} */}
+        <img src={plotImageUrl} alt="Currently Unavailable" />
+      </div>
 
       {renderTable()}
       {searchTerm && renderRelatedNews()}
+      
 
       <footer className="footer">
         <Typography variant="body2">&copy; 2023 Bulls Ai. All rights reserved.</Typography>
