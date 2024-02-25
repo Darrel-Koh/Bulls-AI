@@ -17,6 +17,7 @@ const MainPage = () => {
   const [sortBy, setSortBy] = useState(''); // State to track sorting column
   const [sortDirection, setSortDirection] = useState('asc'); // State to track sorting direction
   const [userData, setUserData] = useState(null);
+  const [tickerData, setTickerData] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
@@ -43,32 +44,58 @@ const MainPage = () => {
   };
 
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+  fetchData();
+ }, []);
 
-  // const fetchData = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     setErrorMessage('');
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage('');
   
-  //     // Fetch data from the /api/data endpoint
-  //     const response = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data`);
+      // Fetch data from the /api/data endpoint
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data`);
   
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! Status: ${response.status}`);
-  //     }
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const recommendationDataArray = await response.json();
+      setData(recommendationDataArray);
+  
+      const tickerDataPromises = recommendationDataArray.map(async (recommendationData) => {
+        const tickerId = recommendationData.ticker_id;
+        
+  
+        try {
+          const tickerResponse = await fetch(`${process.env.REACT_APP_BASE_URL}/recommendation-data/ticker/${encodeURIComponent(tickerId)}`);
+          if (!tickerResponse.ok) {
+            throw new Error(`Failed to fetch ticker data: ${tickerResponse.statusText}`);
+          }
+  
+          const tickerData = await tickerResponse.json();
+          return {
+            tickerId,
+            tickerData,
+          };
+        } catch (error) {
+          console.error('Error fetching ticker data:', error);
+          return null;
+        }
+      });
+  
+      const tickerDataResults = await Promise.all(tickerDataPromises);
+      setTickerData(tickerDataResults.filter(Boolean));
       
-  //     const tickersData = await response.json();
-  //     console.log('API Response:', tickersData);
-  //     setData(tickersData);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //     handleFetchError("Error fetching data. Please try again.");
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setErrorMessage("Error fetching data. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  
   
   useEffect(() => {
     // Retrieve user data from local storage
@@ -180,6 +207,17 @@ const MainPage = () => {
     sortData(column);
   };
   
+  const formatTo3SF = (number) => {
+    if (number === null || isNaN(number)) {
+      return '-';
+    }
+  
+    // Convert to a number with 3 significant figures
+    const formattedNumber = Number.parseFloat(number).toPrecision(3);
+  
+    return formattedNumber;
+  };
+  
 
   return (
     <div className="main-container">
@@ -248,43 +286,53 @@ const MainPage = () => {
                 <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
               )}
             </TableCell>
-            <TableCell onClick={() => handleSort('symbol')}>
-              Symbol {sortBy === 'symbol' && (
+          
+            <TableCell onClick={() => handleSort('open')}>
+              Open {sortBy === 'open' && (
                 <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
               )}
             </TableCell>
-            <TableCell onClick={() => handleSort('last')}>
-              Last {sortBy === 'last' && (
+            <TableCell onClick={() => handleSort('adjclose')}>
+              Adj Close {sortBy === 'adjclose' && (
                 <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
               )}
             </TableCell>
-            <TableCell onClick={() => handleSort('chng')}>
-              Change {sortBy === 'chng' && (
+            <TableCell onClick={() => handleSort('volume')}>
+              Volume {sortBy === 'volume' && (
                 <span>{sortDirection === 'asc' ? ' ▲' : ' ▼'}</span>
               )}
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-        {data && Array.isArray(data) && data.map((item, index) => (
-          <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? grey[200] : 'white' }}>
-            <TableCell>
-              <Link
-                className="trading-link"
-                onClick={() => handleSearchLink(item.trading_name)}
-                style={{ color: '#007bff', cursor: 'pointer' }}
-              >
-                {item.trading_name}
-              </Link>
-            </TableCell>
-            <TableCell>{item.symbol}</TableCell>
-            <TableCell>{item.last.toFixed(2)}</TableCell>
-            <TableCell className={item.chng > 0 ? 'positive-change' : 'negative-change'}>
-              {item.chng > 0 ? `+${item.chng}` : item.chng}
-            </TableCell>
-          </TableRow>
-        ))}
-        </TableBody>
+      
+
+<TableBody>
+  {data && Array.isArray(data) && data.map((item, index) => {
+   const correspondingTickerData = tickerData.find(tickerItem => tickerItem.tickerId === item.ticker_id);
+
+   const latestTransaction = correspondingTickerData ? correspondingTickerData.tickerData.transactions.reduce((latest, transaction) => {
+     return latest.Date > transaction.Date ? latest : transaction;
+   }, {}) : {};
+   
+    return (
+      <TableRow key={index} style={{ backgroundColor: index % 2 === 0 ? grey[200] : 'white' }}>
+        <TableCell>
+          <Link
+            className="trading-link"
+            onClick={() => handleSearchLink(item.trading_name)}
+            style={{ color: '#007bff', cursor: 'pointer' }}
+          >
+            {item.trading_name}
+          </Link>
+        </TableCell>
+        <TableCell>{latestTransaction ? formatTo3SF(latestTransaction.Open) : '-'}</TableCell>
+        <TableCell>{latestTransaction ? formatTo3SF(latestTransaction['Adj Close']) : '-'}</TableCell>
+        <TableCell>{latestTransaction ? latestTransaction.Volume : '-'}</TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
+
       </Table>
     </div>
     

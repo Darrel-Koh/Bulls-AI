@@ -11,15 +11,25 @@ router.get("/", async (req, res) => {
     res.send(results).status(200);
 });
 
-router.get('/recommendation-data', async (req, res) => {
+router.get("/ticker/:id", async (req, res) => {
     try {
-        const recommendationCollection = bullsdb.collection("recommendations");
-        const recommendations = await recommendationCollection.find({}).sort({ chng: -1 });
-        res.json(recommendations);
+      const collection = await bullsdb.collection("ticker_data");
+      const tickerId = req.params.id;
+  
+      // Ensure that the userId is a valid ObjectId
+      if (!ObjectId.isValid(tickerId)) {
+        return res.status(400).send("Invalid ticker ID");
+      }
+  
+      const query = { _id: new ObjectId(tickerId) };
+      const result = await collection.findOne(query);
+  
+      if (!result) res.status(404).send("Not found");
+      else res.status(200).send(result);
     } catch (error) {
-        console.error('Error fetching recommendations:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      console.error("Error getting user details:", error);
+      res.status(500).send("Internal Server Error");
     }
-});
+  });
 
 export default router;

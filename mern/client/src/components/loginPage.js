@@ -178,7 +178,6 @@ const LoginPage = () => {
           variant="text"
           color="primary"
           onClick={handleOpenResetDialog}
-          style={{ marginTop: "10px", marginLeft: "10px" }}
         >
           Forgot Password?
         </Button>

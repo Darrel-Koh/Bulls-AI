@@ -51,13 +51,11 @@ const ViewTickers = () => {
       }
   
       const filteredID = Array.isArray(searchResults) ? searchResults : [searchResults];
-      console.log(filteredID[0]._id);
-      console.log(userData.account_type);
-  
+      
+      console.log('filteredID:', filteredID);
       const availableLists = userData.favList.filter((list) => !list.tickers.includes(filteredID[0]._id));
       setSelectedList(availableLists.length > 0 ? availableLists[0].list_name : null);
-      console.log(availableLists[0].list_name);
-      console.log(filteredID[0]._id);
+      
   
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -89,7 +87,7 @@ const ViewTickers = () => {
 
   useEffect(() => {
     console.log('Fetching related news for:', searchTerm);
-    const apiKey = '466de00744114cc8be03ca388f1f816f';
+    const apiKey = '9281952933294c1db4cd37047165cae3';
 
     const fetchRelatedNews = async () => {
       try {
@@ -124,8 +122,7 @@ const ViewTickers = () => {
   }, [userId, searchTerm]);
 
   useEffect(() => {
-    console.log('Search Term:', searchTerm);
-    console.log('Search Results:', searchResults);
+    
   }, [searchResults, searchTerm]);
 
   const handleAddToFavourite = async (recordId, recordIdName) => {
@@ -203,6 +200,17 @@ const ViewTickers = () => {
 
 const handleListSelection = (listName) => {
   setSelectedList(listName);
+};
+
+const formatTo3SF = (number) => {
+  if (number === null || isNaN(number)) {
+    return '-';
+  }
+
+  // Convert to a number with 3 significant figures
+  const formattedNumber = Number.parseFloat(number).toPrecision(3);
+
+  return formattedNumber;
 };
 
 const renderListDropdown = (result) => {
@@ -302,7 +310,7 @@ const renderListDropdown = (result) => {
                   {result.transactions.length > 0 && result.transactions[result.transactions.length - 1].Date}
                 </TableCell>
                 <TableCell style={tableCellStyle}>
-                  {result.transactions.length > 0 && result.transactions[result.transactions.length - 1]['Adj Close']}
+                  {result.transactions.length > 0 && formatTo3SF(result.transactions[result.transactions.length - 1]['Adj Close'])}
                 </TableCell>
                 <TableCell style={tableCellStyle}>
                   {result.transactions.length > 0 && result.transactions[result.transactions.length - 1].Volume}
