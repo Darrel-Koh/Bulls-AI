@@ -128,16 +128,14 @@ const ViewTickers = () => {
   const handleAddToFavourite = async (recordId, recordIdName) => {
     
     const availableLists = favList.filter((list) => !list.tickers.includes(recordId));
-    setSelectedList(availableLists[0].list_name);
     try {
       if (!userId) {
         throw new Error('Invalid user');
       }
       
-      // Check if there is a selected list; if not, use the last list from the dropdown
-      let listToAdd = availableLists[0].list_name;
+      let listToAdd = selectedList;
       setIsSnackbarOpen(true);
-      setSnackbarMessage(`Added ${recordIdName} to ${listToAdd}`);
+      setSnackbarMessage(`Added ${recordIdName} to ${selectedList}`);
   
       if (!listToAdd) {
         throw new Error('No list selected or no available lists');
@@ -161,8 +159,6 @@ const ViewTickers = () => {
         console.log('List selected:', listToAdd);
         setLastListAdded(false);
       }      
-      
-      
      
       console.log('Adding record to list:', listToAdd);
       console.log('Record ID name:', recordIdName);
@@ -171,6 +167,8 @@ const ViewTickers = () => {
         `${process.env.REACT_APP_BASE_URL}/my-ticker/update/${encodeURIComponent(userId)}/${encodeURIComponent(listToAdd)}`,
         { tickerId: recordId }
       );
+
+      setSelectedList(selectedList);
 
       setTimeout(() => {
         window.location.reload();
@@ -198,8 +196,8 @@ const ViewTickers = () => {
   }
 };
 
-const handleListSelection = (listName) => {
-  setSelectedList(listName);
+const handleListSelection = (selectedList) => {
+  setSelectedList(selectedList);
 };
 
 const formatTo3SF = (number) => {
