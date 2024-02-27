@@ -21,7 +21,6 @@ import tickerpage from "./routes/tickerpageGet.mjs";
 import tickerListRouter from "./routes/addtickerlistGet.mjs";
 import deletetickerListRouter from "./routes/deletetickerlistGet.mjs";
 import deleteTicker from "./routes/deleteTicker.mjs";
-import searchRoute from "./routes/searchRoute.mjs";
 import compression from "compression";
 import edittickerlistRouter from "./routes/edittickerlistpageGet.mjs";
 import updateAccountRouter from "./routes/updateAccount.mjs";
@@ -54,14 +53,13 @@ app.use("/edit-tickerlist", edittickerlistRouter);
 // Serve static files from the "tfjs_models" directory
 app.use("/tfjs_model", express.static(path.join(__dirname, "tfjs_model")));
 
-// fetch search route 
+// fetch search route
 app.use("/mainPage/search", searchLor);
 // update account from basic to professional
 app.use("/updateAccount", updateAccountRouter);
 // recommendation table
-app.use('/recommendation-data', recommendationDataRoute);
+app.use("/recommendation-data", recommendationDataRoute);
 app.use("/userInfo", userInfo);
-
 
 app.use("/my-ticker", tickerpage);
 app.use("/add-tickerlist", tickerListRouter);
@@ -79,30 +77,20 @@ app.get("/db-test", async (req, res) => {
 });
 
 app.use("/glossary", glossary);
-// if(process.env.NODE_ENV === 'production'){
-//   app.use(express.static('client/build'));
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
-//   });
-// } 
-if(process.env.NODE_ENV === 'production'){
-  // Serve static files from the React app
-  app.use(express.static(path.join(__dirname, '../client/build')));
 
-  // The "catchall" handler: for any request that doesn't
-  // match one above, send back React's index.html file.
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+if (process.env.NODE_ENV === "production") {
+  // Serve static files from the React app
+  app.use(express.static(path.join(__dirname, "../client/build")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
   });
-}
-else {
+} else {
   app.get("*", (req, res) => {
     // res.send("API is running");
     res.json({ message: "API is running" });
-
   });
 }
-
 
 const port = process.env.PORT || 5050;
 app.listen(port, () => {
