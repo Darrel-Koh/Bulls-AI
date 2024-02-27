@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/AuthContext";
 import BullsAiLogo from "../images/BullsAI logo_coloured_logo.png"; // Import BullsAI logo
+// eslint-disable-next-line no-unused-vars
 import { Button, Select, MenuItem, Box, Avatar, Container, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Tabs, Tab } from '@mui/material';
 import { Snackbar } from '@mui/material';
@@ -17,6 +18,7 @@ const LoginPage = () => {
   const [registerUsername, setRegisterUsername] = useState("");
   // const [registerAccountType, setRegisterAccountType] = useState("Basic");
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const { setUserId, setUserName, setStatus } = useContext(AuthContext);
   const [wrongPasswordDialogOpen, setWrongPasswordDialogOpen] = useState(false); // State for dialog visibility
   const [openDialog, setOpenDialog] = useState(false);
@@ -68,7 +70,7 @@ const LoginPage = () => {
       if (!registerEmail || !registerPassword || !registerUsername) {
         throw new Error("Please fill in all the registration fields.");
       }
-
+// eslint-disable-next-line no-unused-vars
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/register`, {
         registerEmail,
         registerPassword,

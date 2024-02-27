@@ -74,9 +74,7 @@ const PaymentPage = () => {
         navigate("/PricingPage");
     };
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
+
 
   // Function to validate the card number format
 const isValidCardNumber = (cardNumber) => {

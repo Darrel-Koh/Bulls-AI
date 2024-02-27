@@ -1,6 +1,8 @@
 // App.js
 import React from "react";
+// eslint-disable-next-line no-unused-vars
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
 import Navbar from "./components/navbar";
 
 import Header from "./components/header";

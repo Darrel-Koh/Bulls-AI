@@ -66,11 +66,6 @@ const UpdatePassword = () => {
     }
   };
 
-  function useUpdatePassword() {
-    const [password, setPassword] = useState('');
-    // Hook logic here
-    return { password, setPassword };
-}
 
 return (
   <Container maxWidth="sm">
