@@ -11,13 +11,12 @@ import ViewTickers from "./components/viewTickers";
 import Create from "./components/create2";
 import LoginPage from "./components/loginPage";
 import MainPage from "./components/mainPage";
-import UserList from "./components/recordList2";
 import { useState, useEffect } from "react";
 import AuthContext from "./components/AuthContext";
 import ForgetPassword from "./components/ForgetPassword";
 import EditTickerListPage from "./components/edittickerlistpage";
 import ProfileUser from "./components/ProfileUser";
-import PricingPage from './components/PricingPage';
+import PricingPage from "./components/PricingPage";
 import UserInfo from "./components/UserInfo";
 import PaymentPage from "./components/PaymentPage";
 import UpdatePassword from "./components/updatePassword";
@@ -37,7 +36,6 @@ const App = () => {
       setUserId(storedUserId);
       setUserName(storedUserName);
       setStatus(storedStatus);
-     
     }
   }, []);
 
@@ -46,12 +44,12 @@ const App = () => {
     localStorage.setItem("userId", userId);
     localStorage.setItem("userName", userName);
     localStorage.setItem("status", status);
-
-  
   }, [userId, userName, status]);
 
   return (
-    <AuthContext.Provider value={{ userId, setUserId, userName, setUserName, status, setStatus }}>
+    <AuthContext.Provider
+      value={{ userId, setUserId, userName, setUserName, status, setStatus }}
+    >
       {userId && <Header />}
       <div style={{ margin: 20 }}>
         <Routes>
@@ -65,7 +63,7 @@ const App = () => {
             path="/edit-tickerlist/:listName"
             element={<EditTickerListPage />}
           />
-          <Route path="/recordListPage" element={<UserList />} />
+          {/* <Route path="/recordListPage" element={<UserList />} /> */}
           <Route path="/viewTickers" element={<ViewTickers />} />
           <Route path="/mainPage" element={<MainPage />} />
           <Route path="/ProfileUser" element={<ProfileUser />} />
@@ -75,7 +73,7 @@ const App = () => {
           <Route path="/updatePassword" element={<UpdatePassword />} />
           <Route
             path="/forget-password"
-            element={<ForgetPassword userId= "" />}
+            element={<ForgetPassword userId="" />}
           />
           {/* Add a default route for unmatched paths */}
           <Route

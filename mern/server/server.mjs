@@ -2,8 +2,6 @@
 import express from "express";
 import cors from "cors";
 import "./loadEnvironment.mjs";
-import records from "./routes/record.mjs";
-import user from "./routes/record2.mjs";
 import loginRouter from "./routes/login.mjs";
 import registrationRouter from "./routes/registration.mjs";
 import forgetPasswordRouter from "./routes/forgetpassword.mjs";
@@ -39,15 +37,12 @@ app.use(cors());
 app.use(express.json());
 app.use(compression());
 
-app.use("/record", records);
-app.use("/user", user);
 app.use("/login", loginRouter);
 app.use("/register", registrationRouter);
 app.use("/forget-password", forgetPasswordRouter);
 // update password
 app.use("/updatePassword", updatePasswordRouter);
 app.use("/model", modelsRouter);
-app.use("/edit-tickerlist", edittickerlistRouter);
 app.use("/edit-tickerlist", edittickerlistRouter);
 
 // Serve static files from the "tfjs_models" directory
