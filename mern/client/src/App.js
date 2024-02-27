@@ -17,7 +17,7 @@ import AuthContext from "./components/AuthContext";
 import ForgetPassword from "./components/ForgetPassword";
 import EditTickerListPage from "./components/edittickerlistpage";
 import ProfileUser from "./components/ProfileUser";
-import PricingPage from './components/PricingPage';
+import PricingPage from "./components/PricingPage";
 import UserInfo from "./components/UserInfo";
 import PaymentPage from "./components/PaymentPage";
 import UpdatePassword from "./components/updatePassword";
@@ -37,7 +37,6 @@ const App = () => {
       setUserId(storedUserId);
       setUserName(storedUserName);
       setStatus(storedStatus);
-     
     }
   }, []);
 
@@ -46,12 +45,12 @@ const App = () => {
     localStorage.setItem("userId", userId);
     localStorage.setItem("userName", userName);
     localStorage.setItem("status", status);
-
-  
   }, [userId, userName, status]);
 
   return (
-    <AuthContext.Provider value={{ userId, setUserId, userName, setUserName, status, setStatus }}>
+    <AuthContext.Provider
+      value={{ userId, setUserId, userName, setUserName, status, setStatus }}
+    >
       {userId && <Header />}
       <div style={{ margin: 20 }}>
         <Routes>
@@ -72,7 +71,7 @@ const App = () => {
           <Route path="/updatePassword" element={<UpdatePassword />} />
           <Route
             path="/forget-password"
-            element={<ForgetPassword userId= "" />}
+            element={<ForgetPassword userId="" />}
           />
           {/* Add a default route for unmatched paths */}
           <Route
