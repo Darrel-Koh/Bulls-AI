@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../components/style.css";
+import "../components/style.css";// eslint-disable-next-line no-unused-vars
 import { TextField, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, IconButton, Box, Grid, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Link } from 'react-router-dom';
@@ -25,22 +25,12 @@ const MainPage = () => {
     setSnackbarOpen(false);
   };
 
-  // Inside your fetch and search functions where errors occur
-  const handleFetchError = (errorMessage) => {
-    setSnackbarMessage(errorMessage);
-    setSnackbarOpen(true);
-  };
 
   // Inside your handleSearch function
   const handleSearchError = (errorMessage) => {
     setSnackbarMessage(errorMessage);
     setSnackbarOpen(true);
     setIsLoading(false); // Ensure loading indicator is stopped
-  };
-
-  const handleSnackbarOpen = (message) => {
-    setSnackbarMessage(message);
-    setSnackbarOpen(true);
   };
 
 
