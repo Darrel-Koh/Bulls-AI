@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Button, List, ListItem, ListItemText, Card, CardContent, CardActions } from '@mui/material';
+// eslint-disable-next-line no-unused-vars
 import { Link } from 'react-router-dom';
 
 const PricingPlan = ({ name, price, features, onSelect, image }) => {

@@ -1,11 +1,12 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
+// eslint-disable-next-line no-unused-vars
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import AuthContext from '../components/AuthContext';
 import BullsAiLogo from '../images/BullsAI logo_coloured_logo.png';
 import {
   Typography,
   Button,
-  Link,
+  //Link,
   Menu,
   MenuItem,
   AppBar,
@@ -27,8 +28,10 @@ const Header = () => {
   const authContext = useContext(AuthContext);
   const { userId, userName, status, setUserId, setUserName, setStatus } = authContext || {};
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [loading, setLoading] = useState(true); // New state for loading status
+  // eslint-disable-next-line no-unused-vars
   const [isLoggedOut, setIsLoggedOut] = useState(false); // New state for logout status
   const dropdownRef = useRef(null);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -98,9 +101,7 @@ const Header = () => {
     }
   }, [userId, userName, status]);
 
-  const toggleDropdown = () => {
-    setDropdownVisible((prevVisible) => !prevVisible);
-  };
+
 
   const handleLogout = () => {
     localStorage.removeItem('userId');

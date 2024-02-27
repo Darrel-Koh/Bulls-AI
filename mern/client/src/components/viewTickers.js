@@ -11,9 +11,10 @@ const ViewTickers = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { searchResults, searchTerm } = location.state || {};
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (currentPage - 1) * itemsPerPage;
+ // eslint-disable-next-line no-unused-vars
   const endIndex = startIndex + itemsPerPage;
   const [relatedNews, setRelatedNews] = useState([]);
   const [loadingNews, setLoadingNews] = useState(true);
@@ -24,8 +25,7 @@ const ViewTickers = () => {
    const [isSnackbarOpen, setIsSnackbarOpen] = useState(false); // State for Snackbar
   const [snackbarMessage, setSnackbarMessage] = useState(''); // Message for the Snackbar
   const [plotImageUrl, setPlotImageUrl] = useState(null);
-  const [loading, setLoading] = useState(true);
-
+  
   const fetchUserData = async () => {
     try {
       if (!userId) {
@@ -119,6 +119,7 @@ const ViewTickers = () => {
     }
     fetchUserData();
     fetchPlotData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, searchTerm]);
 
   useEffect(() => {
@@ -260,22 +261,6 @@ const renderListDropdown = (result) => {
   
           };  
 
-  // fetch(`${process.env.REACT_APP_BASE_URL}/mainPage/SIA`)
-  // .then(response => response.json())
-  // .then(data => {
-  //   const plotData = data.plot_data;
-  //   if (plotData) {
-  //     const imageUrl = `data:image/png;base64,${plotData.buffer}`;
-  //     // Now you can use the `imageUrl` to display the plot data in your component
-  //     console.log(imageUrl); // Check if the URL is correctly formed
-  //   } else {
-  //     console.log('Plot data not found in the response');
-  //   }
-  // })
-  // .catch(error => {
-  //   console.error('Error fetching plot data:', error);
-  // });
-
 
 
   const renderTable = () => {
@@ -405,13 +390,6 @@ const renderListDropdown = (result) => {
 };
 
 
-const favouriteButtonStyle = {
-  backgroundColor: '#FFD700',
-  color: 'black',
-  padding: '8px 12px',
-  borderRadius: '4px',
-  cursor: 'pointer',
-};
 
 const tableHeaderStyle = {
   padding: '10px',
