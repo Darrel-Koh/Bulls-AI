@@ -1,79 +1,41 @@
-# FYP-23-S4-33
+# Bulls AI
 Webservice for Stock Market Prediction
 
-### Do use the following commands to help
-
-```
-git clone https://github.com/Darrel-Koh/FYP-23-S4-33.git
-
-git status (To check current status of your git progress)
-
-git fetch (To fetch Teammates changes before starting)
-
-git pull (To confirm pull in Teammates changes)
-
-git checkout -b <new-branch-name> (Creates a new branch for a new feature)
-
-git push origin <new-branch-name> (Push new branch from local machine to main)
-
-git switch <file-name> (Switch between branches)
-
-git commit -m (To commit changes, and include a message)
-
-git push (To push changes to the main repo)
-```
-### To start out:
-``` 
-git clone https://github.com/Darrel-Koh/FYP-23-S4-33.git
-
-System may prompt you request for your credentials,  replace <username> with your desired username and <email> with your email address. Dont need <>
-These commands configure Git to associate your name and email with the commits you make on your repository. 
-git config user.name <username>
-git config user.email <email>
-```
-
-### Before you start coding:
-```
-git status (To check current status of your git progress)
-git fetch (To fetch Teammates changes before starting)
-git pull (To complete fetching changes)
-```
-
-### After make changes:
-```
-git status (To check current status of your git progress)
-git fetch (To fetch Teammates changes before starting)
-git pull(To confirm pull in Teammates changes)
-git commit -m (To commit changes, and include a message)
-git push (To push changes to the main repo)
-```
-
-### To start a new feature:
-```
-git checkout -b <new-branch-name> (Creates a new branch for a new feature)
-git commit -m (To commit changes, and include a message)
-git push (To push changes to the Branch repo)
-git push origin <new-branch-name> (Push new changes in branch from local machine to main)
-
-- If just want to retrieve main changes but dont want your current code to affect main branch
-git fetch origin main
-git merge origin/main
-
-```
-
-## How To Run the Project
-```
-Create the file `mern/server/config.env` with your Atlas URI and the server port:
-
-Start server:
-cd mern/server
-npm install (only for first time)
-npm start
+## Introduction
+Bulls AI is a one-stop web-service to assist traders in making more informed trades with
+our stock predictions.
 
 
-Start Web server:
-cd mern/client
-npm install (only for first time)
-npm start
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Features](#features)
+3. [Tech Stack](#tech-stack)
+4. [Installation](#installation)
+5. [Usage](#usage)
 
-```
+## Introduction
+Bulls AI is a one-stop web-service to assist traders in making more informed trades with our stock predictions.
+
+## Features
+- Recommended Stocks
+- Reliable API/Dataset
+- Favourite List
+- Glossary
+
+## Tech Stack
+- MongoDB
+- Express
+- React
+- Node.js
+
+## Installation
+Please refer to the README.md within mern folder for installation instructions.
+
+## Usage
+1) Register as User 
+2) Login to access the features
+3) View recommended stocks
+4) Add stocks to favourite list
+
+## Live Demo
+The deployed webpage can be found [here](koh465.wixsite.com/bulls-ai).
