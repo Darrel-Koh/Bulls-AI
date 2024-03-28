@@ -29,7 +29,7 @@ Bulls AI is a one-stop web-service to assist traders in making more informed tra
 - Node.js
 
 ## Installation
-Please refer to the README.md within mern folder for installation instructions.
+Please refer [here](mern/README.md) for installation instructions.
 
 ## Usage
 1) Register as User 
